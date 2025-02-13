@@ -13,6 +13,8 @@ enum error_code {
 	SDL_INIT_FAIL,
 	SDL_WINDOW_FAIL,
 	MEM_ERR,
-	NULLPTR_ERR
+	NULLPTR_ERR,
+	IO_ERR,
+	FMT_ERR
 };
 

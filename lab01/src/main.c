@@ -1,16 +1,6 @@
 #include "../inc/defines.h"
 #include "../inc/graphics.h"
 #include "../inc/sdltools.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_hints.h>
-#include <SDL2/SDL_keyboard.h>
-#include <SDL2/SDL_mouse.h>
-#include <SDL2/SDL_quit.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_surface.h>
-#include <SDL2/SDL_timer.h>
-#include <SDL2/SDL_video.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -23,10 +13,8 @@ void handle_events() {
   }
 }
 
-int main(void) {
-  int rc = SUCCESS;
-  bool running = true;
-  rc = init_sdl();
+int main(int argc, char **argv) {
+  int rc = init_sdl();
 
   SDL_Renderer *renderer = NULL;
   SDL_Window *window = NULL;
@@ -34,9 +22,16 @@ int main(void) {
   if (!rc)
     rc = create_window_and_renderer(&window, &renderer);
 
+  FILE *file = NULL;
+  if (!rc && argc == 2) {
+    file = fopen(argv[1], "r");
+    if (!file)
+      rc = IO_ERR;
+  }
+
   figure_t *figure = NULL;
   if (!rc)
-    rc = create_cube(&figure);
+    rc = load_figure(file, &figure);
 
   if (!rc)
     scale_figure(figure, 200.0f);
