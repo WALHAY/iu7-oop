@@ -6,6 +6,8 @@
 #define FPS 60
 #define FPS_INTERVAL (1000 / FPS)
 
+#define FOV 10
+
 enum error_code {
 	SUCCESS = 0,
 	SDL_INIT_FAIL,

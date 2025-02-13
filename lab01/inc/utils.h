@@ -5,4 +5,4 @@
 
 int init_sdl();
 
-int create_window_and_surface(SDL_Window** window, SDL_Surface **surface);
+int create_window_and_renderer(SDL_Window **window, SDL_Renderer **renderer);
