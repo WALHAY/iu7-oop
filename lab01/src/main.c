@@ -1,27 +1,24 @@
 #include "../inc/defines.h"
 #include "../inc/graphics.h"
-#include "../inc/utils.h"
+#include "../inc/sdltools.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_hints.h>
 #include <SDL2/SDL_keyboard.h>
+#include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_quit.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
 #include <stdbool.h>
+#include <stdio.h>
 
-void handle_event(bool *running) {
+void handle_events() {
   SDL_Event event;
   if (SDL_PollEvent(&event)) {
-    switch (event.type) {
-    case SDL_QUIT:
-      *running = false;
-      break;
-    case SDL_KEYDOWN:
-      if (event.key.keysym.sym == SDLK_LEFT)
-        printf("Nigga");
+    if (event.type == SDL_MOUSEBUTTONDOWN &&
+        event.button.button == SDL_BUTTON_LEFT) {
     }
   }
 }
@@ -41,27 +38,13 @@ int main(void) {
   if (!rc)
     rc = create_cube(&figure);
 
-  SDL_UpdateWindowSurface(window);
-  while (running && !rc) {
-    if (SDL_QuitRequested()) {
-      running = false;
-      break;
-    }
-    // clear viewport
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+  if (!rc)
+    scale_figure(figure, 200.0f);
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    draw_figure(renderer, figure);
+  if (!rc)
+    rc = draw_loop(renderer, figure);
 
-    SDL_RenderPresent(renderer);
-
-    SDL_Delay(FPS_INTERVAL);
-  }
-
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
+  destroy_sdl(window, renderer);
 
   return rc;
 }

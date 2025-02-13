@@ -67,23 +67,34 @@ int create_pyramid(figure_t **cube) {
   return rc;
 }
 
-int draw_figure(SDL_Renderer *renderer, const figure_t *figure) {
-  static double x = 0;
-  x += 0.01;
+void scale_figure(figure_t *figure, double scale) {
+  for (size_t i = 0; i < CUBE_VERTICES; ++i) {
+    figure->vertices[i].x *= scale;
+    figure->vertices[i].y *= scale;
+    figure->vertices[i].z *= scale;
+  }
+}
+
+int draw_figure(SDL_Renderer *renderer, const figure_t *figure, double rotx,
+                double roty) {
+  if (renderer == NULL || figure == NULL)
+    return NULLPTR_ERR;
+
+  point3d_t screen_shift = {(double)SDL_SCREEN_WIDTH / 2,
+                            (double)SDL_SCREEN_HEIGHT / 2};
   for (size_t i = 0; i < figure->edge_count; ++i) {
     point3d_t first = figure->vertices[figure->edges[i].start];
     point3d_t second = figure->vertices[figure->edges[i].end];
 
-    first = rotate_y(&first, x);
-    second = rotate_y(&second, x);
+    first = rotate_y(&first, rotx);
+    second = rotate_y(&second, rotx);
 
-    first = rotate_x(&first, x);
-    second = rotate_x(&second, x);
+    first = rotate_x(&first, roty);
+    second = rotate_x(&second, roty);
 
-    point2d_t start =
-        projection(&first, FOV, SDL_SCREEN_WIDTH, SDL_SCREEN_HEIGHT);
-    point2d_t end =
-        projection(&second, FOV, SDL_SCREEN_WIDTH, SDL_SCREEN_HEIGHT);
+    point3d_t start = point_translate(&first, &screen_shift);
+    point3d_t end = point_translate(&second, &screen_shift);
+
     SDL_RenderDrawLine(renderer, (int)start.x, (int)start.y, (int)end.x,
                        (int)end.y);
   }

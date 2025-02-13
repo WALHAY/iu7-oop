@@ -6,12 +6,13 @@
 #define FPS 60
 #define FPS_INTERVAL (1000 / FPS)
 
-#define FOV 10
+#define MOUSE_SENSITIVITY 200.0f
 
 enum error_code {
 	SUCCESS = 0,
 	SDL_INIT_FAIL,
 	SDL_WINDOW_FAIL,
-	MEM_ERR
+	MEM_ERR,
+	NULLPTR_ERR
 };
 
