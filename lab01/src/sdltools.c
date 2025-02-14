@@ -1,10 +1,4 @@
 #include "../inc/sdltools.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_mouse.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_video.h>
-#include <stdio.h>
 
 int init_sdl() {
   return SDL_Init(SDL_INIT_EVERYTHING) == 0 ? SUCCESS : SDL_INIT_FAIL;
@@ -36,7 +30,6 @@ int draw_loop(SDL_Renderer *renderer, const figure_t *figure) {
   bool running = true;
   double rotationX = 0, rotationY = 0;
   int lastX = 0, lastY = 0;
-  SDL_Event event;
   while (running && !rc) {
     if (SDL_QuitRequested()) {
       running = false;

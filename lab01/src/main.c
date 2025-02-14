@@ -4,15 +4,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-void handle_events() {
-  SDL_Event event;
-  if (SDL_PollEvent(&event)) {
-    if (event.type == SDL_MOUSEBUTTONDOWN &&
-        event.button.button == SDL_BUTTON_LEFT) {
-    }
-  }
-}
-
 int main(int argc, char **argv) {
   int rc = init_sdl();
 
@@ -40,6 +31,9 @@ int main(int argc, char **argv) {
     rc = draw_loop(renderer, figure);
 
   destroy_sdl(window, renderer);
+
+  if (file)
+    fclose(file);
 
   return rc;
 }
