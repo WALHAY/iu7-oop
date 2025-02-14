@@ -30,9 +30,10 @@ int load_figure(FILE *file, figure_t **figure) {
       rc = MEM_ERR;
   }
 
+  edge_t *edges = NULL;
   if (!rc) {
-    new_figure->edges = malloc(sizeof(edge_t) * edge_count);
-    if (!new_figure->edges)
+    edges = malloc(sizeof(edge_t) * edge_count);
+    if (!edges)
       rc = MEM_ERR;
   }
 
@@ -40,17 +41,18 @@ int load_figure(FILE *file, figure_t **figure) {
     new_figure->vertices[i] = read_vertex(file, &rc);
 
   for (size_t i = 0; !rc && i < edge_count; ++i)
-    new_figure->edges[i] = read_edge(file, &rc);
-
-  if (rc && new_figure) {
-    if (new_figure->edges)
-      free(new_figure->edges);
-    free(new_figure);
-  }
+    edges[i] = read_edge(file, &rc);
 
   if (!rc) {
     new_figure->edge_count = edge_count;
+    new_figure->edges = edges;
     *figure = new_figure;
+  } else {
+    if (edges)
+      free(edges);
+
+    if (new_figure)
+      free(new_figure);
   }
 
   return rc;

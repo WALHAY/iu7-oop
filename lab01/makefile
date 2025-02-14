@@ -1,8 +1,8 @@
-CC := gcc
+CC := gcc-13
 
-CCFLAGS := -Wall -Wextra -Wpedantic -std=c99
-CLFLAGS := -lm
-LIBS := -lSDL2
+CCFLAGS := -Wall -Wextra -Wpedantic -std=c99 -I/opt/homebrew/include -g3
+CLFLAGS := -lm -g3
+LIBS := -lSDL2 -L/opt/homebrew/lib
 
 INC_PATH := ./inc
 SRC_PATH := ./src
@@ -21,4 +21,5 @@ $(OBJ_PATH)/%.o : $(SRC_PATH)/%.c $(INC_PATH)/*.h
 .PHONY : clean
 
 clean :
-	rm $(OBJ_PATH) app
+	rm -rf $(OBJ_PATH) app
+	rmdir out

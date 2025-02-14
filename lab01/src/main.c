@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
     rc = load_figure(file, &figure);
 
   if (!rc)
-    scale_figure(figure, 200.0f);
+    scale_figure(figure, FIGURE_SCALE);
 
   if (!rc)
     rc = draw_loop(renderer, figure);
