@@ -13,6 +13,7 @@ typedef struct {
 
 typedef struct {
 	size_t edge_count;
+	size_t vertex_count;
 	edge_t *edges;
 	point3d_t vertices[];
 } figure_t;

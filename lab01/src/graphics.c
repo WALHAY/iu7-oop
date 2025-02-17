@@ -45,6 +45,7 @@ int load_figure(FILE *file, figure_t **figure) {
 
   if (!rc) {
     new_figure->edge_count = edge_count;
+    new_figure->vertex_count = vertex_count;
     new_figure->edges = edges;
     *figure = new_figure;
   } else {
@@ -59,7 +60,7 @@ int load_figure(FILE *file, figure_t **figure) {
 }
 
 void scale_figure(figure_t *figure, double scale) {
-  for (size_t i = 0; i < figure->edge_count; ++i) {
+  for (size_t i = 0; i < figure->vertex_count; ++i) {
     figure->vertices[i].x *= scale;
     figure->vertices[i].y *= scale;
     figure->vertices[i].z *= scale;
