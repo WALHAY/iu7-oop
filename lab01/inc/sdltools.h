@@ -1,15 +1,14 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_video.h>
+#include "defines.h"
+#include "figures.h"
+#include "geometry.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_mouse.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_video.h>
 #include <stdbool.h>
-#include "geometry.h"
-#include "graphics.h"
-#include "defines.h"
 
 int init_sdl();
 
