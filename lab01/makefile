@@ -1,7 +1,7 @@
 CC := gcc-13
 
-CCFLAGS := -Wall -Wextra -Wpedantic -std=c99 -I/opt/homebrew/include -g3
-CLFLAGS := -lm -g3
+CCFLAGS := -Wall -Wextra -Wpedantic -std=c99 -I/opt/homebrew/include -g2
+CLFLAGS := -lm
 LIBS := -lSDL2 -L/opt/homebrew/lib
 
 INC_PATH := ./inc

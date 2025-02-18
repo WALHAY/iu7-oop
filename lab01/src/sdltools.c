@@ -16,16 +16,16 @@ int create_window_and_renderer(SDL_Window **window, SDL_Renderer **renderer)
     return rc;
 }
 
-void handle_mouse(int *lastX, int *lastY, double *dx, double *dy)
+void handle_mouse(int *x, int *y, double *dx, double *dy)
 {
-    int x = 0, y = 0;
-    SDL_GetMouseState(&x, &y);
-    if (x != *lastX || y != *lastY)
+    int nx = 0, ny = 0;
+    SDL_GetMouseState(&nx, &ny);
+    if (nx != *x || ny != *y)
     {
-        *dx = (x - *lastX) / MOUSE_SENSITIVITY;
-        *dy = (y - *lastY) / MOUSE_SENSITIVITY;
-        *lastX = x;
-        *lastY = y;
+        *dx = (nx - *x) / MOUSE_SENSITIVITY;
+        *dy = (ny - *y) / MOUSE_SENSITIVITY;
+        *x = nx;
+        *y = ny;
     }
 }
 
