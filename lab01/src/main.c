@@ -37,6 +37,8 @@ int main(int argc, char **argv)
 
     destroy_sdl(window, renderer);
 
+    free_state(state);
+
     close_file(file);
 
     return rc;

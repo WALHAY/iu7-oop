@@ -9,3 +9,5 @@ typedef struct {
 } figure_state_t;
 
 figure_state_t *init_state(int *rc);
+
+void free_state(figure_state_t *state);

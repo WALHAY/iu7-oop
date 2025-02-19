@@ -13,3 +13,9 @@ figure_state_t *init_state(int *rc)
         *rc = MEM_ERR;
     return new_state;
 }
+
+void free_state(figure_state_t *state)
+{
+    if (state)
+        free(state);
+}
