@@ -1,4 +1,5 @@
 #include "../inc/sdltools.h"
+#include <SDL2/SDL_events.h>
 
 int init_sdl()
 {
@@ -29,12 +30,39 @@ void handle_mouse(int *x, int *y, double *dx, double *dy)
     }
 }
 
+void handle_keyboard(int *x, int *y)
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_KEYDOWN)
+        {
+            switch (event.key.keysym.sym)
+            {
+                case SDLK_w:
+                    *x -= 1;
+                    break;
+                case SDLK_s:
+                    *x += 1;
+                    break;
+                case SDLK_d:
+                    *y += 5;
+                    break;
+                case SDLK_a:
+                    *y -= 5;
+                    break;
+            }
+        }
+    }
+}
+
 int draw_loop(SDL_Renderer *renderer, const figure_t *figure)
 {
     int rc = SUCCESS;
     bool running = true;
     double rotationX = 0, rotationY = 0;
     int lastX = 0, lastY = 0;
+    int posX = 0, posY = 0;
     while (running && !rc)
     {
         if (SDL_QuitRequested())
@@ -45,6 +73,7 @@ int draw_loop(SDL_Renderer *renderer, const figure_t *figure)
 
         double dx = 0, dy = 0;
         handle_mouse(&lastX, &lastY, &dx, &dy);
+        handle_keyboard(&posX, &posY);
 
         rotationX -= dx;
         rotationY += dy;
@@ -54,7 +83,7 @@ int draw_loop(SDL_Renderer *renderer, const figure_t *figure)
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        rc = draw_figure(renderer, figure, rotationX, rotationY);
+        rc = draw_figure(renderer, figure, posX, posY, rotationX, rotationY);
 
         SDL_RenderPresent(renderer);
 

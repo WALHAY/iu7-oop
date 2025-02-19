@@ -24,4 +24,4 @@ int load_figure(FILE *file, figure_t **figure);
 
 void scale_figure(figure_t *figure, double scale);
 
-int draw_figure(SDL_Renderer *renderer, const figure_t *figure, double rotx, double roty);
+int draw_figure(SDL_Renderer *renderer, const figure_t *figure, double posX, double posY, double rotx, double roty);

@@ -25,9 +25,9 @@ int main(int argc, char **argv)
     figure_t *figure = NULL;
     if (!rc)
         rc = load_figure(file, &figure);
-
-    if (!rc)
-        scale_figure(figure, FIGURE_SCALE);
+    /**/
+    /*if (!rc)*/
+    /*    scale_figure(figure, FIGURE_SCALE);*/
 
     if (!rc)
         rc = draw_loop(renderer, figure);

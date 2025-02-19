@@ -5,7 +5,7 @@
 
 #define FIGURE_SCALE 200.0f
 
-#define FPS 60
+#define FPS 144
 #define FPS_INTERVAL (1000 / FPS)
 
 #define MOUSE_SENSITIVITY 200.0f

@@ -18,3 +18,5 @@ point3d_t rotate_x(const point3d_t *point, double degree);
 point3d_t rotate_y(const point3d_t *point, double degree);
 
 point3d_t scale_point(const point3d_t *point, double scale);
+
+point3d_t projection(const point3d_t *point, double distance);
