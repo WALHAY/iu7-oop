@@ -16,21 +16,19 @@ int create_window_and_renderer(SDL_Window **window, SDL_Renderer **renderer)
     return rc;
 }
 
-void handle_mouse(int *x, int *y, double *dx, double *dy)
+void handle_input(figure_state_t *state)
 {
+    static int x = 0, y = 0;
     int nx = 0, ny = 0;
     SDL_GetMouseState(&nx, &ny);
-    if (nx != *x || ny != *y)
+    if (nx != x || ny != y)
     {
-        *dx = (nx - *x) / MOUSE_SENSITIVITY;
-        *dy = (ny - *y) / MOUSE_SENSITIVITY;
-        *x = nx;
-        *y = ny;
+        state->rotation.x += (x - nx) / MOUSE_SENSITIVITY;
+        state->rotation.y += (y - ny) / MOUSE_SENSITIVITY;
+        x = nx;
+        y = ny;
     }
-}
 
-void handle_keyboard(figure_state_t *state)
-{
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -69,7 +67,6 @@ int draw_loop(SDL_Renderer *renderer, const figure_t *figure, figure_state_t *st
 {
     int rc = SUCCESS;
     bool running = true;
-    int lastX = 0, lastY = 0;
 
     while (running && !rc)
     {
@@ -79,12 +76,7 @@ int draw_loop(SDL_Renderer *renderer, const figure_t *figure, figure_state_t *st
             break;
         }
 
-        double dx = 0, dy = 0;
-        handle_mouse(&lastX, &lastY, &dx, &dy);
-        handle_keyboard(state);
-
-        state->rotation.x -= dx;
-        state->rotation.y += dy;
+        handle_input(state);
 
         // clear viewport
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
