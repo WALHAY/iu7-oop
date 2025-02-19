@@ -1,6 +1,16 @@
 #include "../inc/figures.h"
+#include <SDL2/SDL_render.h>
 
 #define DISTANCE 1
+
+point3d_t create_point(double x, double y, double z)
+{
+    point3d_t result;
+    result.x = x;
+    result.y = y;
+    result.z = z;
+    return result;
+}
 
 point3d_t read_vertex(FILE *file, int *rc)
 {
@@ -76,33 +86,33 @@ void scale_figure(figure_t *figure, double scale)
         *it = scale_point(it, scale);
 }
 
-int draw_figure(SDL_Renderer *renderer, const figure_t *figure, double posX, double posY, double rotx, double roty)
+int draw_figure(SDL_Renderer *renderer, const figure_t *figure, double scale, double posX, double posY, double rotX, double rotY)
 {
     if (renderer == NULL || figure == NULL)
         return NULLPTR_ERR;
 
-    point3d_t screen_shift = {(double)SDL_SCREEN_WIDTH / 2 + posY, (double)SDL_SCREEN_HEIGHT / 2, 0};
+    point3d_t screen_shift = create_point((double)SDL_SCREEN_WIDTH / 2 + posY, (double)SDL_SCREEN_HEIGHT / 2, 0);
     for (size_t i = 0; i < figure->edge_count; ++i)
     {
         point3d_t first = figure->vertices[figure->edges[i].start];
         point3d_t second = figure->vertices[figure->edges[i].end];
 
-        first = rotate_y(&first, rotx);
-        second = rotate_y(&second, rotx);
+        first = rotate_y(&first, rotX);
+        second = rotate_y(&second, rotX);
 
-        first = rotate_x(&first, roty);
-        second = rotate_x(&second, roty);
+        first = rotate_x(&first, rotY);
+        second = rotate_x(&second, rotY);
 
         first = projection(&first, posX);
         second = projection(&second, posX);
 
-        first = scale_point(&first, 200);
-        second = scale_point(&second, 200);
+        first = scale_point(&first, scale);
+        second = scale_point(&second, scale);
 
-        point3d_t start = point_translate(&first, &screen_shift);
-        point3d_t end = point_translate(&second, &screen_shift);
+        first = point_translate(&first, &screen_shift);
+        second = point_translate(&second, &screen_shift);
 
-        SDL_RenderDrawLine(renderer, start.x, start.y, end.x, end.y);
+        SDL_RenderDrawLineF(renderer, first.x, first.y, second.x, second.y);
     }
     return SUCCESS;
 }

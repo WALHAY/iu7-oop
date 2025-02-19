@@ -20,8 +20,8 @@ typedef struct
     point3d_t vertices[];
 } figure_t;
 
+point3d_t create_point(double x, double y, double z);
+
 int load_figure(FILE *file, figure_t **figure);
 
-void scale_figure(figure_t *figure, double scale);
-
-int draw_figure(SDL_Renderer *renderer, const figure_t *figure, double posX, double posY, double rotx, double roty);
+int draw_figure(SDL_Renderer *renderer, const figure_t *figure, double scale, double posX, double posY, double rotX, double rotY);

@@ -3,7 +3,7 @@
 
 int init_sdl()
 {
-    return SDL_Init(SDL_INIT_EVERYTHING) == 0 ? SUCCESS : SDL_INIT_FAIL;
+    return SDL_Init(SDL_INIT_EVERYTHING) == 0 ? SUCCESS : SDL_INIT_ERR;
 }
 
 int create_window_and_renderer(SDL_Window **window, SDL_Renderer **renderer)
@@ -11,8 +11,7 @@ int create_window_and_renderer(SDL_Window **window, SDL_Renderer **renderer)
     int rc = SUCCESS;
 
     if (SDL_CreateWindowAndRenderer(SDL_SCREEN_WIDTH, SDL_SCREEN_HEIGHT, SDL_WINDOW_SHOWN, window, renderer) != 0)
-
-        rc = SDL_WINDOW_FAIL;
+        rc = SDL_INIT_ERR;
 
     return rc;
 }
@@ -30,7 +29,7 @@ void handle_mouse(int *x, int *y, double *dx, double *dy)
     }
 }
 
-void handle_keyboard(int *x, int *y)
+void handle_keyboard(double *x, double *y, float *scale)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -53,6 +52,10 @@ void handle_keyboard(int *x, int *y)
                     break;
             }
         }
+        else if (event.type == SDL_MOUSEWHEEL)
+        {
+            *scale += event.wheel.y * SCROLL_MODIFIER;
+        }
     }
 }
 
@@ -62,7 +65,8 @@ int draw_loop(SDL_Renderer *renderer, const figure_t *figure)
     bool running = true;
     double rotationX = 0, rotationY = 0;
     int lastX = 0, lastY = 0;
-    int posX = 0, posY = 0;
+    double posX = 0, posY = 0;
+    float scale = 200.0f;
     while (running && !rc)
     {
         if (SDL_QuitRequested())
@@ -73,7 +77,7 @@ int draw_loop(SDL_Renderer *renderer, const figure_t *figure)
 
         double dx = 0, dy = 0;
         handle_mouse(&lastX, &lastY, &dx, &dy);
-        handle_keyboard(&posX, &posY);
+        handle_keyboard(&posX, &posY, &scale);
 
         rotationX -= dx;
         rotationY += dy;
@@ -83,7 +87,7 @@ int draw_loop(SDL_Renderer *renderer, const figure_t *figure)
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        rc = draw_figure(renderer, figure, posX, posY, rotationX, rotationY);
+        rc = draw_figure(renderer, figure, scale, posX, posY, rotationX, rotationY);
 
         SDL_RenderPresent(renderer);
 
