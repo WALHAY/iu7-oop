@@ -1,8 +1,6 @@
 #include "../inc/figures.h"
 #include <SDL2/SDL_render.h>
 
-#define DISTANCE 1
-
 point3d_t read_vertex(FILE *file, int *rc)
 {
     point3d_t point;
@@ -75,7 +73,6 @@ int draw_figure(SDL_Renderer *renderer, const figure_t *figure, const figure_sta
     if (renderer == NULL || figure == NULL)
         return NULLPTR_ERR;
 
-    point3d_t screen_shift = create_point((double)SDL_SCREEN_WIDTH / 2 + state->position.y, (double)SDL_SCREEN_HEIGHT / 2, 0);
     for (size_t i = 0; i < figure->edge_count; ++i)
     {
         point3d_t first = figure->vertices[figure->edges[i].start];
@@ -87,14 +84,14 @@ int draw_figure(SDL_Renderer *renderer, const figure_t *figure, const figure_sta
         first = rotate_x(&first, state->rotation.y);
         second = rotate_x(&second, state->rotation.y);
 
-        first = projection(&first, state->position.x);
-        second = projection(&second, state->position.x);
+        first = projection(&first, state->position.z);
+        second = projection(&second, state->position.z);
 
         first = scale_point(&first, state->scale);
         second = scale_point(&second, state->scale);
 
-        first = point_translate(&first, &screen_shift);
-        second = point_translate(&second, &screen_shift);
+        first = point_translate(&first, &state->position);
+        second = point_translate(&second, &state->position);
 
         SDL_RenderDrawLineF(renderer, first.x, first.y, second.x, second.y);
     }

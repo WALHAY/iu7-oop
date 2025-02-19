@@ -1,7 +1,7 @@
 #include "../inc/geometry.h"
 #include <SDL2/SDL_rect.h>
 
-point3d_t create_point(double x, double y, double z)
+vec3d_t create_vec3d(double x, double y, double z)
 {
     point3d_t result;
     result.x = x;
@@ -32,6 +32,6 @@ point3d_t scale_point(const point3d_t *point, double scale)
 
 point3d_t projection(const point3d_t *point, double distance)
 {
-    double z = 1 / (distance - point->z / 2);
+    double z = 10 / (distance - point->z / 2);
     return (point3d_t){point->x * z, point->y * z, point->z};
 }

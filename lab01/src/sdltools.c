@@ -29,7 +29,7 @@ void handle_mouse(int *x, int *y, double *dx, double *dy)
     }
 }
 
-void handle_keyboard(double *x, double *y, float *scale)
+void handle_keyboard(figure_state_t *state)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -39,22 +39,28 @@ void handle_keyboard(double *x, double *y, float *scale)
             switch (event.key.keysym.sym)
             {
                 case SDLK_w:
-                    *x -= 1;
+                    state->position.y -= 5;
                     break;
                 case SDLK_s:
-                    *x += 1;
+                    state->position.y += 5;
                     break;
                 case SDLK_d:
-                    *y += 5;
+                    state->position.x += 5;
                     break;
                 case SDLK_a:
-                    *y -= 5;
+                    state->position.x -= 5;
+                    break;
+                case SDLK_q:
+                    state->position.z += 5;
+                    break;
+                case SDLK_e:
+                    state->position.z -= 5;
                     break;
             }
         }
         else if (event.type == SDL_MOUSEWHEEL)
         {
-            *scale += event.wheel.y * SCROLL_MODIFIER;
+            state->scale += event.wheel.y * SCROLL_MODIFIER;
         }
     }
 }
@@ -75,7 +81,7 @@ int draw_loop(SDL_Renderer *renderer, const figure_t *figure, figure_state_t *st
 
         double dx = 0, dy = 0;
         handle_mouse(&lastX, &lastY, &dx, &dy);
-        handle_keyboard(&state->position.x, &state->position.y, &state->scale);
+        handle_keyboard(state);
 
         state->rotation.x -= dx;
         state->rotation.y += dy;

@@ -4,7 +4,7 @@
 
 typedef struct {
 	point3d_t position;
-	point3d_t rotation;
+	rotation3d_t rotation;
 	float scale;
 } figure_state_t;
 

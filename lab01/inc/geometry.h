@@ -13,7 +13,9 @@ typedef struct
 
 typedef vec3d_t point3d_t;
 
-point3d_t create_point(double x, double y, double z);
+typedef vec3d_t rotation3d_t;
+
+vec3d_t create_vec3d(double x, double y, double z);
 
 point3d_t point_translate(const point3d_t *first, const point3d_t *second);
 
