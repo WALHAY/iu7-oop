@@ -24,3 +24,5 @@ typedef struct
 int load_figure(FILE *file, figure_t **figure);
 
 int draw_figure(SDL_Renderer *renderer, const figure_t *figure, const figure_state_t *state);
+
+void free_figure(figure_t *figure);

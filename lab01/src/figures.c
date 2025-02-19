@@ -97,3 +97,14 @@ int draw_figure(SDL_Renderer *renderer, const figure_t *figure, const figure_sta
     }
     return SUCCESS;
 }
+
+void free_figure(figure_t *figure)
+{
+    if (figure)
+    {
+        if (figure->edges)
+            free(figure->edges);
+
+        free(figure);
+    }
+}
