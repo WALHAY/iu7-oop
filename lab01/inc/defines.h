@@ -12,6 +12,8 @@
 
 #define SCROLL_MODIFIER 3.0f
 
+#define INIT_SCALE 200.0f
+
 enum error_code
 {
     SUCCESS = 0,

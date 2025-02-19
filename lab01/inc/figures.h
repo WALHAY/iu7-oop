@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defines.h"
+#include "figure_state.h"
 #include "geometry.h"
 #include <SDL2/SDL.h>
 #include <memory.h>
@@ -20,8 +21,6 @@ typedef struct
     point3d_t vertices[];
 } figure_t;
 
-point3d_t create_point(double x, double y, double z);
-
 int load_figure(FILE *file, figure_t **figure);
 
-int draw_figure(SDL_Renderer *renderer, const figure_t *figure, double scale, double posX, double posY, double rotX, double rotY);
+int draw_figure(SDL_Renderer *renderer, const figure_t *figure, const figure_state_t *state);

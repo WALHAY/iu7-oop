@@ -59,14 +59,12 @@ void handle_keyboard(double *x, double *y, float *scale)
     }
 }
 
-int draw_loop(SDL_Renderer *renderer, const figure_t *figure)
+int draw_loop(SDL_Renderer *renderer, const figure_t *figure, figure_state_t *state)
 {
     int rc = SUCCESS;
     bool running = true;
-    double rotationX = 0, rotationY = 0;
     int lastX = 0, lastY = 0;
-    double posX = 0, posY = 0;
-    float scale = 200.0f;
+
     while (running && !rc)
     {
         if (SDL_QuitRequested())
@@ -77,17 +75,17 @@ int draw_loop(SDL_Renderer *renderer, const figure_t *figure)
 
         double dx = 0, dy = 0;
         handle_mouse(&lastX, &lastY, &dx, &dy);
-        handle_keyboard(&posX, &posY, &scale);
+        handle_keyboard(&state->position.x, &state->position.y, &state->scale);
 
-        rotationX -= dx;
-        rotationY += dy;
+        state->rotation.x -= dx;
+        state->rotation.y += dy;
 
         // clear viewport
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        rc = draw_figure(renderer, figure, scale, posX, posY, rotationX, rotationY);
+        rc = draw_figure(renderer, figure, state);
 
         SDL_RenderPresent(renderer);
 

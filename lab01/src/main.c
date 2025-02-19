@@ -28,8 +28,12 @@ int main(int argc, char **argv)
     if (!rc)
         rc = load_figure(file, &figure);
 
+    figure_state_t *state = NULL;
     if (!rc)
-        rc = draw_loop(renderer, figure);
+        state = init_state(&rc);
+
+    if (!rc)
+        rc = draw_loop(renderer, figure, state);
 
     destroy_sdl(window, renderer);
 

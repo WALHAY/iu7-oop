@@ -1,6 +1,15 @@
 #include "../inc/geometry.h"
 #include <SDL2/SDL_rect.h>
 
+point3d_t create_point(double x, double y, double z)
+{
+    point3d_t result;
+    result.x = x;
+    result.y = y;
+    result.z = z;
+    return result;
+}
+
 point3d_t point_translate(const point3d_t *first, const point3d_t *second)
 {
     return (point3d_t){first->x + second->x, first->y + second->y, first->z + second->z};
