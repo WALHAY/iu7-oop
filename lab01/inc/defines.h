@@ -14,6 +14,8 @@
 
 #define INIT_SCALE 200.0f
 
+#define SCALE_FACTOR 500.0f
+
 enum error_code
 {
     SUCCESS = 0,

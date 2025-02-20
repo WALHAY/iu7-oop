@@ -1,5 +1,7 @@
 #include "../inc/sdltools.h"
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keyboard.h>
+#include <SDL2/SDL_scancode.h>
 
 int init_sdl()
 {
@@ -18,6 +20,7 @@ int create_window_and_renderer(SDL_Window **window, SDL_Renderer **renderer)
 
 void handle_input(figure_state_t *state)
 {
+    SDL_PumpEvents();
     static int x = 0, y = 0;
     int nx = 0, ny = 0;
     SDL_GetMouseState(&nx, &ny);
@@ -29,38 +32,19 @@ void handle_input(figure_state_t *state)
         y = ny;
     }
 
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        if (event.type == SDL_KEYDOWN)
-        {
-            switch (event.key.keysym.sym)
-            {
-                case SDLK_w:
-                    state->position.y -= 5;
-                    break;
-                case SDLK_s:
-                    state->position.y += 5;
-                    break;
-                case SDLK_d:
-                    state->position.x += 5;
-                    break;
-                case SDLK_a:
-                    state->position.x -= 5;
-                    break;
-                case SDLK_q:
-                    state->position.z += 5;
-                    break;
-                case SDLK_e:
-                    state->position.z -= 5;
-                    break;
-            }
-        }
-        else if (event.type == SDL_MOUSEWHEEL)
-        {
-            state->scale += event.wheel.y * SCROLL_MODIFIER;
-        }
-    }
+    const Uint8 *keys = SDL_GetKeyboardState(0);
+    if (keys[SDL_SCANCODE_W])
+        state->position.y -= 5;
+    if (keys[SDL_SCANCODE_S])
+        state->position.y += 5;
+    if (keys[SDL_SCANCODE_D])
+        state->position.x += 5;
+    if (keys[SDL_SCANCODE_A])
+        state->position.x -= 5;
+    if (keys[SDL_SCANCODE_Q])
+        state->position.z += 5;
+    if (keys[SDL_SCANCODE_E])
+        state->position.z -= 5;
 }
 
 int draw_loop(SDL_Renderer *renderer, const figure_t *figure, figure_state_t *state)

@@ -32,6 +32,6 @@ point3d_t scale_point(const point3d_t *point, double scale)
 
 point3d_t projection(const point3d_t *point, double distance)
 {
-    double z = 10 / (distance - point->z / 2);
+    double z = SCALE_FACTOR / (distance - point->z / 2);
     return create_vec3d(point->x / z, point->y / z, point->z);
 }
