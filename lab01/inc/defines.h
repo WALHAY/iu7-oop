@@ -13,6 +13,7 @@
 #define SCROLL_MODIFIER 3.0f
 
 #define INIT_SCALE 200.0f
+#define WORLD_SCALE 1000
 
 #define PI 3.14
 
