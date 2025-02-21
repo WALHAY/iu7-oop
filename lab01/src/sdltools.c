@@ -1,5 +1,6 @@
 #include "../inc/sdltools.h"
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keyboard.h>
 
 int init_sdl()
 {
@@ -30,33 +31,37 @@ void handle_input(figure_state_t *state)
     }
 
     SDL_Event event;
+    SDL_PumpEvents();
+
+    const Uint8 *keys = SDL_GetKeyboardState(0);
+
+    // movement
+    if (keys[SDL_SCANCODE_S])
+        state->position.y += 5;
+    if (keys[SDL_SCANCODE_W])
+        state->position.y -= 5;
+    if (keys[SDL_SCANCODE_D])
+        state->position.x += 5;
+    if (keys[SDL_SCANCODE_A])
+        state->position.x -= 5;
+    if (keys[SDL_SCANCODE_Q])
+        state->position.z += 5;
+    if (keys[SDL_SCANCODE_E])
+        state->position.z -= 5;
+
+    // rotation
+    if (keys[SDL_SCANCODE_UP])
+        state->rotation.y += 5;
+    if (keys[SDL_SCANCODE_DOWN])
+        state->rotation.y -= 5;
+    if (keys[SDL_SCANCODE_LEFT])
+        state->rotation.x += 5;
+    if (keys[SDL_SCANCODE_RIGHT])
+        state->rotation.x -= 5;
+
     while (SDL_PollEvent(&event))
     {
-        if (event.type == SDL_KEYDOWN)
-        {
-            switch (event.key.keysym.sym)
-            {
-                case SDLK_w:
-                    state->position.y -= 5;
-                    break;
-                case SDLK_s:
-                    state->position.y += 5;
-                    break;
-                case SDLK_d:
-                    state->position.x += 5;
-                    break;
-                case SDLK_a:
-                    state->position.x -= 5;
-                    break;
-                case SDLK_q:
-                    state->position.z += 5;
-                    break;
-                case SDLK_e:
-                    state->position.z -= 5;
-                    break;
-            }
-        }
-        else if (event.type == SDL_MOUSEWHEEL)
+        if (event.type == SDL_MOUSEWHEEL)
         {
             state->scale += event.wheel.y * SCROLL_MODIFIER;
         }

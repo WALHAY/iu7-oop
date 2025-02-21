@@ -8,11 +8,13 @@
 #define FPS 144
 #define FPS_INTERVAL (1000 / FPS)
 
-#define MOUSE_SENSITIVITY 200.0f
+#define MOUSE_SENSITIVITY 1.0f
 
 #define SCROLL_MODIFIER 3.0f
 
 #define INIT_SCALE 200.0f
+
+#define PI 3.14
 
 enum error_code
 {
