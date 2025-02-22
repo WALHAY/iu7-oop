@@ -1,5 +1,4 @@
 #include "../inc/figures.h"
-#include <SDL2/SDL_render.h>
 
 point3d_t read_vertex(FILE *file, int *rc)
 {
@@ -68,9 +67,9 @@ int load_figure(FILE *file, figure_t **figure)
     return rc;
 }
 
-int draw_figure(SDL_Renderer *renderer, const figure_t *figure, const figure_state_t *state)
+int draw_figure(const graphics_t *graphics, const figure_state_t *state, const figure_t *figure)
 {
-    if (renderer == NULL || figure == NULL)
+    if (graphics == NULL || figure == NULL)
         return NULLPTR_ERR;
 
     for (size_t i = 0; i < figure->edge_count; ++i)
@@ -93,7 +92,7 @@ int draw_figure(SDL_Renderer *renderer, const figure_t *figure, const figure_sta
         first = point_translate(&first, &state->position);
         second = point_translate(&second, &state->position);
 
-        SDL_RenderDrawLineF(renderer, first.x, first.y, second.x, second.y);
+        graphics_draw_line(graphics, first.x, first.y, second.x, second.y);
     }
     return SUCCESS;
 }

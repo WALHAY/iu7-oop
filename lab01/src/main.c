@@ -1,7 +1,8 @@
 #include "../inc/defines.h"
+#include "../inc/draw_logic.h"
 #include "../inc/figures.h"
 #include "../inc/fileio.h"
-#include "../inc/sdltools.h"
+#include "../inc/graphics.h"
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -10,15 +11,10 @@ int main(int argc, char **argv)
     if (argc != ARGC)
         return ARGC_ERR;
 
-    int rc = init_sdl();
-
     const char *filename = argv[1];
 
-    SDL_Renderer *renderer = NULL;
-    SDL_Window *window = NULL;
-
-    if (!rc)
-        rc = create_window_and_renderer(&window, &renderer);
+    graphics_t *graphics = NULL;
+    int rc = graphics_init(&graphics);
 
     FILE *file = NULL;
     if (!rc)
@@ -33,9 +29,7 @@ int main(int argc, char **argv)
         state = init_state(&rc);
 
     if (!rc)
-        rc = draw_loop(renderer, figure, state);
-
-    destroy_sdl(window, renderer);
+        rc = run_draw_loop(graphics, state, figure);
 
     free_figure(figure);
     free_state(state);

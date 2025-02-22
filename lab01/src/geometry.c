@@ -1,5 +1,4 @@
 #include "../inc/geometry.h"
-#include <SDL2/SDL_rect.h>
 
 vec3d_t create_vec3d(double x, double y, double z)
 {
