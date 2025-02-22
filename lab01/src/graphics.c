@@ -1,4 +1,5 @@
 #include "../inc/graphics.h"
+#include <SDL2/SDL_events.h>
 
 struct graphics_t
 {
@@ -77,16 +78,27 @@ int graphics_event_handler(figure_state_t *state, const graphics_t *graphics_t)
         return NULLPTR_ERR;
 
     SDL_PumpEvents();
+
     static int x = 0, y = 0;
+    static bool mouse_pressed = false;
     int nx = 0, ny = 0;
+    SDL_Event event;
     SDL_GetMouseState(&nx, &ny);
-    if (nx != x || ny != y)
+    if (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_MOUSEBUTTONDOWN)
+            mouse_pressed = true;
+        else if (event.type == SDL_MOUSEBUTTONUP)
+            mouse_pressed = false;
+    }
+
+    if (mouse_pressed)
     {
         state->rotation.x += (x - nx) / MOUSE_SENSITIVITY;
         state->rotation.y += (y - ny) / MOUSE_SENSITIVITY;
-        x = nx;
-        y = ny;
     }
+    x = nx;
+    y = ny;
 
     const Uint8 *keys = SDL_GetKeyboardState(0);
     if (keys[SDL_SCANCODE_W])
@@ -101,6 +113,15 @@ int graphics_event_handler(figure_state_t *state, const graphics_t *graphics_t)
         state->position.z += 5;
     if (keys[SDL_SCANCODE_E])
         state->position.z -= 5;
+
+    if (keys[SDL_SCANCODE_UP])
+        state->rotation.y -= 5;
+    if (keys[SDL_SCANCODE_DOWN])
+        state->rotation.y += 5;
+    if (keys[SDL_SCANCODE_LEFT])
+        state->rotation.x += 5;
+    if (keys[SDL_SCANCODE_RIGHT])
+        state->rotation.x -= 5;
 
     return SUCCESS;
 }

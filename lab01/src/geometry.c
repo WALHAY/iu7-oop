@@ -14,7 +14,7 @@ point3d_t point_translate(const point3d_t *first, const point3d_t *second)
     return create_vec3d(first->x + second->x, first->y + second->y, first->z + second->z);
 }
 
-inline double angle_to_rad(double angle)
+double angle_to_rad(double angle)
 {
     return angle * PI / 180;
 }
