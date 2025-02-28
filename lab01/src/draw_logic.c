@@ -16,10 +16,10 @@ int run_draw_loop(graphics_t *graphics, figure_state_t *state, const figure_t *f
 
         graphics_event_handler(state, graphics);
 
-        graphic_set_color(graphics, 0, 0, 0, 255);
+        graphics_set_color(graphics, 0, 0, 0, 255);
         graphics_clear(graphics);
 
-        graphic_set_color(graphics, 255, 255, 255, 255);
+        graphics_set_color(graphics, 255, 255, 255, 255);
         rc = draw_figure(graphics, state, figure);
 
         graphics_show(graphics);

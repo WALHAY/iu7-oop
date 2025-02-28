@@ -8,6 +8,7 @@
 #include <SDL2/SDL_quit.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
+#include <SDL2/SDL_events.h>
 
 typedef struct graphics_t graphics_t;
 
@@ -15,7 +16,7 @@ int graphics_init(graphics_t **graphics);
 
 int graphics_draw_line(const graphics_t *graphics, float x1, float y1, float x2, float y2);
 
-int graphic_set_color(const graphics_t *graphics, int r, int g, int b, int a);
+int graphics_set_color(const graphics_t *graphics, int r, int g, int b, int a);
 
 int graphics_clear(const graphics_t *graphics);
 

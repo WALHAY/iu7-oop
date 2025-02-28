@@ -1,5 +1,4 @@
 #include "../inc/graphics.h"
-#include <SDL2/SDL_events.h>
 
 struct graphics_t
 {
@@ -43,7 +42,7 @@ int graphics_clear(const graphics_t *graphics)
     return SUCCESS;
 }
 
-int graphic_set_color(const graphics_t *graphics, int r, int g, int b, int a)
+int graphics_set_color(const graphics_t *graphics, int r, int g, int b, int a)
 {
     if (!graphics || !graphics->renderer)
         return NULLPTR_ERR;
