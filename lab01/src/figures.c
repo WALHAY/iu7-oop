@@ -92,7 +92,7 @@ int draw_figure(const graphics_t *graphics, const figure_state_t *state, const f
         first = point_translate(&first, &state->position);
         second = point_translate(&second, &state->position);
 
-        graphics_draw_line(graphics, first.x, first.y, second.x, second.y);
+        graphics_draw_line(graphics, &first, &second);
     }
     return SUCCESS;
 }

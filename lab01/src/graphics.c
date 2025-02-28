@@ -23,12 +23,12 @@ int graphics_init(graphics_t **graphics)
     return rc;
 }
 
-int graphics_draw_line(const graphics_t *graphics, float x1, float y1, float x2, float y2)
+int graphics_draw_line(const graphics_t *graphics, const point3d_t *a, const point3d_t *b)
 {
     if (!graphics || !graphics->renderer)
         return NULLPTR_ERR;
 
-    SDL_RenderDrawLineF(graphics->renderer, x1, y1, x2, y2);
+    SDL_RenderDrawLineF(graphics->renderer, a->x, a->y, b->x, b->y);
 
     return SUCCESS;
 }

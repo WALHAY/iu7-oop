@@ -14,7 +14,7 @@ typedef struct graphics_t graphics_t;
 
 int graphics_init(graphics_t **graphics);
 
-int graphics_draw_line(const graphics_t *graphics, float x1, float y1, float x2, float y2);
+int graphics_draw_line(const graphics_t *graphics, const point3d_t *a, const point3d_t *b);
 
 int graphics_set_color(const graphics_t *graphics, int r, int g, int b, int a);
 
