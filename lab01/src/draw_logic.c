@@ -6,7 +6,7 @@ int run_draw_loop(graphics_t *graphics, figure_state_t *state, const figure_t *f
         return NULLPTR_ERR;
 
     int rc = SUCCESS;
-    static bool running = true;
+    bool running = true;
     while (!rc && running)
     {
         if (graphics_quit_requested(&rc, graphics))
