@@ -1,5 +1,7 @@
 #include "../inc/figures.h"
 
+// TODO: те же самые ошибки для данного файла
+
 point3d_t read_vertex(FILE *file, int *rc)
 {
     point3d_t point;

@@ -1,5 +1,6 @@
 #include "../inc/graphics.h"
 
+// TODO: функции зависят от СДЛа, нужно сделать более глубокую обертку
 struct graphics_t
 {
     SDL_Window *window;
@@ -42,6 +43,7 @@ int graphics_clear(const graphics_t *graphics)
     return SUCCESS;
 }
 
+// TODO: отвязать хардкод цвета и вынести в абстракцию цвета
 int graphics_set_color(const graphics_t *graphics, int r, int g, int b, int a)
 {
     if (!graphics || !graphics->renderer)

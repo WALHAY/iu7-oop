@@ -1,5 +1,6 @@
 #include "../inc/geometry.h"
 
+// TODO: хреновая обертка точки?!?!
 vec3d_t create_vec3d(double x, double y, double z)
 {
     point3d_t result;
