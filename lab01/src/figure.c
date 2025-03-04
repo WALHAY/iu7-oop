@@ -69,7 +69,23 @@ int load_figure(FILE *file, figure_t **figure)
     return rc;
 }
 
-int draw_figure(const graphics_t *graphics, const figure_state_t *state, const figure_t *figure)
+int figure_move(figure_t *figure, const point3d_t offset)
+{
+    for (size_t i = 0; i < figure->vertex_count; ++i)
+        point_move(figure->vertices + i);
+}
+
+int figure_rotate(figure_t *figure, const point3d_t *center, const rotation3d_t *rotation)
+{
+    for (size_t i = 0; i < figure->vertex_count; ++i)
+        point_rotate(figure->vertices + i, center, rotation);
+}
+
+int figure_scale(figure_t *figure, const point3d_t *center, double scale)
+{
+}
+
+int draw_figure(const graphics_t *graphics, const figure_t *figure)
 {
     if (graphics == NULL || figure == NULL)
         return NULLPTR_ERR;
@@ -78,21 +94,6 @@ int draw_figure(const graphics_t *graphics, const figure_state_t *state, const f
     {
         point3d_t first = figure->vertices[figure->edges[i].start];
         point3d_t second = figure->vertices[figure->edges[i].end];
-
-        first = rotate_y(&first, state->rotation.x);
-        second = rotate_y(&second, state->rotation.x);
-
-        first = rotate_x(&first, state->rotation.y);
-        second = rotate_x(&second, state->rotation.y);
-
-        first = projection(&first, state->position.z);
-        second = projection(&second, state->position.z);
-
-        first = scale_point(&first, state->scale);
-        second = scale_point(&second, state->scale);
-
-        first = point_translate(&first, &state->position);
-        second = point_translate(&second, &state->position);
 
         graphics_draw_line(graphics, &first, &second);
     }

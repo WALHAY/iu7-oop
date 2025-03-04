@@ -1,8 +1,8 @@
 #pragma once 
 
 #include <stdbool.h>
-#include "figure_state.h"
 #include "../inc/defines.h"
+#include "vec3d.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_quit.h>
@@ -21,12 +21,6 @@ int graphics_set_color(const graphics_t *graphics, int r, int g, int b, int a);
 int graphics_clear(const graphics_t *graphics);
 
 int graphics_show(const graphics_t *graphics);
-
-bool graphics_quit_requested(int *rc, const graphics_t *graphics);
-
-int graphics_event_handler(figure_state_t *state, const graphics_t *graphics);
-
-bool graphics_valid(const graphics_t *graphics);
 
 int graphics_delay(const graphics_t *graphics_t, int delay);
 
