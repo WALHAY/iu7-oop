@@ -1,20 +1,21 @@
 #pragma once
 
+#include "graphics.hpp"
 #include "point.hpp"
+#include "vertices.hpp"
 #include <cstddef>
+#include <cstdio>
 
 typedef struct {
-	point3d_t *first;
-	point3d_t *second;
+	const point3d_t *first;
+	const point3d_t *second;
 } edge_t;
 
 typedef struct {
-	size_t edge_count;
+	size_t count;
 	edge_t *edges;
 } edges_t;
 
-edge_t edge_init(point3d_t *first, point3d_t *second);
+int edges_load(edges_t &edges, FILE *file, const vertices_t &vertices);
 
-int draw_edge(const edge_t &edge);
-
-int draw_edges(const edges_t &edges);
+int draw_edges(const graphics_t &graphics, const edges_t &edges);

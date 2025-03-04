@@ -2,6 +2,14 @@
 #include "defines.hpp"
 #include <math.h>
 
+vec2d_t create_vec2d(double x, double y)
+{
+    vec2d_t result;
+    result.x = x;
+    result.y = y;
+    return result;
+}
+
 vec3d_t create_vec3d(double x, double y, double z)
 {
     vec3d_t result;
@@ -11,7 +19,7 @@ vec3d_t create_vec3d(double x, double y, double z)
     return result;
 }
 
-void point_transpose(point3d_t &first, const point3d_t &second)
+void point_move(point3d_t &first, const point3d_t &second)
 {
 	first.x += second.x;
 	first.y += second.y;
@@ -78,4 +86,9 @@ void point_scale(point3d_t &point, double scale)
 	point.x *= scale;
 	point.y *= scale;
 	point.z *= scale;
+}
+
+point2d_t point_to_screen(const point3d_t &point)
+{
+	return {point.x, point.y};
 }

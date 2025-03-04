@@ -1,8 +1,10 @@
 #pragma once
 
 #include "defines.hpp"
+#include "edges.hpp"
 #include "graphics.hpp"
 #include "point.hpp"
+#include "vertices.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
 #include <memory.h>
@@ -10,21 +12,11 @@
 
 typedef struct
 {
-    size_t start;
-    size_t end;
-} edge_t;
-
-typedef struct
-{
-    size_t edge_count;
-    size_t vertex_count;
-    edge_t *edges;
-    point3d_t vertices[];
+	vertices_t vertices;
+	edges_t edges;
 } figure_t;
 
-int figure_load(figure_t **figure, const char *figure_path);
-
-void figure_draw(const graphics_t &graphics, const figure_t &figure);
+int figure_load(figure_t &figure, const char *figure_path);
 
 void figure_move(figure_t &figure, const point3d_t &offset);
 

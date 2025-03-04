@@ -34,7 +34,7 @@ int graphics_init(graphics_t **graphics)
     return rc;
 }
 
-int graphics_draw_line(const graphics_t &graphics, const point3d_t &a, const point3d_t &b)
+int graphics_draw_line(const graphics_t &graphics, const point2d_t &a, const point2d_t &b)
 {
     if (graphics.renderer)
         return NULLPTR_ERR;

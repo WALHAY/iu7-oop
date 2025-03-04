@@ -8,7 +8,7 @@ int run_app(const graphics_t &graphics, const char *figure_path)
 {
 	static figure_t *figure = NULL;
 	if(!figure)
-		figure_load(&figure, figure_path);
+		figure_load(*figure, figure_path);
 
 	bool running = true;
 	while(running)

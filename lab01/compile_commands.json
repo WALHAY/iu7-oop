@@ -76,5 +76,18 @@
     "directory": "/home/WALHAY/Study/iu7-oop/lab01",
     "file": "/home/WALHAY/Study/iu7-oop/lab01/src/point.cxx",
     "output": "/home/WALHAY/Study/iu7-oop/lab01/app.exe"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Iinc/",
+      "-o",
+      "app.exe",
+      "src/projection.cxx"
+    ],
+    "directory": "/home/WALHAY/Study/iu7-oop/lab01",
+    "file": "/home/WALHAY/Study/iu7-oop/lab01/src/projection.cxx",
+    "output": "/home/WALHAY/Study/iu7-oop/lab01/app.exe"
   }
 ]
