@@ -1,8 +1,6 @@
 #pragma once
 
-#include "defines.hpp"
 #include "edges.hpp"
-#include "graphics.hpp"
 #include "point.hpp"
 #include "vertices.hpp"
 #include <SDL2/SDL.h>
