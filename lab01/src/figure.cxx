@@ -23,7 +23,6 @@ int figure_load(figure_t &figure, const char *figure_path)
 	if(!rc)
 	{
 		figure.vertices = vertices;
-		printf("Text 2: %zu\n", figure.vertices.count);
 		figure.edges = edges;
 	}
 

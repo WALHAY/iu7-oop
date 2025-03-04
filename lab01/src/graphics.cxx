@@ -36,7 +36,7 @@ int graphics_init(graphics_t **graphics)
 
 int graphics_draw_line(const graphics_t &graphics, const point2d_t &a, const point2d_t &b)
 {
-    if (graphics.renderer)
+    if (!graphics.renderer)
         return NULLPTR_ERR;
 
     SDL_RenderDrawLineF(graphics.renderer, a.x, a.y, b.x, b.y);
