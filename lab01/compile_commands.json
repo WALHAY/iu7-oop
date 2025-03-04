@@ -1,1 +1,80 @@
-[]
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Iinc/",
+      "-o",
+      "app.exe",
+      "src/application.cxx"
+    ],
+    "directory": "/home/WALHAY/Study/iu7-oop/lab01",
+    "file": "/home/WALHAY/Study/iu7-oop/lab01/src/application.cxx",
+    "output": "/home/WALHAY/Study/iu7-oop/lab01/app.exe"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Iinc/",
+      "-o",
+      "app.exe",
+      "src/edges.cxx"
+    ],
+    "directory": "/home/WALHAY/Study/iu7-oop/lab01",
+    "file": "/home/WALHAY/Study/iu7-oop/lab01/src/edges.cxx",
+    "output": "/home/WALHAY/Study/iu7-oop/lab01/app.exe"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Iinc/",
+      "-o",
+      "app.exe",
+      "src/figure.cxx"
+    ],
+    "directory": "/home/WALHAY/Study/iu7-oop/lab01",
+    "file": "/home/WALHAY/Study/iu7-oop/lab01/src/figure.cxx",
+    "output": "/home/WALHAY/Study/iu7-oop/lab01/app.exe"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Iinc/",
+      "-o",
+      "app.exe",
+      "src/graphics.cxx"
+    ],
+    "directory": "/home/WALHAY/Study/iu7-oop/lab01",
+    "file": "/home/WALHAY/Study/iu7-oop/lab01/src/graphics.cxx",
+    "output": "/home/WALHAY/Study/iu7-oop/lab01/app.exe"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Iinc/",
+      "-o",
+      "app.exe",
+      "src/main.cxx"
+    ],
+    "directory": "/home/WALHAY/Study/iu7-oop/lab01",
+    "file": "/home/WALHAY/Study/iu7-oop/lab01/src/main.cxx",
+    "output": "/home/WALHAY/Study/iu7-oop/lab01/app.exe"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Iinc/",
+      "-o",
+      "app.exe",
+      "src/point.cxx"
+    ],
+    "directory": "/home/WALHAY/Study/iu7-oop/lab01",
+    "file": "/home/WALHAY/Study/iu7-oop/lab01/src/point.cxx",
+    "output": "/home/WALHAY/Study/iu7-oop/lab01/app.exe"
+  }
+]
