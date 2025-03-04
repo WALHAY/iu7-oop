@@ -1,7 +1,6 @@
 #include "application.hpp"
 #include "figure.hpp"
 #include "graphics.hpp"
-#include "point.hpp"
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_quit.h>
 
@@ -24,6 +23,8 @@ int run_app(const graphics_t &graphics, const char *figure_path)
 
 		graphics_set_color(graphics, 255, 255, 255, 255);
 		edges_draw(graphics,figure.edges);
+
+		figure_move(figure, create_vec3d(0.1, 0, 0));
 
 		graphics_show(graphics);
 		graphics_delay(graphics, FPS_INTERVAL);

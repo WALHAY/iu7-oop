@@ -31,14 +31,17 @@ int figure_load(figure_t &figure, const char *figure_path)
 
 void figure_move(figure_t &figure, const point3d_t &offset)
 {
+	vertices_move(figure.vertices, offset);
 }
 
 void figure_rotate(figure_t &figure, const point3d_t &center, const rotation3d_t &rotation)
 {
+	vertices_rotate(figure.vertices, center, rotation);
 }
 
 void figure_scale(figure_t &figure, const point3d_t &center, double scale)
 {
+	vertices_scale(figure.vertices, center, scale);
 }
 
 void free_figure(figure_t &figure)

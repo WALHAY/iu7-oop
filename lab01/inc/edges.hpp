@@ -1,7 +1,6 @@
 #pragma once
 
 #include "graphics.hpp"
-#include "point.hpp"
 #include "vertices.hpp"
 #include <cstddef>
 #include <cstdio>

@@ -47,3 +47,21 @@ int vertices_load(vertices_t &vertices, FILE *file)
 
 	return rc;
 }
+
+void vertices_move(vertices_t &vertices, const point3d_t &offset)
+{
+	for(size_t i = 0; i < vertices.count; ++i)
+		point_move(vertices.vertices[i], offset);
+}
+
+void vertices_rotate(vertices_t &vertices, const point3d_t &center, const rotation3d_t &rotation)
+{
+	for(size_t i = 0; i < vertices.count; ++i)
+		point_rotate(vertices.vertices[i], center, rotation);
+}
+
+void vertices_scale(vertices_t &vertices, const point3d_t &center, double scale)
+{
+	for(size_t i = 0; i < vertices.count; ++i)
+		point_scale(vertices.vertices[i], scale);
+}
