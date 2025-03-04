@@ -6,12 +6,14 @@
 
 int run_app(const graphics_t &graphics, const char *figure_path)
 {
-	static figure_t *figure = NULL;
-	if(!figure)
-		figure_load(*figure, figure_path);
+	figure_t figure;
+	int rc = figure_load(figure, figure_path);
+
+	/*for(size_t i = 0; i < figure->vertices.count; ++i)*/
+	/*	printf("%lf %lf %lf", figure->vertices.vertices->x, figure->vertices.vertices->y, figure->vertices.vertices->z);*/
 
 	bool running = true;
-	while(running)
+	while(!rc && running)
 	{
 		if(SDL_QuitRequested())
 		{
@@ -21,6 +23,8 @@ int run_app(const graphics_t &graphics, const char *figure_path)
 	
 		graphics_set_color(graphics, 255, 255, 255, 255);
 		graphics_clear(graphics);
+
+		/*draw_edges(graphics,figure->edges);*/
 
 		graphics_show(graphics);
 	}
