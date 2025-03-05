@@ -16,6 +16,8 @@ int graphics_clear(const graphics_t &graphics);
 
 int graphics_show(const graphics_t &graphics);
 
+int graphics_get_key_pressed(const graphics_t &graphics, bool *keys);
+
 int graphics_delay(const graphics_t &graphics_t, int delay);
 
 void graphics_destroy(graphics_t &graphics);

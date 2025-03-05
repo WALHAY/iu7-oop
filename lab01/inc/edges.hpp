@@ -18,3 +18,5 @@ typedef struct {
 int edges_load(edges_t &edges, FILE *file, const vertices_t &vertices);
 
 int edges_draw(const graphics_t &graphics, const edges_t &edges);
+
+void edges_destroy(edges_t &edges);

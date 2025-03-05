@@ -1,4 +1,5 @@
 #include "figure.hpp"
+#include "edges.hpp"
 #include "point.hpp"
 #include "vertices.hpp"
 
@@ -15,7 +16,6 @@ int figure_load(figure_t &figure, const char *figure_path)
 
 	if(!rc)
 		rc = vertices_load(vertices, file);
-
 
 	if(!rc)
 		rc = edges_load(edges, file, vertices);
@@ -46,4 +46,6 @@ void figure_scale(figure_t &figure, const point3d_t &center, double scale)
 
 void free_figure(figure_t &figure)
 {
+	vertices_destroy(figure.vertices);
+	edges_destroy(figure.edges);
 }

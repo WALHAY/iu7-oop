@@ -1,4 +1,5 @@
 #include "graphics.hpp"
+#include "SDL2/SDL_keycode.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
@@ -69,6 +70,23 @@ int graphics_show(const graphics_t &graphics)
 
     SDL_RenderPresent(graphics.renderer);
     return SUCCESS;
+}
+
+int graphics_get_key_pressed(const graphics_t &graphics, bool *keys)
+{
+	SDL_Event event;
+	while(SDL_PollEvent(&event))
+	{
+		if(event.type == SDL_KEYDOWN)
+		{
+			keys[event.key.keysym.sym] = true;
+		} else if(event.type == SDL_KEYUP)
+		{
+			keys[event.key.keysym.sym] = false;
+		}
+	}
+
+	return SUCCESS;
 }
 
 int graphics_delay(const graphics_t &graphics, int delay)

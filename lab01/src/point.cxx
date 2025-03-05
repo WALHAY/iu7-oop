@@ -30,8 +30,8 @@ static void point_rotate_x(point3d_t &point, double angle)
 {
 	double rad = angle * PI / 180;
 
-    double cosv = cos(angle);
-    double sinv = sin(angle);
+    double cosv = cos(rad);
+    double sinv = sin(rad);
 
 	double y = point.y;
 	double z = point.z;
@@ -44,8 +44,8 @@ static void point_rotate_y(point3d_t &point, double angle)
 {
 	double rad = angle * PI / 180;
 
-    double cosv = cos(angle);
-    double sinv = sin(angle);
+    double cosv = cos(rad);
+    double sinv = sin(rad);
 
 	double x = point.x;
 	double z = point.z;
@@ -58,8 +58,8 @@ static void point_rotate_z(point3d_t &point, double angle)
 {
 	double rad = angle * PI / 180;
 
-    double cosv = cos(angle);
-    double sinv = sin(angle);
+    double cosv = cos(rad);
+    double sinv = sin(rad);
 
 	double x = point.x;
 	double y = point.y;

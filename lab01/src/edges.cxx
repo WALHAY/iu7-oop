@@ -70,3 +70,8 @@ int edges_draw(const graphics_t &graphics, const edges_t &edges)
 		draw_edge(graphics, edges.edges[i]);
 	return SUCCESS;
 }
+
+void edges_destroy(edges_t &edges)
+{
+	free(edges.edges);
+}
