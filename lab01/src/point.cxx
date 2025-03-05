@@ -81,14 +81,11 @@ void point_rotate(point3d_t &point, const point3d_t &center, const rotation3d_t 
 	point.z = zeroed.z + center.z;
 }
 
-void point_scale(point3d_t &point, double scale)
+void point_scale(point3d_t &point, const point3d_t &center, double scale)
 {
+	point_move(point, center);
 	point.x *= scale;
 	point.y *= scale;
 	point.z *= scale;
-}
-
-point2d_t point_to_screen(const point3d_t &point)
-{
-	return {point.x, point.y};
+	point_move(point, create_vec3d(center.x, center.y, center.z));
 }

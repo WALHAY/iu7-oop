@@ -63,7 +63,7 @@ void vertices_rotate(vertices_t &vertices, const point3d_t &center, const rotati
 void vertices_scale(vertices_t &vertices, const point3d_t &center, double scale)
 {
 	for(size_t i = 0; i < vertices.count; ++i)
-		point_scale(vertices.vertices[i], scale);
+		point_scale(vertices.vertices[i], center, scale);
 }
 
 void vertices_destroy(vertices_t &vertices)

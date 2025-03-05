@@ -2,11 +2,12 @@
 #include "SDL2/SDL_keycode.h"
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keyboard.h>
 #include <SDL2/SDL_quit.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
-#include <SDL2/SDL_events.h>
 
 struct graphics_t
 {
@@ -20,8 +21,8 @@ int graphics_init(graphics_t **graphics)
     int rc = SDL_Init(SDL_INIT_EVERYTHING) == 0 ? SUCCESS : SDL_INIT_ERR;
 
     graphics_t *new_graphics = NULL;
-	if(!rc)
-		new_graphics = (graphics_t*)malloc(sizeof(graphics_t));
+    if (!rc)
+        new_graphics = (graphics_t *)malloc(sizeof(graphics_t));
 
     if (!rc && new_graphics)
     {
@@ -72,21 +73,23 @@ int graphics_show(const graphics_t &graphics)
     return SUCCESS;
 }
 
-int graphics_get_key_pressed(const graphics_t &graphics, bool *keys)
+int graphics_key_pressed(const graphics_t &graphics, const char key)
 {
-	SDL_Event event;
-	while(SDL_PollEvent(&event))
-	{
-		if(event.type == SDL_KEYDOWN)
-		{
-			keys[event.key.keysym.sym] = true;
-		} else if(event.type == SDL_KEYUP)
-		{
-			keys[event.key.keysym.sym] = false;
-		}
-	}
+    bool pressed = false;
+    int size = 0;
+    const Uint8 *state = SDL_GetKeyboardState(&size);
 
-	return SUCCESS;
+    for (int i = 0; i < size; ++i)
+    {
+        if (state[i])
+        {
+            SDL_Keycode code = SDL_GetKeyFromScancode((SDL_Scancode)i);
+            if (code == key)
+                pressed = true;
+        }
+    }
+
+    return pressed;
 }
 
 int graphics_delay(const graphics_t &graphics, int delay)

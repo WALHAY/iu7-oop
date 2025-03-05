@@ -1,59 +1,39 @@
 #include "application.hpp"
-#include "SDL2/SDL_keycode.h"
 #include "figure.hpp"
 #include "graphics.hpp"
 #include "point.hpp"
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_quit.h>
 
-static void event_move(point3d_t &event, double x, double y, double z)
+static int get_axis_value(const graphics_t &graphics, const char positive, const char negative)
 {
-    event.x = x;
-    event.y = y;
-    event.z = z;
-}
-
-static void event_rotate(rotation3d_t &event, double x, double y, double z)
-{
-    event.x = x;
-    event.y = y;
-    event.z = z;
+	bool positive_pressed = graphics_key_pressed(graphics, positive);
+	bool negative_pressed = graphics_key_pressed(graphics, negative);
+	return positive_pressed ^ negative_pressed ? (positive_pressed ? 1 : -1) : 0;
 }
 
 int populate_event(const graphics_t &graphics, event_t &event)
 {
-    bool *keys = (bool *)malloc(sizeof(bool) * 255);
-    graphics_get_key_pressed(graphics, keys);
-    for (size_t i = 0; i < 255; ++i)
-    {
-        if (keys[i])
-        {
-            switch (i)
-            {
-                case 'a':
-					event.type = MOVE;
-                    event_move(event.move, 1, 0, 0);
-                    break;
-                case 'd':
-					event.type = MOVE;
-                    event_move(event.move, -1, 0, 0);
-                    break;
-                case 'w':
-					event.type = MOVE;
-                    event_move(event.move, 0, -1, 0);
-                    break;
-                case 's':
-					event.type = MOVE;
-                    event_move(event.move, 0, 1, 0);
-                    break;
+	int move_x = get_axis_value(graphics, 'd', 'a');
+	int move_y = get_axis_value(graphics, 's', 'w');
+	int move_z = get_axis_value(graphics, 'e', 'q');
 
-				case 'z':
-					event.type = ROTATE;
-					event_rotate(event.rotation, 1, 0 ,0);
-            }
-        }
-    }
-    return SUCCESS;
+	if(move_x || move_y || move_z)
+	{
+		event.type = MOVE;
+
+		event.move = create_vec3d(move_x * 5, move_y * 5, move_z * 5);
+	}
+
+	int rotation_x = get_axis_value(graphics, 'k', 'j');
+	int rotation_y = get_axis_value(graphics, 'h', 'l');
+	if(rotation_x || rotation_y)
+	{
+		event.type = ROTATE;
+
+		event.rotation = create_vec3d(rotation_x,rotation_y,0);
+	}
+	return SUCCESS;
 }
 
 int request_handler(figure_t &figure, event_t &event)
@@ -65,12 +45,14 @@ int request_handler(figure_t &figure, event_t &event)
             break;
         case SCALE:
         case ROTATE:
-			figure_rotate(figure, create_vec3d(0,0,0), event.rotation);
+			figure_rotate(figure, event.rotation);
 			break;
+        case NONE:
+            break;
         case EXIT:
             break;
     }
-	event.type = NONE;
+    event.type = NONE;
     return SUCCESS;
 }
 
@@ -78,6 +60,8 @@ int run_app(const graphics_t &graphics, const char *figure_path)
 {
     figure_t figure;
     int rc = figure_load(figure, figure_path);
+	figure_scale(figure, 200);
+	figure_move(figure, create_vec3d(SDL_SCREEN_WIDTH / 2, SDL_SCREEN_HEIGHT / 2, 200));
 
     bool running = true;
     while (!rc && running)

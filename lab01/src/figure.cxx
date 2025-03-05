@@ -22,6 +22,7 @@ int figure_load(figure_t &figure, const char *figure_path)
 
 	if(!rc)
 	{
+		figure.center = create_vec3d(0,0,0);
 		figure.vertices = vertices;
 		figure.edges = edges;
 	}
@@ -32,16 +33,17 @@ int figure_load(figure_t &figure, const char *figure_path)
 void figure_move(figure_t &figure, const point3d_t &offset)
 {
 	vertices_move(figure.vertices, offset);
+	point_move(figure.center, offset);
 }
 
-void figure_rotate(figure_t &figure, const point3d_t &center, const rotation3d_t &rotation)
+void figure_rotate(figure_t &figure, const rotation3d_t &rotation)
 {
-	vertices_rotate(figure.vertices, center, rotation);
+	vertices_rotate(figure.vertices, figure.center, rotation);
 }
 
-void figure_scale(figure_t &figure, const point3d_t &center, double scale)
+void figure_scale(figure_t &figure, double scale)
 {
-	vertices_scale(figure.vertices, center, scale);
+	vertices_scale(figure.vertices, figure.center, scale);
 }
 
 void free_figure(figure_t &figure)
