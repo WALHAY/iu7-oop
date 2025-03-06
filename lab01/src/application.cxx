@@ -1,5 +1,9 @@
 #include "application.hpp"
 #include "figure.hpp"
+#include <chrono>
+#include <ratio>
+#include <thread>
+#include <unistd.h>
 
 static int get_axis_value(const char positive, const char negative)
 {
@@ -125,6 +129,7 @@ int run_app(graphics_t &graphics, const char *figure_path)
     init_event = populate_draw_event();
     controller_handler(graphics, init_event);
 
+	int tick = 0;
     while (!rc && running)
     {
 		bool redraw = false;
@@ -152,6 +157,8 @@ int run_app(graphics_t &graphics, const char *figure_path)
 
 		event = populate_exit_event();
 		rc = controller_handler(graphics, event);
+
+		usleep(FPS_INTERVAL * 1000);
     }
     return rc;
 }
