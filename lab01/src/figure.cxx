@@ -1,7 +1,4 @@
 #include "figure.hpp"
-#include "edges.hpp"
-#include "point.hpp"
-#include "vertices.hpp"
 
 int figure_load(figure_t &figure, const char *figure_path)
 {

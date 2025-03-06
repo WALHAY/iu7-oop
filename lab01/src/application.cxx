@@ -1,11 +1,5 @@
 #include "application.hpp"
-#include "defines.hpp"
 #include "figure.hpp"
-#include "graphics.hpp"
-#include "point.hpp"
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_quit.h>
-#include <utility>
 
 static int get_axis_value(const char positive, const char negative)
 {
@@ -19,7 +13,6 @@ static event_t populate_load_event(const char *path)
     event_t event;
     event.type = LOAD;
     event.path = path;
-	printf("Event load: %s\n", event.path);
     return event;
 }
 

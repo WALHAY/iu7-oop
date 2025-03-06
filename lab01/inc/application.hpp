@@ -1,7 +1,7 @@
 #pragma once
 
+#include "defines.hpp"
 #include "graphics.hpp"
-#include "figure.hpp"
 #include "point.hpp"
 
 typedef enum {

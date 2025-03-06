@@ -1,5 +1,8 @@
 #pragma once
 
+#include "defines.hpp"
+#include <math.h>
+
 typedef struct
 {
     double x;

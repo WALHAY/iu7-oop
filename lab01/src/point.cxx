@@ -1,6 +1,4 @@
 #include "point.hpp"
-#include "defines.hpp"
-#include <math.h>
 
 vec2d_t create_vec2d(double x, double y)
 {

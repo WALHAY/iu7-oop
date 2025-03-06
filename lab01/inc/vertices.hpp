@@ -3,6 +3,9 @@
 #include "point.hpp"
 #include <cstddef>
 #include <cstdio>
+#include "defines.hpp"
+#include "point.hpp"
+#include <cstdlib>
 
 typedef struct {
 	size_t count;

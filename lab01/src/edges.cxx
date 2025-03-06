@@ -1,10 +1,4 @@
 #include "edges.hpp"
-#include "defines.hpp"
-#include "graphics.hpp"
-#include "point.hpp"
-#include "projection.hpp"
-#include "vertices.hpp"
-#include <cstdlib>
 
 int read_edge(edge_t *edge, FILE *file, const point3d_t *vertices)
 {

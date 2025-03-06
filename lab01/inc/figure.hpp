@@ -3,10 +3,6 @@
 #include "edges.hpp"
 #include "point.hpp"
 #include "vertices.hpp"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_render.h>
-#include <memory.h>
-#include <stdlib.h>
 
 typedef struct
 {

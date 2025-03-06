@@ -1,7 +1,4 @@
 #include "vertices.hpp"
-#include "defines.hpp"
-#include "point.hpp"
-#include <cstdlib>
 
 static int read_vertex(point3d_t &vertex, FILE *file)
 {

@@ -2,8 +2,10 @@
 
 #include "graphics.hpp"
 #include "vertices.hpp"
-#include <cstddef>
-#include <cstdio>
+#include "defines.hpp"
+#include "point.hpp"
+#include "projection.hpp"
+#include <cstdlib>
 
 typedef struct {
 	const point3d_t *first;
