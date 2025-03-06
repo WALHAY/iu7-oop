@@ -83,9 +83,9 @@ void point_rotate(point3d_t &point, const point3d_t &center, const rotation3d_t 
 
 void point_scale(point3d_t &point, const point3d_t &center, double scale)
 {
-	point_move(point, center);
+	point_move(point, create_vec3d(-center.x, -center.y, -center.z));
 	point.x *= scale;
 	point.y *= scale;
 	point.z *= scale;
-	point_move(point, create_vec3d(center.x, center.y, center.z));
+	point_move(point, center);
 }

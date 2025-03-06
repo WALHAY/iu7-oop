@@ -4,6 +4,7 @@
 #include "point.hpp"
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_quit.h>
+#include <utility>
 
 static int get_axis_value(const char positive, const char negative)
 {
@@ -19,6 +20,15 @@ static event_t populate_load_event(const char *path)
     event.path = path;
 	printf("Event load: %s\n", event.path);
     return event;
+}
+
+static event_t populate_exit_event()
+{
+	event_t event;
+	event.type = NONE;
+	if(graphics_exit_requested())
+		event.type = EXIT;
+	return event;
 }
 
 static event_t populate_draw_event()
@@ -48,8 +58,14 @@ static event_t populate_move_event()
 static event_t populate_scale_event()
 {
     event_t event;
-    event.type = SCALE;
-    event.scale = 1.0f;
+	event.type = NONE;
+	int scale = get_axis_value('z', 'x');
+	if(scale)
+	{
+    	event.type = SCALE;
+
+    	event.scale = 1.0f + scale / 50.0f;
+	}
     return event;
 }
 
@@ -69,8 +85,9 @@ static event_t populate_rotate_event()
     return event;
 }
 
-int controller_handler(const graphics_t &graphics, const event_t &event)
+int controller_handler(graphics_t &graphics, const event_t &event)
 {
+	int rc = SUCCESS;
     static figure_t figure;
 
     switch (event.type)
@@ -79,6 +96,7 @@ int controller_handler(const graphics_t &graphics, const event_t &event)
             figure_move(figure, event.move);
             break;
         case SCALE:
+			figure_scale(figure, event.scale);
             break;
         case ROTATE:
             figure_rotate(figure, event.rotation);
@@ -87,50 +105,59 @@ int controller_handler(const graphics_t &graphics, const event_t &event)
             figure_load(figure, event.path);
 			break;
         case DRAW:
-            graphics_set_color(graphics, 0, 0, 0, 255);
-            graphics_clear(graphics);
-            graphics_set_color(graphics, 255, 255, 255, 255);
-            edges_draw(graphics, figure.edges);
-            graphics_show(graphics);
-            break;
-        case EXIT:
+			figure_draw(graphics, figure);
             break;
         case NONE:
             break;
+        case EXIT:
+			graphics_destroy(graphics);		
+			rc = 1;
+            break;
+		default:
+			rc = WRONG_EVENT_ERR;
+			break;
     }
-    return SUCCESS;
+    return rc;
 }
 
-int run_app(const graphics_t &graphics, const char *figure_path)
+int run_app(graphics_t &graphics, const char *figure_path)
 {
     int rc = SUCCESS;
     bool running = true;
-    event_t load_event = populate_load_event(figure_path);
-    controller_handler(graphics, load_event);
-    event_t e = populate_draw_event();
-    controller_handler(graphics, e);
+
+    event_t init_event = populate_load_event(figure_path);
+    controller_handler(graphics, init_event);
+
+    init_event = populate_draw_event();
+    controller_handler(graphics, init_event);
 
     while (!rc && running)
     {
-        if (SDL_QuitRequested())
+		bool redraw = false;
+
+        event_t event = populate_move_event();
+        rc = controller_handler(graphics, event);
+		if(!rc && event.type)
+			redraw = true;
+
+        event = populate_rotate_event();
+        rc = controller_handler(graphics, event);
+		if(!rc && event.type)
+			redraw = true;
+
+        event = populate_scale_event();
+        rc = controller_handler(graphics, event);
+		if(!rc && event.type)
+			redraw = true;
+
+        if(!rc && redraw)
         {
-            running = false;
-            break;
+        	event = populate_draw_event();
+        	rc = controller_handler(graphics, event);
         }
 
-        event_t move_event = populate_move_event();
-        event_t rotation_event = populate_rotate_event();
-        event_t scale_event = populate_scale_event();
-
-        controller_handler(graphics, move_event);
-        controller_handler(graphics, rotation_event);
-        controller_handler(graphics, scale_event);
-
-        if(move_event.type != NONE || scale_event.type != NONE || rotation_event.type != NONE)
-        {
-        	event_t draw_event = populate_draw_event();
-        	controller_handler(graphics, draw_event);
-        }
+		event = populate_exit_event();
+		rc = controller_handler(graphics, event);
     }
     return rc;
 }

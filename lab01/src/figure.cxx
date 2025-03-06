@@ -46,6 +46,15 @@ void figure_scale(figure_t &figure, double scale)
 	vertices_scale(figure.vertices, figure.center, scale);
 }
 
+void figure_draw(const graphics_t &graphics, const figure_t &figure)
+{
+	graphics_set_color(graphics, 0, 0, 0, 255);
+	graphics_clear(graphics);
+	graphics_set_color(graphics, 255, 255, 255, 255);
+	edges_draw(graphics, figure.edges);
+	graphics_show(graphics);
+}
+
 void free_figure(figure_t &figure)
 {
 	vertices_destroy(figure.vertices);

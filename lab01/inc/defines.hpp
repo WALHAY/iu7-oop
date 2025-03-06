@@ -25,5 +25,6 @@ enum error_code
     NULLPTR_ERR,
     IO_ERR,
     FMT_ERR,
-	ARGC_ERR
+	ARGC_ERR,
+	WRONG_EVENT_ERR
 };

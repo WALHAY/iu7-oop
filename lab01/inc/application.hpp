@@ -5,7 +5,7 @@
 #include "point.hpp"
 
 typedef enum {
-	NONE,
+	NONE = 0,
 	LOAD,
 	DRAW,
 	MOVE,
@@ -24,6 +24,6 @@ typedef struct {
 	};
 } event_t;
 
-int controller_handler(const graphics_t &graphics, const event_t &event);
+int controller_handler(graphics_t &graphics, const event_t &event);
 
-int run_app(const graphics_t &graphics, const char *figure_path);
+int run_app(graphics_t &graphics, const char *figure_path);

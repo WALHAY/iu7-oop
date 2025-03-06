@@ -72,7 +72,7 @@ int graphics_show(const graphics_t &graphics)
     return SUCCESS;
 }
 
-int graphics_key_pressed(const char key)
+bool graphics_key_pressed(const char key)
 {
     bool pressed = false;
     int size = 0;
@@ -89,6 +89,11 @@ int graphics_key_pressed(const char key)
     }
 
     return pressed;
+}
+
+bool graphics_exit_requested()
+{
+	return SDL_QuitRequested();
 }
 
 void graphics_destroy(graphics_t &graphics)

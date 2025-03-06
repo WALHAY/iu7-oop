@@ -23,4 +23,6 @@ void figure_rotate(figure_t &figure, const rotation3d_t &rotation);
 
 void figure_scale(figure_t &figure, double scale);
 
+void figure_draw(const graphics_t &graphics, const figure_t &figure);
+
 void figure_free(figure_t &figure);
