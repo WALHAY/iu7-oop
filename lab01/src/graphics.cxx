@@ -15,7 +15,6 @@ struct graphics_t
     SDL_Renderer *renderer;
 };
 
-// TODO: rewrite init graphics to init sdl first and allocate memory second
 int graphics_init(graphics_t **graphics)
 {
     int rc = SDL_Init(SDL_INIT_EVERYTHING) == 0 ? SUCCESS : SDL_INIT_ERR;
@@ -73,7 +72,7 @@ int graphics_show(const graphics_t &graphics)
     return SUCCESS;
 }
 
-int graphics_key_pressed(const graphics_t &graphics, const char key)
+int graphics_key_pressed(const char key)
 {
     bool pressed = false;
     int size = 0;
@@ -90,12 +89,6 @@ int graphics_key_pressed(const graphics_t &graphics, const char key)
     }
 
     return pressed;
-}
-
-int graphics_delay(const graphics_t &graphics, int delay)
-{
-    SDL_Delay(delay);
-    return SUCCESS;
 }
 
 void graphics_destroy(graphics_t &graphics)

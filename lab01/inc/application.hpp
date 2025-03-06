@@ -5,11 +5,13 @@
 #include "point.hpp"
 
 typedef enum {
+	NONE,
+	LOAD,
+	DRAW,
 	MOVE,
 	SCALE,
 	ROTATE,
-	EXIT,
-	NONE
+	EXIT
 } event_type_t;
 
 typedef struct {
@@ -18,9 +20,10 @@ typedef struct {
 		vec3d_t move;
 		rotation3d_t rotation;
 		double scale;
+		const char *path;
 	};
 } event_t;
 
-int request_handler(figure_t &figure, event_t &event);
+int controller_handler(const graphics_t &graphics, const event_t &event);
 
 int run_app(const graphics_t &graphics, const char *figure_path);
