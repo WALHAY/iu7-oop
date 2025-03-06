@@ -8,12 +8,12 @@
 #define FPS 144
 #define FPS_INTERVAL (1000 / FPS)
 
-#define MOUSE_SENSITIVITY 1.0f
-
-#define SCROLL_MODIFIER 3.0f
-
 #define INIT_SCALE 200.0f
 #define WORLD_SCALE 1000.0f
+
+#define SCALE_MODIFIER 50.0f
+#define MOVE_MODIFIER 5.0f
+#define ROTATION_MODIFIER 1.0f
 
 #define PI 3.14
 

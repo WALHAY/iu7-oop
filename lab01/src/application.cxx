@@ -1,4 +1,5 @@
 #include "application.hpp"
+#include "defines.hpp"
 #include "figure.hpp"
 #include "graphics.hpp"
 #include "point.hpp"
@@ -50,7 +51,7 @@ static event_t populate_move_event()
     {
         event.type = MOVE;
 
-        event.move = create_vec3d(move_x * 5, move_y * 5, move_z * 5);
+        event.move = create_vec3d(move_x * MOVE_MODIFIER, move_y * MOVE_MODIFIER, move_z * MOVE_MODIFIER);
     }
     return event;
 }
@@ -64,7 +65,7 @@ static event_t populate_scale_event()
 	{
     	event.type = SCALE;
 
-    	event.scale = 1.0f + scale / 50.0f;
+    	event.scale = 1.0f + scale / SCALE_MODIFIER;
 	}
     return event;
 }
@@ -80,7 +81,7 @@ static event_t populate_rotate_event()
     {
         event.type = ROTATE;
 
-        event.rotation = create_vec3d(rotation_x, rotation_y, 0);
+        event.rotation = create_vec3d(rotation_x * ROTATION_MODIFIER, rotation_y * ROTATION_MODIFIER, 0);
     }
     return event;
 }
