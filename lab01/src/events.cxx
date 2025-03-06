@@ -1,5 +1,4 @@
 #include "events.hpp"
-#include "figure.hpp"
 
 static int get_axis_value(const char positive, const char negative)
 {

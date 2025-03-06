@@ -7,7 +7,7 @@
 #include "point.hpp"
 #include <cstdlib>
 
-typedef struct {
+typedef struct vertices_t {
 	size_t count;
 	point3d_t *vertices;
 } vertices_t;

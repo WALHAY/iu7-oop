@@ -2,6 +2,8 @@
 
 #include "graphics.hpp"
 #include "point.hpp"
+#include "figure.hpp"
+
 typedef enum {
 	NONE = 0,
 	LOAD,
@@ -12,7 +14,7 @@ typedef enum {
 	EXIT
 } event_type_t;
 
-typedef struct {
+typedef struct event_t {
 	event_type_t type;
 	union {
 		vec3d_t move;

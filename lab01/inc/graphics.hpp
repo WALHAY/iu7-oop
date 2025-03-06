@@ -2,7 +2,7 @@
 
 #include "defines.hpp"
 
-typedef struct {
+typedef struct point2d_t {
 	double x;
 	double y;
 } point2d_t;

@@ -7,12 +7,12 @@
 #include "projection.hpp"
 #include <cstdlib>
 
-typedef struct {
+typedef struct edge_t {
 	const point3d_t *first;
 	const point3d_t *second;
 } edge_t;
 
-typedef struct {
+typedef struct edges_t {
 	size_t count;
 	edge_t *edges;
 } edges_t;

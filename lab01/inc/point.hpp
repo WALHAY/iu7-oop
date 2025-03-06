@@ -3,7 +3,7 @@
 #include "defines.hpp"
 #include <math.h>
 
-typedef struct
+typedef struct vec3d_t
 {
     double x;
     double y;

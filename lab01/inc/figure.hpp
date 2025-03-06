@@ -4,7 +4,7 @@
 #include "point.hpp"
 #include "vertices.hpp"
 
-typedef struct
+typedef struct figure_t
 {
 	point3d_t center;
 	vertices_t vertices;
