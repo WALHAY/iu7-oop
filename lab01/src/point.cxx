@@ -1,13 +1,5 @@
 #include "point.hpp"
 
-vec2d_t create_vec2d(double x, double y)
-{
-    vec2d_t result;
-    result.x = x;
-    result.y = y;
-    return result;
-}
-
 vec3d_t create_vec3d(double x, double y, double z)
 {
     vec3d_t result;

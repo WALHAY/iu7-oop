@@ -1,9 +1,15 @@
 #pragma once 
 
 #include "defines.hpp"
-#include "point.hpp"
+
+typedef struct {
+	double x;
+	double y;
+} point2d_t;
 
 typedef struct graphics_t graphics_t;
+
+point2d_t create_vec2d(double x, double y);
 
 int graphics_init(graphics_t **graphics);
 

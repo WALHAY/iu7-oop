@@ -14,6 +14,14 @@ struct graphics_t
     SDL_Renderer *renderer;
 };
 
+point2d_t create_vec2d(double x, double y)
+{
+    point2d_t result;
+    result.x = x;
+    result.y = y;
+    return result;
+}
+
 int graphics_init(graphics_t **graphics)
 {
     int rc = SDL_Init(SDL_INIT_EVERYTHING) == 0 ? SUCCESS : SDL_INIT_ERR;
