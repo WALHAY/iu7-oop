@@ -8,8 +8,8 @@
 #include <cstdlib>
 
 typedef struct edge_t {
-	const point3d_t *first;
-	const point3d_t *second;
+	const point_t *first;
+	const point_t *second;
 } edge_t;
 
 typedef struct edges_t {

@@ -1,4 +1,5 @@
 #include "figure.hpp"
+#include "point.hpp"
 
 int figure_load(figure_t &figure, const char *figure_path)
 {
@@ -19,7 +20,7 @@ int figure_load(figure_t &figure, const char *figure_path)
 
 	if(!rc)
 	{
-		figure.center = create_vec3d(0,0,0);
+		figure.center = create_point(0,0,0);
 		figure.vertices = vertices;
 		figure.edges = edges;
 	}
@@ -27,13 +28,13 @@ int figure_load(figure_t &figure, const char *figure_path)
 	return rc;
 }
 
-void figure_move(figure_t &figure, const point3d_t &offset)
+void figure_move(figure_t &figure, const point_t &offset)
 {
 	vertices_move(figure.vertices, offset);
 	point_move(figure.center, offset);
 }
 
-void figure_rotate(figure_t &figure, const rotation3d_t &rotation)
+void figure_rotate(figure_t &figure, const rotation_t &rotation)
 {
 	vertices_rotate(figure.vertices, figure.center, rotation);
 }

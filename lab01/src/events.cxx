@@ -1,4 +1,5 @@
 #include "events.hpp"
+#include "point.hpp"
 
 static int get_axis_value(const char positive, const char negative)
 {
@@ -43,7 +44,7 @@ event_t populate_move_event()
     {
         event.type = MOVE;
 
-        event.move = create_vec3d(move_x * MOVE_MODIFIER, move_y * MOVE_MODIFIER, move_z * MOVE_MODIFIER);
+        event.move = create_point(move_x * MOVE_MODIFIER, move_y * MOVE_MODIFIER, move_z * MOVE_MODIFIER);
     }
     return event;
 }
@@ -73,7 +74,7 @@ event_t populate_rotate_event()
     {
         event.type = ROTATE;
 
-        event.rotation = create_vec3d(rotation_x * ROTATION_MODIFIER, rotation_y * ROTATION_MODIFIER, 0);
+        event.rotation = create_rotation(rotation_x * ROTATION_MODIFIER, rotation_y * ROTATION_MODIFIER, 0);
     }
     return event;
 }

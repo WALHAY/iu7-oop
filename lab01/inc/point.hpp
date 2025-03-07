@@ -3,20 +3,25 @@
 #include "defines.hpp"
 #include <math.h>
 
-typedef struct vec3d_t
+typedef struct point_t
 {
     double x;
     double y;
     double z;
-} vec3d_t;
+} point_t;
 
-typedef vec3d_t point3d_t;
-typedef vec3d_t rotation3d_t;
+typedef struct rotation_t {
+	double x;
+	double y;
+	double z;
+} rotation_t;
 
-vec3d_t create_vec3d(double x, double y, double z);
+point_t create_point(double x, double y, double z);
 
-void point_move(vec3d_t &first, const vec3d_t &second);
+rotation_t create_rotation(double x, double y, double z);
 
-void point_rotate(point3d_t &point, const point3d_t &center, const rotation3d_t &rotation);
+void point_move(point_t &first, const point_t &second);
 
-void point_scale(point3d_t &point, const point3d_t &center, double scale);
+void point_rotate(point_t &point, const point_t &center, const rotation_t &rotation);
+
+void point_scale(point_t &point, const point_t &center, double scale);

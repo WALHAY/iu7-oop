@@ -1,6 +1,6 @@
 #include "edges.hpp"
 
-int read_edge(edge_t *edge, FILE *file, const point3d_t *vertices)
+int read_edge(edge_t *edge, FILE *file, const point_t *vertices)
 {
 	if(!edge)
 		return NULLPTR_ERR;

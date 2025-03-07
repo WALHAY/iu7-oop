@@ -17,8 +17,8 @@ typedef enum {
 typedef struct event_t {
 	event_type_t type;
 	union {
-		vec3d_t move;
-		rotation3d_t rotation;
+		point_t move;
+		rotation_t rotation;
 		double scale;
 		const char *path;
 	};
