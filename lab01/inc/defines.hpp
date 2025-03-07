@@ -5,6 +5,8 @@
 #define SDL_SCREEN_WIDTH 1280
 #define SDL_SCREEN_HEIGHT 720
 
+#define MAX_COLOR_COMP 255
+
 #define FPS 144
 #define FPS_INTERVAL (1000 / FPS)
 

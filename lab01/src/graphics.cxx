@@ -1,5 +1,6 @@
 #include "graphics.hpp"
 #include "SDL2/SDL_keycode.h"
+#include "defines.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keyboard.h>
@@ -13,6 +14,15 @@ struct graphics_t
     SDL_Window *window;
     SDL_Renderer *renderer;
 };
+
+color_rgb_t create_rgb(int r, int g, int b)
+{
+	color_rgb_t rgb;
+	rgb.r = r;
+	rgb.g = g;
+	rgb.b = b;
+	return rgb;
+}
 
 point2d_t create_vec2d(double x, double y)
 {
@@ -61,12 +71,12 @@ int graphics_clear(const graphics_t &graphics)
     return SUCCESS;
 }
 
-int graphics_set_color(const graphics_t &graphics, int r, int g, int b, int a)
+int graphics_set_color(const graphics_t &graphics, const color_rgb_t &color)
 {
     if (!graphics.renderer)
         return NULLPTR_ERR;
 
-    SDL_SetRenderDrawColor(graphics.renderer, r, g, b, a);
+    SDL_SetRenderDrawColor(graphics.renderer, color.r, color.g, color.b, MAX_COLOR_COMP);
     return SUCCESS;
 }
 

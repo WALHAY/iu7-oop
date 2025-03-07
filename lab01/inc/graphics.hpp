@@ -7,7 +7,15 @@ typedef struct point2d_t {
 	double y;
 } point2d_t;
 
+typedef struct color_rgb_t {
+	int r;
+	int g;
+	int b;
+} color_rgb_t;
+
 typedef struct graphics_t graphics_t;
+
+color_rgb_t create_rgb(int r, int g, int b);
 
 point2d_t create_vec2d(double x, double y);
 
@@ -15,7 +23,7 @@ int graphics_init(graphics_t **graphics);
 
 int graphics_draw_line(const graphics_t &graphics, const point2d_t &a, const point2d_t &b);
 
-int graphics_set_color(const graphics_t &graphics, int r, int g, int b, int a);
+int graphics_set_color(const graphics_t &graphics, const color_rgb_t &color);
 
 int graphics_clear(const graphics_t &graphics);
 

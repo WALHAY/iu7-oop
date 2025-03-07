@@ -45,9 +45,12 @@ void figure_scale(figure_t &figure, double scale)
 
 void figure_draw(const graphics_t &graphics, const figure_t &figure)
 {
-	graphics_set_color(graphics, 0, 0, 0, 255);
+	static color_rgb_t black = create_rgb(0,0,0);
+	static color_rgb_t white = create_rgb(255,255,255);
+
+	graphics_set_color(graphics, black);
 	graphics_clear(graphics);
-	graphics_set_color(graphics, 255, 255, 255, 255);
+	graphics_set_color(graphics, white);
 	edges_draw(graphics, figure.edges);
 	graphics_show(graphics);
 }
