@@ -3,7 +3,6 @@
 #include "figure.hpp"
 #include <unistd.h>
 
-
 int run_app(graphics_t &graphics, const char *figure_path)
 {
     int rc = SUCCESS;
@@ -45,5 +44,5 @@ int run_app(graphics_t &graphics, const char *figure_path)
 
 		usleep(FPS_INTERVAL * 1000);
     }
-    return rc;
+    return rc == EXIT_CODE ? SUCCESS : rc;
 }

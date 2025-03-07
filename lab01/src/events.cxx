@@ -104,7 +104,7 @@ int controller_handler(graphics_t &graphics, const event_t &event)
             break;
         case EXIT:
 			graphics_destroy(graphics);		
-			rc = 1;
+			rc = EXIT_CODE;
             break;
 		default:
 			rc = WRONG_EVENT_ERR;

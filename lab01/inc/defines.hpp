@@ -17,6 +17,8 @@
 
 #define PI 3.14
 
+#define EXIT_CODE -1
+
 enum error_code
 {
     SUCCESS = 0,
