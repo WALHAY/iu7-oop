@@ -1,4 +1,5 @@
 #include "events.hpp"
+#include "figure.hpp"
 #include "point.hpp"
 
 static int get_axis_value(const char positive, const char negative)
@@ -96,14 +97,15 @@ int controller_handler(graphics_t &graphics, const event_t &event)
             figure_rotate(figure, event.rotation);
             break;
         case LOAD:
-            figure_load(figure, event.path);
+            rc = figure_load(figure, event.path);
 			break;
         case DRAW:
-			figure_draw(graphics, figure);
+			rc = figure_draw(graphics, figure);
             break;
         case NONE:
             break;
         case EXIT:
+			figure_destroy(figure);
 			graphics_destroy(graphics);		
 			rc = EXIT_CODE;
             break;

@@ -28,10 +28,10 @@ int figure_load(figure_t &figure, const char *figure_path)
 	return rc;
 }
 
-void figure_move(figure_t &figure, const point_t &offset)
+void figure_move(figure_t &figure, const point_t &move)
 {
-	vertices_move(figure.vertices, offset);
-	point_move(figure.center, offset);
+	vertices_move(figure.vertices, move);
+	point_move(figure.center, move);
 }
 
 void figure_rotate(figure_t &figure, const rotation_t &rotation)
@@ -44,19 +44,27 @@ void figure_scale(figure_t &figure, double scale)
 	vertices_scale(figure.vertices, figure.center, scale);
 }
 
-void figure_draw(const graphics_t &graphics, const figure_t &figure)
+int figure_draw(const graphics_t &graphics, const figure_t &figure)
 {
-	static color_rgb_t black = create_rgb(0,0,0);
-	static color_rgb_t white = create_rgb(255,255,255);
+	static color_rgb_t black = create_rgba(0,0,0, 255);
+	static color_rgb_t white = create_rgba(255,255,255, 255);
 
-	graphics_set_color(graphics, black);
-	graphics_clear(graphics);
-	graphics_set_color(graphics, white);
-	edges_draw(graphics, figure.edges);
-	graphics_show(graphics);
+	int rc = graphics_set_color(graphics, black);
+	if (!rc)
+		rc = graphics_clear(graphics);
+	
+	if(!rc)
+		rc = graphics_set_color(graphics, white);
+
+	if(!rc)
+		rc = edges_draw(graphics, figure.edges);
+
+	if(!rc)
+		rc = graphics_show(graphics);
+	return rc;
 }
 
-void free_figure(figure_t &figure)
+void figure_destroy(figure_t &figure)
 {
 	vertices_destroy(figure.vertices);
 	edges_destroy(figure.edges);

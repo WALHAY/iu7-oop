@@ -11,13 +11,14 @@ typedef struct color_rgb_t {
 	int r;
 	int g;
 	int b;
-} color_rgb_t;
+	int alpha;
+} color_rgba_t;
 
 typedef struct graphics_t graphics_t;
 
-color_rgb_t create_rgb(int r, int g, int b);
+color_rgba_t create_rgba(int r, int g, int b, int alpha);
 
-point2d_t create_vec2d(double x, double y);
+point2d_t create_point2d(double x, double y);
 
 int graphics_init(graphics_t **graphics);
 

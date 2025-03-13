@@ -61,6 +61,29 @@
       "-I",
       "/opt/homebrew/include",
       "-o",
+      "out/events.o",
+      "src/events.cxx"
+    ],
+    "directory": "/Users/walhay/Study/iu7-oop/lab01",
+    "file": "/Users/walhay/Study/iu7-oop/lab01/src/events.cxx",
+    "output": "/Users/walhay/Study/iu7-oop/lab01/out/events.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-std=c++20",
+      "-I./inc",
+      "-I/opt/homebrew/include",
+      "-g2",
+      "-I",
+      ".",
+      "-I",
+      "/opt/homebrew/include",
+      "-o",
       "out/figure.o",
       "src/figure.cxx"
     ],

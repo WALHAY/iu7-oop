@@ -15,16 +15,17 @@ struct graphics_t
     SDL_Renderer *renderer;
 };
 
-color_rgb_t create_rgb(int r, int g, int b)
+color_rgba_t create_rgba(int r, int g, int b, int alpha)
 {
-	color_rgb_t rgb;
+	color_rgba_t rgb;
 	rgb.r = r;
 	rgb.g = g;
 	rgb.b = b;
+	rgb.alpha = alpha;
 	return rgb;
 }
 
-point2d_t create_vec2d(double x, double y)
+point2d_t create_point2d(double x, double y)
 {
     point2d_t result;
     result.x = x;
