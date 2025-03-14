@@ -6,7 +6,6 @@
 #include "point.hpp"
 
 typedef enum {
-	NONE = 0,
 	LOAD,
 	DRAW,
 	MOVE,
@@ -25,17 +24,17 @@ typedef struct event_t {
 	};
 } event_t;
 
-event_t populate_load_event(const char *path);
+bool populate_load_event(event_t &event, const char *path);
 
-event_t populate_exit_event();
+bool populate_exit_event(event_t &event);
 
-event_t populate_draw_event();
+bool populate_draw_event(event_t &event);
 
-event_t populate_move_event();
+bool populate_move_event(event_t &event);
 
-event_t populate_scale_event();
+bool populate_scale_event(event_t &event);
 
-event_t populate_rotate_event();
+bool populate_rotate_event(event_t &event_t);
 
 int controller_handler(graphics_t &graphics, const event_t &event);
 

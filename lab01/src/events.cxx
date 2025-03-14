@@ -7,75 +7,83 @@ static int get_axis_value(const char positive, const char negative)
     return positive_pressed ^ negative_pressed ? (positive_pressed ? 1 : -1) : 0;
 }
 
-event_t populate_load_event(const char *path)
+bool populate_load_event(event_t &event, const char *path)
 {
-    event_t event;
-    event.type = LOAD;
-    event.path = path;
-    return event;
+	bool populated = false;
+	if(path != NULL)
+	{
+		populated = true;
+
+    	event.type = LOAD;
+    	event.path = path;
+	}
+    return populated;
 }
 
-event_t populate_exit_event()
+bool populate_exit_event(event_t &event)
 {
-	event_t event;
-	event.type = NONE;
+	bool populated = false;
 	if(graphics_exit_requested())
+	{
+		populated = true;
+
 		event.type = EXIT;
-	return event;
+	}
+	return populated;
 }
 
-event_t populate_draw_event()
+bool populate_draw_event(event_t &event)
 {
-    event_t event;
     event.type = DRAW;
-    return event;
+    return true;
 }
 
-event_t populate_move_event()
+bool populate_move_event(event_t &event)
 {
-    event_t event;
-    event.type = NONE;
+	bool populated = false;
 
     int move_x = get_axis_value('d', 'a');
     int move_y = get_axis_value('s', 'w');
     int move_z = get_axis_value('e', 'q');
     if (move_x || move_y || move_z)
     {
-        event.type = MOVE;
+		populated = true;
 
+    	event.type = MOVE;
         event.move = create_point(move_x * MOVE_MODIFIER, move_y * MOVE_MODIFIER, move_z * MOVE_MODIFIER);
     }
-    return event;
+    return populated;
 }
 
-event_t populate_scale_event()
+bool populate_scale_event(event_t &event)
 {
-    event_t event;
-	event.type = NONE;
+	bool populated =  false;
+
 	int scale = get_axis_value('z', 'x');
 	if(scale)
 	{
-    	event.type = SCALE;
+		populated = true;
 
+		event.type = SCALE;
     	event.scale = 1.0f + scale / SCALE_MODIFIER;
 	}
-    return event;
+    return populated;
 }
 
-event_t populate_rotate_event()
+bool populate_rotate_event(event_t &event)
 {
-    event_t event;
-    event.type = NONE;
+	bool populated = false;
 
     int rotation_x = get_axis_value('k', 'j');
     int rotation_y = get_axis_value('h', 'l');
     if (rotation_x || rotation_y)
     {
-        event.type = ROTATE;
+		populated =  true;
 
+    	event.type = ROTATE;
         event.rotation = create_rotation(rotation_x * ROTATION_MODIFIER, rotation_y * ROTATION_MODIFIER, 0);
     }
-    return event;
+    return populated;
 }
 
 int controller_handler(graphics_t &graphics, const event_t &event)
@@ -99,8 +107,6 @@ int controller_handler(graphics_t &graphics, const event_t &event)
 			break;
         case DRAW:
 			rc = figure_draw(graphics, figure);
-            break;
-        case NONE:
             break;
         case EXIT:
 			figure_destroy(figure);

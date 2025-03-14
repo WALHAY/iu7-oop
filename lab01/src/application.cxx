@@ -1,45 +1,47 @@
 #include "application.hpp"
+#include "events.hpp"
 
 int run_app(graphics_t &graphics, const char *figure_path)
 {
     int rc = SUCCESS;
     bool running = true;
 
-    event_t init_event = populate_load_event(figure_path);
-    controller_handler(graphics, init_event);
+    event_t event;
+    if (!rc && populate_load_event(event, figure_path))
+        rc = controller_handler(graphics, event);
 
-    init_event = populate_draw_event();
-    controller_handler(graphics, init_event);
+    if (!rc && populate_draw_event(event))
+        rc = controller_handler(graphics, event);
 
     while (!rc && running)
     {
-		bool redraw = false;
+        bool redraw = false;
 
-        event_t event = populate_move_event();
-        rc = controller_handler(graphics, event);
-		if(!rc && event.type)
-			redraw = true;
-
-        event = populate_rotate_event();
-        rc = controller_handler(graphics, event);
-		if(!rc && event.type)
-			redraw = true;
-
-        event = populate_scale_event();
-        rc = controller_handler(graphics, event);
-		if(!rc && event.type)
-			redraw = true;
-
-        if(!rc && redraw)
+        if (!rc && populate_move_event(event))
         {
-        	event = populate_draw_event();
-        	rc = controller_handler(graphics, event);
+            rc = controller_handler(graphics, event);
+            redraw = true;
         }
 
-		event = populate_exit_event();
-		rc = controller_handler(graphics, event);
+        if (!rc && populate_rotate_event(event))
+        {
+            rc = controller_handler(graphics, event);
+            redraw = true;
+        }
 
-		usleep(FPS_INTERVAL);
+        if (!rc && populate_scale_event(event))
+        {
+            rc = controller_handler(graphics, event);
+            redraw = true;
+        }
+
+        if (!rc && redraw && populate_draw_event(event))
+            rc = controller_handler(graphics, event);
+
+        if (!rc && populate_exit_event(event))
+            rc = controller_handler(graphics, event);
+
+        usleep(FPS_INTERVAL);
     }
     return rc == EXIT_CODE ? SUCCESS : rc;
 }
