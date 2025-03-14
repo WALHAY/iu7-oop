@@ -1,7 +1,4 @@
 #include "application.hpp"
-#include "events.hpp"
-#include "figure.hpp"
-#include <unistd.h>
 
 int run_app(graphics_t &graphics, const char *figure_path)
 {
@@ -42,7 +39,7 @@ int run_app(graphics_t &graphics, const char *figure_path)
 		event = populate_exit_event();
 		rc = controller_handler(graphics, event);
 
-		usleep(FPS_INTERVAL * 1000);
+		usleep(FPS_INTERVAL);
     }
     return rc == EXIT_CODE ? SUCCESS : rc;
 }

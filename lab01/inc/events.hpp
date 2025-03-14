@@ -3,6 +3,7 @@
 #include "graphics.hpp"
 #include "point.hpp"
 #include "figure.hpp"
+#include "point.hpp"
 
 typedef enum {
 	NONE = 0,

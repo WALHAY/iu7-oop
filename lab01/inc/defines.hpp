@@ -8,7 +8,7 @@
 #define MAX_COLOR_COMP 255
 
 #define FPS 144
-#define FPS_INTERVAL (1000 / FPS)
+#define FPS_INTERVAL (1000000 / FPS)
 
 #define INIT_SCALE 200.0f
 #define WORLD_SCALE 1000.0f

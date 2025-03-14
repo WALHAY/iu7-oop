@@ -1,5 +1,4 @@
 #include "figure.hpp"
-#include "point.hpp"
 
 int figure_load(figure_t &figure, const char *figure_path)
 {
