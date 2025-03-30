@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <ranges>
 #include <utility>
+#include <iostream>
 
 template <typename Type> Matrix<Type>::Matrix()
 {
@@ -53,15 +54,9 @@ template <typename Type> void Matrix<Type>::print()
 }
 
 template<typename Type>
-Matrix<Type> Matrix<Type>::add(Type value)
+Matrix<Type> Matrix<Type>::add(const Type &value) const
 {
 }
 
-
-/*template<typename Type>*/
-/*Matrix<Type> Matrix<Type>::add_matrix(Matrix<Type> matrix)*/
-/*{*/
-/*	return Matrix<Type>();*/
-/*}*/
-
 template class Matrix<int>;
+template class Matrix<double>;
