@@ -1,8 +1,6 @@
-#include "../inc/Matrix.hpp"
-#include <exception>
+#include "Matrix.hpp"
 #include <initializer_list>
 #include <vector>
-#include <ranges>
 
 template <typename T> Matrix<T>::Matrix() noexcept
 {
@@ -10,7 +8,7 @@ template <typename T> Matrix<T>::Matrix() noexcept
     this->columns = 0;
 }
 
-template <typename T> Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> matrix)
+template <typename T> Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> matrix) noexcept
 {
     size_t rows = matrix.size();
 

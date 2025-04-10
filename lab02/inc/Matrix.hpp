@@ -8,18 +8,21 @@
 
 template<typename T>
 class Matrix : public BaseMatrix {
-	private:
-		std::shared_ptr<T[]> data = nullptr;
-
 	public:
 		Matrix() noexcept;
-		explicit Matrix(Matrix<T> &matrix) noexcept;
-		Matrix(const size_t rows, const size_t cols) noexcept;
+        Matrix(const size_t rows, const size_t cols) noexcept;
 		Matrix(T **matrix, const size_t rows, const size_t cols) noexcept;
-		Matrix(Matrix<T> &&matrix)noexcept;
 		Matrix(const std::initializer_list<std::initializer_list<T>> list) noexcept;
 
 		~Matrix() = default;
+
+		/*
+		 * ASSIGN & COPY
+		 */
+        Matrix &operator=(const Matrix &) = delete;
+        Matrix &operator=(Matrix &&) = delete;
+        explicit Matrix(Matrix<T> &matrix) noexcept;
+		explicit Matrix(Matrix<T> &&matrix) noexcept;
 
 		/*
 		 * INDEXATION
@@ -68,9 +71,11 @@ class Matrix : public BaseMatrix {
 		void resize(size_t rows, size_t columns);
 
 private:
-
 		void allocateMemory(size_t rows, size_t columns);
 
 		void validateRow(const size_t row) const;
 		void validateColumn(const size_t column) const;
+
+		std::shared_ptr<T[]> data = nullptr;
+
 };

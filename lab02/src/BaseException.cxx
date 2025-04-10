@@ -1,4 +1,4 @@
-#include "../inc/BaseException.hpp"
+#include "BaseException.hpp"
 #include <string>
 
 BaseException::BaseException(const std::string message) : message(message) {}

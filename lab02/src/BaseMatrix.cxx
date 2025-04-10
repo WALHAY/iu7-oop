@@ -1,4 +1,4 @@
-#include "../inc/BaseMatrix.hpp"
+#include "BaseMatrix.hpp"
 #include <cstddef>
 
 BaseMatrix::BaseMatrix() : rows(0), columns(0) {}
