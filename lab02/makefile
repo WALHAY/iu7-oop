@@ -1,4 +1,4 @@
-CC := g++-14
+CC := g++
 
 CCFLAGS := -Wall -Wextra -Wpedantic -std=c++20 -I./inc -I/opt/homebrew/include -g2 
 CLFLAGS := -lm

@@ -3,79 +3,82 @@
 #include <cstddef>
 #include <initializer_list>
 #include <memory>
-#include "BaseMatrix.hpp"
+
+#include "base/BaseMatrix.hpp"
+#include "base/BaseMatrixIterator.hpp"
 #include "MatrixExceptions.hpp"
 
-template<typename T>
-class Matrix : public BaseMatrix {
-	public:
-		Matrix() noexcept;
-        Matrix(const size_t rows, const size_t cols) noexcept;
-		Matrix(T **matrix, const size_t rows, const size_t cols) noexcept;
-		Matrix(const std::initializer_list<std::initializer_list<T>> list) noexcept;
+template <typename T> class Matrix : public BaseMatrix
+{
+    friend BaseMatrixIterator<T>;
 
-		~Matrix() = default;
+  public:
+    Matrix() noexcept;
+    Matrix(const size_t rows, const size_t cols) noexcept;
+    Matrix(T **matrix, const size_t rows, const size_t cols) noexcept;
+    Matrix(const std::initializer_list<std::initializer_list<T>> list) noexcept;
 
-		/*
-		 * ASSIGN & COPY
-		 */
-        Matrix &operator=(const Matrix &) = delete;
-        Matrix &operator=(Matrix &&) = delete;
-        explicit Matrix(Matrix<T> &matrix) noexcept;
-		explicit Matrix(Matrix<T> &&matrix) noexcept;
+    ~Matrix() = default;
 
-		/*
-		 * INDEXATION
-		 */
-		T& at(const size_t row, const size_t column);
-		const T& at(const size_t row, const size_t column) const;
-		T& operator ()(const size_t row, const size_t column);
-		const T& operator ()(const size_t row, const size_t column) const;
+    /*
+     * ASSIGN & COPY
+     */
+    Matrix &operator=(const Matrix &matrix) noexcept;
+    Matrix &operator=(Matrix &&matrix) noexcept;
+    explicit Matrix(Matrix<T> &matrix) noexcept;
+    explicit Matrix(Matrix<T> &&matrix) noexcept;
 
-		/*
-		 * SIMPLE ADDITION
-		 */
-		Matrix<T> add(const T &value) const;
-		Matrix<T> operator+(const T &value) const;
-		Matrix<T>& operator+=(const T &value);
+    /*
+     * INDEXATION
+     */
+    T &at(const size_t row, const size_t column);
+    const T &at(const size_t row, const size_t column) const;
+    T &operator()(const size_t row, const size_t column);
+    const T &operator()(const size_t row, const size_t column) const;
 
-		/*
-		 * COMPLEX ADDITION
-		 */
-		Matrix<T> addMatrix(const Matrix<T> &matrix) const;
-		Matrix<T> operator+(const Matrix<T> &matrix) const;
-		Matrix<T>& operator+=(const Matrix<T> &matrix);
+    /*
+     * SIMPLE ADDITION
+     */
+    Matrix<T> add(const T &value) const;
+    Matrix<T> operator+(const T &value) const;
+    Matrix<T> &operator+=(const T &value);
 
-		/*
-		 * SIMPLE SUB
-		 */
-		Matrix<T> sub(const T &value) const;
-		Matrix<T> operator-(const T &value) const;
-		Matrix<T>& operator-=(const T &value);
+    /*
+     * COMPLEX ADDITION
+     */
+    Matrix<T> addMatrix(const Matrix<T> &matrix) const;
+    Matrix<T> operator+(const Matrix<T> &matrix) const;
+    Matrix<T> &operator+=(const Matrix<T> &matrix);
 
-		/*
-		 * COMPLEX SUB
-		 */
-		Matrix<T> subMatrix(const Matrix<T> &matrix) const;
-		Matrix<T> operator-(const Matrix<T> &matrix) const;
-		Matrix<T>& operator-=(const Matrix<T> &matrix);
+    /*
+     * SIMPLE SUB
+     */
+    Matrix<T> sub(const T &value) const;
+    Matrix<T> operator-(const T &value) const;
+    Matrix<T> &operator-=(const T &value);
 
-		/*
-		 * DETERMINANT
-		 */
-		T determinant() const;
+    /*
+     * COMPLEX SUB
+     */
+    Matrix<T> subMatrix(const Matrix<T> &matrix) const;
+    Matrix<T> operator-(const Matrix<T> &matrix) const;
+    Matrix<T> &operator-=(const Matrix<T> &matrix);
 
-		/*
-		 * MISCELLANOUS
-		 */
-		void resize(size_t rows, size_t columns);
+    /*
+     * DETERMINANT
+     */
+    T determinant() const;
 
-private:
-		void allocateMemory(size_t rows, size_t columns);
+    /*
+     * MISCELLANOUS
+     */
+    void resize(size_t rows, size_t columns);
 
-		void validateRow(const size_t row) const;
-		void validateColumn(const size_t column) const;
+  private:
+    void allocateMemory(size_t rows, size_t columns);
 
-		std::shared_ptr<T[]> data = nullptr;
+    void validateRow(const size_t row) const;
+    void validateColumn(const size_t column) const;
 
+    std::shared_ptr<T[]> data = nullptr;
 };
