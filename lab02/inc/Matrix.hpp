@@ -2,73 +2,75 @@
 
 #include <cstddef>
 #include <initializer_list>
-#include <vector>
+#include <memory>
+#include "BaseMatrix.hpp"
+#include "MatrixExceptions.hpp"
 
-template<typename Type>
-class Matrix {
+template<typename T>
+class Matrix : public BaseMatrix {
 	private:
-		std::size_t rows;
-		std::size_t columns;
-
-		std::vector<std::vector<Type>> data;
+		std::shared_ptr<T[]> data = nullptr;
 
 	public:
 		Matrix() noexcept;
-		explicit Matrix(Matrix<Type> &matrix);
-		Matrix(const std::size_t rows, const std::size_t cols);
-		Matrix(Type **matrix, const std::size_t rows, const std::size_t cols);
-		Matrix(Matrix<Type> &&matrix);
-		Matrix(const std::initializer_list<std::initializer_list<Type>> list);
+		explicit Matrix(Matrix<T> &matrix) noexcept;
+		Matrix(const size_t rows, const size_t cols) noexcept;
+		Matrix(T **matrix, const size_t rows, const size_t cols) noexcept;
+		Matrix(Matrix<T> &&matrix)noexcept;
+		Matrix(const std::initializer_list<std::initializer_list<T>> list) noexcept;
 
 		~Matrix() = default;
 
 		/*
 		 * INDEXATION
 		 */
-		Type& at(const std::size_t row, const std::size_t column);
-		const Type& at(const std::size_t row, const std::size_t column) const;
-		Type& operator ()(const std::size_t row, const std::size_t column);
-		const Type& operator ()(const std::size_t row, const std::size_t column) const;
+		T& at(const size_t row, const size_t column);
+		const T& at(const size_t row, const size_t column) const;
+		T& operator ()(const size_t row, const size_t column);
+		const T& operator ()(const size_t row, const size_t column) const;
 
 		/*
 		 * SIMPLE ADDITION
 		 */
-		Matrix<Type> add(const Type &value) const;
-		Matrix<Type> operator+(const Type &value) const;
-		Matrix<Type>& operator+=(const Type &value);
+		Matrix<T> add(const T &value) const;
+		Matrix<T> operator+(const T &value) const;
+		Matrix<T>& operator+=(const T &value);
 
 		/*
 		 * COMPLEX ADDITION
 		 */
-		Matrix<Type> add_matrix(const Matrix<Type> &matrix) const;
-		Matrix<Type> operator+(const Matrix<Type> &matrix) const;
-		Matrix<Type>& operator+=(const Matrix<Type> &matrix);
+		Matrix<T> addMatrix(const Matrix<T> &matrix) const;
+		Matrix<T> operator+(const Matrix<T> &matrix) const;
+		Matrix<T>& operator+=(const Matrix<T> &matrix);
 
 		/*
 		 * SIMPLE SUB
 		 */
-		Matrix<Type> sub(const Type &value) const;
-		Matrix<Type> operator-(const Type &value) const;
-		Matrix<Type>& operator-=(const Type &value);
+		Matrix<T> sub(const T &value) const;
+		Matrix<T> operator-(const T &value) const;
+		Matrix<T>& operator-=(const T &value);
 
 		/*
 		 * COMPLEX SUB
 		 */
-		Matrix<Type> sub_matrix(const Matrix<Type> &matrix) const;
-		Matrix<Type> operator-(const Matrix<Type> &matrix) const;
-		Matrix<Type>& operator-=(const Matrix<Type> &matrix);
+		Matrix<T> subMatrix(const Matrix<T> &matrix) const;
+		Matrix<T> operator-(const Matrix<T> &matrix) const;
+		Matrix<T>& operator-=(const Matrix<T> &matrix);
 
 		/*
 		 * DETERMINANT
 		 */
-		Type determinant() const;
+		T determinant() const;
 
 		/*
 		 * MISCELLANOUS
 		 */
-		void resize(std::size_t rows, std::size_t columns);
+		void resize(size_t rows, size_t columns);
 
-		void print();
+private:
 
-		Type determinant();
+		void allocateMemory(size_t rows, size_t columns);
+
+		void validateRow(const size_t row) const;
+		void validateColumn(const size_t column) const;
 };
