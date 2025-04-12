@@ -18,7 +18,7 @@ class Bucket : public BaseCollection
 
     bool contains(const K &key) const;
 
-	std::optional<V> find(const K &key);
+	std::optional<V> find(const K &key) const;
 
     void remove(const K &key);
 

@@ -39,7 +39,7 @@ bool Bucket<K, V>::contains(const K &key) const
 
 template <typename K, typename V>
     requires HashAndEqual<K>
-std::optional<V> Bucket<K, V>::find(const K &key)
+std::optional<V> Bucket<K, V>::find(const K &key) const
 {
     for (auto currentNode = this->head; currentNode != nullptr; currentNode = currentNode->getNext())
         if (currentNode->getKey() == key)
