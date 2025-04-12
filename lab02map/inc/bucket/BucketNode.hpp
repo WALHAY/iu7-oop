@@ -3,27 +3,33 @@
 #include "bucket/BucketConcepts.hpp"
 #include <memory>
 
-template <typename Key, typename Value>
-	requires HashAndEqual<Key>
+template <typename K, typename V>
+    requires HashAndEqual<K>
 class BucketNode final
 {
   public:
-    BucketNode(Key key, Value value);
+    BucketNode(const K key, const V value);
 
-    void setNext(std::shared_ptr<BucketNode<Key, Value>> next);
+    BucketNode(const BucketNode &other);
+    BucketNode(BucketNode &&other);
 
-    std::shared_ptr<BucketNode<Key, Value>> getNext() const;
+    BucketNode &operator=(const BucketNode &other);
+    BucketNode &operator=(BucketNode &&other);
+
+    void setNext(const std::shared_ptr<BucketNode<K, V>> next);
+
+    std::shared_ptr<BucketNode<K, V>> getNext() const;
 
     bool hasNext() const;
 
-	Key& getKey() const;
-	Value& getValue() const;
+    K &getKey();
+    V &getValue();
 
   private:
-    std::shared_ptr<BucketNode<Key, Value>> next;
+    std::shared_ptr<BucketNode<K, V>> next;
 
-	Key key;
-	Value value;
+    K key;
+    V value;
 };
 
 #include <bucket/BucketNodeImpl.hpp>

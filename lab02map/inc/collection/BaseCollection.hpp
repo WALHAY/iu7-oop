@@ -13,11 +13,9 @@ class BaseCollection {
 
 		virtual void clear();
 
-		virtual bool insert(T &&value);
-		virtual bool insert(T &value);
+		virtual bool insert(const T &value);
 
-		virtual bool remove(T &&value);
-		virtual bool remove(T &value);
+		virtual bool remove(const T &value );
 
 		virtual bool contains(T &&value) const;
 		virtual bool contains(T &value) const;
@@ -26,6 +24,6 @@ class BaseCollection {
 
 		virtual size_t getSize() const;
 
-	private:
+	protected:
 		size_t size;
 };
