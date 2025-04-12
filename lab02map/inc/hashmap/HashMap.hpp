@@ -9,6 +9,8 @@ class HashMap {
 public:
 
 private:
+	void rebuild();
+
 	float calculateLoadFactor();
 
 	void resize(size_t newSize);

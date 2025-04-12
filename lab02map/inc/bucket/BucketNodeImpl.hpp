@@ -2,52 +2,11 @@
 
 #include "bucket/BucketNode.hpp"
 #include <bucket/BucketConcepts.hpp>
-#include <iostream>
 
 template <typename K, typename V>
     requires HashAndEqual<K>
 BucketNode<K, V>::BucketNode(const K key, const V value) : key(key), value(value), next(nullptr)
 {
-}
-
-template <typename K, typename V>
-    requires HashAndEqual<K>
-BucketNode<K, V>::BucketNode(const BucketNode &other)
-{
-    this->key = other.key;
-    this->value = other.value;
-    this->next = other.next;
-}
-
-template <typename K, typename V>
-    requires HashAndEqual<K>
-BucketNode<K, V>::BucketNode(BucketNode &&other)
-{
-    this->key = other.key;
-    this->value = other.value;
-    this->next = other.next;
-}
-
-template <typename K, typename V>
-    requires HashAndEqual<K>
-BucketNode<K, V> &BucketNode<K, V>::operator=(const BucketNode &other)
-{
-    this->next = other.next;
-    this->value = other.value;
-    this->key = other.key;
-
-    return *this;
-}
-
-template <typename K, typename V>
-    requires HashAndEqual<K>
-BucketNode<K, V> &BucketNode<K, V>::operator=(BucketNode &&other)
-{
-    this->next = other.next;
-    this->value = other.value;
-    this->key = other.key;
-
-    return *this;
 }
 
 template <typename K, typename V>
