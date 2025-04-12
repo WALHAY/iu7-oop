@@ -31,7 +31,7 @@ template <typename K, typename V>
     requires HashAndEqual<K>
 bool Bucket<K, V>::contains(const K &key) const
 {
-    for (auto currentNode = this->head; currentNode->hasNext(); currentNode = currentNode->getNext())
+    for (auto currentNode = this->head; currentNode != nullptr; currentNode = currentNode->getNext())
         if (currentNode->getKey() == key)
             return true;
     return false;
@@ -59,7 +59,7 @@ void Bucket<K, V>::remove(const K &key)
 
     std::shared_ptr<BucketNode<K, V>> currentNode = this->head;
 
-    for (; currentNode->hasNext() && currentNode->getKey() != key; currentNode = currentNode->getNext())
+    for (; currentNode->hasNext() && currentNode->getNext()->getKey() != key; currentNode = currentNode->getNext())
         ;
 
     if (currentNode->hasNext() && currentNode->getNext() != nullptr)
