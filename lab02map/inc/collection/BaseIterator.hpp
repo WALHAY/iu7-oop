@@ -2,13 +2,13 @@
 
 #include <memory>
 
-template <typename T> class BaseMatrixIterator
+template <typename T> class BaseIterator
 {
   public:
-    virtual ~BaseMatrixIterator() = 0;
+    virtual ~BaseIterator() = 0;
 
-    bool operator==(const BaseMatrixIterator<T> &iter) const noexcept override;
-    bool operator!=(const BaseMatrixIterator<T> &iter) const noexcept override;
+    bool operator==(const BaseIterator<T> &iter) const noexcept override;
+    bool operator!=(const BaseIterator<T> &iter) const noexcept override;
 
     operator bool() const noexcept;
 

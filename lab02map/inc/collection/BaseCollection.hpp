@@ -7,17 +7,24 @@ class BaseCollection {
 
 	public:
 		BaseCollection();
+		BaseCollection(const size_t initialSize);
 
 		~BaseCollection() = 0;
 
-		bool insert(T &&value);
-		bool insert(T &value);
+		virtual void clear();
 
-		bool contains(T &&value);
-		bool contains(T &value);
+		virtual bool insert(T &&value);
+		virtual bool insert(T &value);
 
-		bool isEmpty();
-		size_t getSize();
+		virtual bool remove(T &&value);
+		virtual bool remove(T &value);
+
+		virtual bool contains(T &&value) const;
+		virtual bool contains(T &value) const;
+
+		virtual bool isEmpty() const;
+
+		virtual size_t getSize() const;
 
 	private:
 		size_t size;
