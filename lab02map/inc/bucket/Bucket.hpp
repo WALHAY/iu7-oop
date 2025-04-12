@@ -1,26 +1,29 @@
 #pragma once
 
+#include <bucket/BucketConcepts.hpp>
 #include <bucket/BucketNode.hpp>
 #include <collection/BaseCollection.hpp>
-#include <bucket/BucketConcepts.hpp>
+#include <optional>
 
-template<typename K, typename V>
-	requires HashAndEqual<K>
-class Bucket : public BaseCollection<BucketNode<K,V>> {
-
+template <typename K, typename V>
+    requires HashAndEqual<K>
+class Bucket : public BaseCollection
+{
   public:
-    Bucket(const Bucket &other) = default;
-    Bucket(Bucket &&other) = default;
+    Bucket();
 
-    Bucket &operator=(const Bucket &other) = default;
-    Bucket &operator=(Bucket &&other) = default;
+	virtual ~Bucket() = default;
 
-	bool contains(K &key) const;
-	bool contains(BucketNode<K, V> bucket) const override;
+    void insert(K key, V value);
 
-	V& find(K& key);
+    bool contains(const K &key) const;
 
-	void removeValue(K key);
-	void removeValue(BucketNode<K, V> node) override;
+	std::optional<V> find(const K &key);
 
+    void remove(const K &key);
+
+  private:
+    std::shared_ptr<BucketNode<K, V>> head;
 };
+
+#include <bucket/BucketImpl.hpp>

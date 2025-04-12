@@ -2,28 +2,17 @@
 
 #include <cstddef>
 
-template<typename T>
-class BaseCollection {
+class BaseCollection
+{
+  public:
+    BaseCollection();
 
-	public:
-		BaseCollection();
-		BaseCollection(const size_t initialSize);
+    virtual ~BaseCollection() = 0;
 
-		~BaseCollection() = 0;
+    bool isEmpty() const;
 
-		virtual void clear();
+    size_t getSize() const;
 
-		virtual bool insert(const T &value);
-
-		virtual bool remove(const T &value );
-
-		virtual bool contains(T &&value) const;
-		virtual bool contains(T &value) const;
-
-		virtual bool isEmpty() const;
-
-		virtual size_t getSize() const;
-
-	protected:
-		size_t size;
+  protected:
+    size_t size;
 };
