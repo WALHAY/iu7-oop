@@ -21,8 +21,8 @@ class HashMap : public BaseCollection
     HashMap();
     explicit HashMap(const size_t initialSize);
 	HashMap(HashMapIterator<K, V>&& begin, HashMapIterator<K, V> &&end);
-	HashMap(HashMap<K, V> &&map);
-	HashMap(const HashMap<K, V> &map);
+	HashMap(HashMap<K, V> &&map) = default;
+	explicit HashMap(const HashMap<K, V> &map);
 
     virtual ~HashMap() = default;
 
@@ -42,17 +42,20 @@ class HashMap : public BaseCollection
     HashMapIterator<K, V> begin() const;
     HashMapIterator<K, V> end() const;
 
+	size_t getBucketCount();
+
   private:
     /*
      * REBUILD
      */
     void rebuild();
     float getLoadFactor() const;
-    void resize(size_t newSize);
-    size_t getNextPrime() const;
+    size_t getNextPrime(size_t size) const;
 
     size_t keyHash(const K &key) const;
     size_t getEffectiveIndex(const K &key) const;
+
+	void insertIntoBuckets(std::vector<std::shared_ptr<HashMapNode<K, V>>> &buckets, const K& key, const V& value);
 
     float loadFactorThreshold = 1.0f;
 

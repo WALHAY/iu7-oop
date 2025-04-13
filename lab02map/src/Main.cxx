@@ -3,17 +3,14 @@
 
 int main()
 {
-    HashMap<std::string, int> hashmap;
+    HashMap<std::string, int> hashmap2(3);
 
-    hashmap.insert("hello world", 1);
-    hashmap.insert("meow", 2);
-    hashmap.insert("nigga", 123);
-    hashmap.insert("higger", 10);
+	for(int i = 'a'; i < 'z'; ++i)
+	{
+    	hashmap2.insert(std::format("cat{}", char(i)), i);
+		std::cout << "Buckets: " << hashmap2.getBucketCount() << " Size: " <<hashmap2.getSize() << std::endl;
+	}
 
-    HashMap<std::string, int> hashmap2(hashmap);
-
-	hashmap2.clear();
-	std::cout << "Size: " << hashmap2.getSize();
     for (auto start = hashmap2.begin(); start != hashmap2.end(); ++start)
     {
         std::cout << start->key << " : " << start->value << std::endl;
