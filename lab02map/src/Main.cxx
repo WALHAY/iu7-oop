@@ -10,7 +10,7 @@ int main()
     hashmap.insert("nigga", 123);
     hashmap.insert("higger", 10);
 
-    HashMap<std::string, int> hashmap2(hashmap.begin(), hashmap.end());
+    HashMap<std::string, int> hashmap2(hashmap);
 
     for (auto start = hashmap2.begin(); start != hashmap2.end(); ++start)
     {

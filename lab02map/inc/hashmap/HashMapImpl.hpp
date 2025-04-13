@@ -28,6 +28,19 @@ HashMap<K, V>::HashMap(HashMapIterator<K, V>&& begin, HashMapIterator<K, V> &&en
 }
 
 template <HashAndEqual K, MoveAndCopy V>
+HashMap<K, V>::HashMap(HashMap<K, V> &&map)
+{
+	this->size = std::move(map->size);
+	this->sentinelNode = std::move(map->sentinelNode);
+	this->lastNode = std::move(map->lastNode);
+	this->firstNode = std::move(map->firstNode);
+	this->buckets = std::move(map->buckets);
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+HashMap<K, V>::HashMap(const HashMap<K, V> &map) : HashMap(map.begin(), map.end()) {}
+
+template <HashAndEqual K, MoveAndCopy V>
 bool HashMap<K, V>::contains(const K &key) const
 {
     size_t index = getEffectiveIndex(key);

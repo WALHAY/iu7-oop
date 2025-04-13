@@ -21,6 +21,8 @@ class HashMap : public BaseCollection
     HashMap();
     explicit HashMap(const size_t initialSize);
 	HashMap(HashMapIterator<K, V>&& begin, HashMapIterator<K, V> &&end);
+	HashMap(HashMap<K, V> &&map);
+	HashMap(const HashMap<K, V> &map);
     virtual ~HashMap() = default;
 
     /*
