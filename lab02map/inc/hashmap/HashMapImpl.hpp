@@ -1,8 +1,8 @@
 #pragma once
 
 #include "hashmap/HashMap.hpp"
-#include "hashmap/HashMapNode.hpp"
 #include "hashmap/HashMapConcepts.hpp"
+#include "hashmap/HashMapNode.hpp"
 
 template <HashAndEqual K, typename V>
 HashMap<K, V>::HashMap() : HashMap(8)
@@ -12,7 +12,7 @@ HashMap<K, V>::HashMap() : HashMap(8)
 template <HashAndEqual K, typename V>
 HashMap<K, V>::HashMap(const size_t initialSize)
 {
-	sentinelNode = std::make_shared<HashMapNode<K, V>>(K(), V(), nullptr, nullptr, nullptr, 0);
+    sentinelNode = std::make_shared<HashMapNode<K, V>>(K(), V(), nullptr, nullptr, nullptr, 0);
     firstNode = nullptr;
     lastNode = nullptr;
     buckets.resize(initialSize);
@@ -35,7 +35,8 @@ void HashMap<K, V>::insert(const K &key, const V &value)
     size_t hash = keyHash(key);
     size_t index = hash % buckets.size();
 
-    std::shared_ptr<HashMapNode<K, V>> newNode = std::make_shared<HashMapNode<K, V>>(key, value, nullptr, lastNode, sentinelNode, hash);
+    std::shared_ptr<HashMapNode<K, V>> newNode =
+        std::make_shared<HashMapNode<K, V>>(key, value, nullptr, lastNode, sentinelNode, hash);
     std::shared_ptr<HashMapNode<K, V>> bucket = buckets[index];
 
     if (firstNode == nullptr)
@@ -46,7 +47,7 @@ void HashMap<K, V>::insert(const K &key, const V &value)
         lastNode->nextInOrder = newNode;
         newNode->previousInOrder = lastNode;
     }
-	sentinelNode->previousInOrder = newNode;
+    sentinelNode->previousInOrder = newNode;
     lastNode = newNode;
 
     if (bucket == nullptr)
@@ -103,6 +104,7 @@ void HashMap<K, V>::remove(const K &key)
         }
     }
 }
+
 template <HashAndEqual K, typename V>
 HashMapIterator<K, V> HashMap<K, V>::begin() const
 {

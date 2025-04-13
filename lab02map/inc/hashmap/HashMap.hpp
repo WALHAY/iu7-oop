@@ -9,10 +9,12 @@ template <HashAndEqual K, typename V>
 class HashMap : public BaseCollection
 {
     friend class HashMapIterator<K, V>;
-	friend class HashMapNode<K, V>;
+    friend class HashMapNode<K, V>;
 
   public:
-	using iterator = HashMapIterator<K, V>;
+    using key_type = K;
+    using value_type = V;
+    using iterator = HashMapIterator<K, V>;
 
     HashMap();
     explicit HashMap(const size_t initialSize);

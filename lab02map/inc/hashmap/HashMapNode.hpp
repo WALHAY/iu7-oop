@@ -11,7 +11,8 @@ template <HashAndEqual K, typename V>
 class HashMapNode
 {
 
-	friend class HashMap<K, V>;
+    friend class HashMap<K, V>;
+
   public:
     HashMapNode(K key, V value, std::shared_ptr<HashMapNode> next, std::shared_ptr<HashMapNode> previousInOrder,
                 std::shared_ptr<HashMapNode> nextInOrder, size_t hash);

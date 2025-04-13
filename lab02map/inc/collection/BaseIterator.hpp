@@ -4,5 +4,4 @@ class BaseIterator
 {
   public:
     virtual ~BaseIterator() = default;
-
 };
