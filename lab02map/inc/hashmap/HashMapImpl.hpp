@@ -3,6 +3,7 @@
 #include "hashmap/HashMap.hpp"
 #include "hashmap/HashMapConcepts.hpp"
 #include "hashmap/HashMapNode.hpp"
+#include <iostream>
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap() : HashMap(8)
@@ -12,7 +13,7 @@ HashMap<K, V>::HashMap() : HashMap(8)
 template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap(const size_t initialSize)
 {
-	size = 0;
+    size = 0;
     sentinelNode = std::make_shared<HashMapNode<K, V>>(K(), V(), nullptr, nullptr, nullptr, 0);
     firstNode = sentinelNode;
     lastNode = sentinelNode;
@@ -20,25 +21,29 @@ HashMap<K, V>::HashMap(const size_t initialSize)
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-HashMap<K, V>::HashMap(HashMapIterator<K, V>&& begin, HashMapIterator<K, V> &&end) : HashMap() {
-	while(begin != end) {
-		insert(std::move(begin->key), std::move(begin->value));
-		++begin;
-	}
+HashMap<K, V>::HashMap(HashMapIterator<K, V> &&begin, HashMapIterator<K, V> &&end) : HashMap()
+{
+    while (begin != end)
+    {
+        insert(std::move(begin->key), std::move(begin->value));
+        ++begin;
+    }
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap(HashMap<K, V> &&map)
 {
-	this->size = std::move(map->size);
-	this->sentinelNode = std::move(map->sentinelNode);
-	this->lastNode = std::move(map->lastNode);
-	this->firstNode = std::move(map->firstNode);
-	this->buckets = std::move(map->buckets);
+    this->size = std::move(map->size);
+    this->sentinelNode = std::move(map->sentinelNode);
+    this->lastNode = std::move(map->lastNode);
+    this->firstNode = std::move(map->firstNode);
+    this->buckets = std::move(map->buckets);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-HashMap<K, V>::HashMap(const HashMap<K, V> &map) : HashMap(map.begin(), map.end()) {}
+HashMap<K, V>::HashMap(const HashMap<K, V> &map) : HashMap(map.begin(), map.end())
+{
+}
 
 template <HashAndEqual K, MoveAndCopy V>
 bool HashMap<K, V>::contains(const K &key) const
@@ -111,9 +116,21 @@ void HashMap<K, V>::remove(const K &key)
     std::shared_ptr<HashMapNode<K, V>> node = buckets[index];
     if (node != nullptr && node->key == key)
     {
+        if (node == firstNode)
+        {
+            firstNode->nextInOrder;
+            if (firstNode == nullptr)
+                firstNode = sentinelNode;
+        }
+        else if (node == lastNode)
+        {
+            lastNode = lastNode->previousInOrder;
+            sentinelNode->previousInOrder = lastNode;
+        }
+
         buckets[index] = node->next;
         node->removeInOrder();
-		size--;
+        size--;
         return;
     }
 
@@ -121,9 +138,21 @@ void HashMap<K, V>::remove(const K &key)
     {
         if (node->next->key == key)
         {
-            std::shared_ptr<HashMapNode<K, V>> previous = node->next->previousInOrder;
+            if (node == firstNode)
+            {
+                firstNode->nextInOrder;
+                if (firstNode == nullptr)
+                    firstNode = sentinelNode;
+            }
+            else if (node == lastNode)
+            {
+                lastNode = lastNode->previousInOrder;
+                sentinelNode->previousInOrder = lastNode;
+            }
+
+            node->next = node->next->next;
             node->removeInOrder();
-			size--;
+            size--;
             return;
         }
     }
@@ -132,10 +161,13 @@ void HashMap<K, V>::remove(const K &key)
 template <HashAndEqual K, MoveAndCopy V>
 void HashMap<K, V>::clear()
 {
-	for(auto it = begin(); it != end(); ++it)
-	{
+    auto it = begin();
+    while (it.isValid() && it != end())
+    {
+		auto next = it + std::size_t(1);
 		remove(it->key);
-	}
+		it = next;
+    }
 }
 
 template <HashAndEqual K, MoveAndCopy V>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <hashmap/HashMapIter.hpp>
+#include <iostream>
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map)
@@ -11,7 +12,7 @@ HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map)
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V>::HashMapIterator(const HashMapIterator<K, V> &iterator)
 {
-    nodePtr = iterator->nodePtr;
+    nodePtr = iterator.nodePtr;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -49,6 +50,17 @@ HashMapNode<K, V> *HashMapIterator<K, V>::operator->()
     return getPtr();
 }
 
+template <HashAndEqual K, MoveAndCopy V>
+HashMapIterator<K, V> HashMapIterator<K, V>::operator+(size_t offset) const
+{
+	HashMapIterator<K, V> newIter(*this);
+	for(int i = 0; i < offset; ++i)
+		++newIter;
+
+
+    return newIter;
+}
+
 // prefix
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
@@ -73,6 +85,7 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator+=(size_type size)
 {
     while (size--)
         ++(*this);
+	return *this;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -105,6 +118,12 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator-=(size_type size)
 }
 
 template <HashAndEqual K, MoveAndCopy V>
+HashMapIterator<K, V> &HashMapIterator<K, V>::operator=(const HashMapIterator<K, V>& other) {
+	nodePtr = other.nodePtr;
+	return *this;
+}
+
+template <HashAndEqual K, MoveAndCopy V>
 bool HashMapIterator<K, V>::operator==(const HashMapIterator<K, V> &other)
 {
     return other.nodePtr.lock() == nodePtr.lock();
@@ -118,7 +137,7 @@ bool HashMapIterator<K, V>::operator!=(const HashMapIterator<K, V> &other)
 
 template <HashAndEqual K, MoveAndCopy V>
 bool HashMapIterator<K, V>::isValid() {
-	return nodePtr != nullptr && !nodePtr.expired();
+	return nodePtr.lock() != nullptr && !nodePtr.expired();
 }
 
 template <HashAndEqual K, MoveAndCopy V>

@@ -37,6 +37,8 @@ class HashMapIterator : public BaseIterator
     HashMapIterator<K, V> operator--(int);
     HashMapIterator<K, V> &operator-=(size_type offset);
 
+    HashMapIterator<K, V> &operator=(const HashMapIterator<K, V>& other);
+
     bool operator==(const HashMapIterator<K, V> &other);
     bool operator!=(const HashMapIterator<K, V> &other);
 

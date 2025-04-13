@@ -12,6 +12,8 @@ int main()
 
     HashMap<std::string, int> hashmap2(hashmap);
 
+	hashmap2.clear();
+	std::cout << "Size: " << hashmap2.getSize();
     for (auto start = hashmap2.begin(); start != hashmap2.end(); ++start)
     {
         std::cout << start->key << " : " << start->value << std::endl;

@@ -8,7 +8,7 @@ template <HashAndEqual K, MoveAndCopy V>
 class HashMap;
 
 template <HashAndEqual K, MoveAndCopy V>
-class HashMapNode
+class HashMapNode final
 {
 
     friend class HashMap<K, V>;
