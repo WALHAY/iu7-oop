@@ -45,6 +45,8 @@ class HashMap : public BaseCollection
 
     std::shared_ptr<HashMapNode<K, V>> lastNode;
     std::shared_ptr<HashMapNode<K, V>> firstNode;
+    std::shared_ptr<HashMapNode<K, V>> sentinelNode;
+
     std::vector<std::shared_ptr<HashMapNode<K, V>>> buckets;
 };
 
