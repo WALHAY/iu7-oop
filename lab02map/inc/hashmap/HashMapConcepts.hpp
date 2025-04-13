@@ -13,4 +13,3 @@ concept Hashable = requires(T a) {
 
 template<typename T>
 concept HashAndEqual = EqualitiyComparable<T> && Hashable<T>;
-

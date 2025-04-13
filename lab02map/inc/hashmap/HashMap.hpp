@@ -1,44 +1,58 @@
 #pragma once
 
-#include "bucket/Bucket.hpp"
 #include "collection/BaseCollection.hpp"
-#include <bucket/BucketConcepts.hpp>
+#include "hashmap/HashMapConcepts.hpp"
+#include "hashmap/HashMapIter.hpp"
+#include <memory>
 #include <optional>
 
-template<typename K, typename V>
-	requires HashAndEqual<K>
-class HashMap : public BaseCollection {
+template <HashAndEqual K, typename V>
+class HashMap : public BaseCollection
+{
+    friend Iterator<K, V>;
 
-public:
-	HashMap();
-	explicit HashMap(const size_t initialSize);
+  private:
+    struct HashMapNode
+    {
+        K key;
+        V value;
 
-	virtual ~HashMap() = default;
+        std::shared_ptr<HashMapNode> next;
+        std::shared_ptr<HashMapNode> nextInOrder;
+		std::shared_ptr<HashMapNode> previousInOrder;
 
-	void insert(const K& key, const V& value);
+        size_t hash;
+    };
 
-	std::optional<V> find(const K& key);
+  public:
+    HashMap();
+    explicit HashMap(const size_t initialSize);
 
-	bool contains(const K& key);
+    virtual ~HashMap() = default;
 
-	void remove(const K& key);
+    void insert(const K &key, const V &value);
 
-private:
-	size_t getEffectiveIndex(const K& key);
+    std::optional<V> find(const K &key);
 
-	void rebuild();
+    bool contains(const K &key);
 
-	size_t getNextPrime();
+    void remove(const K &key);
 
-	float calculateLoadFactor();
+  private:
+    size_t getEffectiveIndex(const K &key);
 
-	void resize(size_t newSize);
+    void rebuild();
 
-	size_t keyHash(const K& key);
+    size_t getNextPrime();
 
-	std::vector<Bucket<K, V>> buckets;
-	float loadFactor;
-	size_t bucketsCount;
+    float calculateLoadFactor();
+
+    void resize(size_t newSize);
+
+    size_t keyHash(const K &key);
+
+	std::shared_ptr<HashMapNode> lastNode;
+    std::vector<std::shared_ptr<HashMapNode>> buckets;
 };
 
 #include <hashmap/HashMapImpl.hpp>
