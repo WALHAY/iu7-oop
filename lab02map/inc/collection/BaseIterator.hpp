@@ -1,19 +1,8 @@
 #pragma once
 
-#include <memory>
-
-template <typename T> class BaseIterator
+class BaseIterator
 {
   public:
-    virtual ~BaseIterator() = 0;
+    virtual ~BaseIterator() = default;
 
-    bool operator==(const BaseIterator<T> &iter) const noexcept override;
-    bool operator!=(const BaseIterator<T> &iter) const noexcept override;
-
-    operator bool() const noexcept;
-
-    bool isValid();
-
-  protected:
-    std::weak_ptr<T> elementPtr;
 };

@@ -9,22 +9,30 @@
 template <HashAndEqual K, typename V>
 class HashMap : public BaseCollection
 {
-    friend Iterator<K, V>;
+    friend class Iterator<K, V>;
 
-  private:
-    struct HashMapNode
+  public:
+    class HashMapNode
     {
+		friend class HashMap<K, V>;
+      public:
+        HashMapNode(K key, V value, std::shared_ptr<HashMapNode> next, std::shared_ptr<HashMapNode> previousInOrder,
+                    std::shared_ptr<HashMapNode> nextInOrder, size_t hash);
+
         K key;
         V value;
 
+		std::shared_ptr<HashMapNode> getNext();
+		std::shared_ptr<HashMapNode> getPrevious();
+
+      private:
         std::shared_ptr<HashMapNode> next;
+        std::shared_ptr<HashMapNode> previousInOrder;
         std::shared_ptr<HashMapNode> nextInOrder;
-		std::shared_ptr<HashMapNode> previousInOrder;
 
         size_t hash;
     };
 
-  public:
     HashMap();
     explicit HashMap(const size_t initialSize);
 
@@ -37,6 +45,9 @@ class HashMap : public BaseCollection
     bool contains(const K &key);
 
     void remove(const K &key);
+
+    Iterator<K, V> begin();
+    Iterator<K, V> end();
 
   private:
     size_t getEffectiveIndex(const K &key);
@@ -51,7 +62,8 @@ class HashMap : public BaseCollection
 
     size_t keyHash(const K &key);
 
-	std::shared_ptr<HashMapNode> lastNode;
+    std::shared_ptr<HashMapNode> lastNode;
+    std::shared_ptr<HashMapNode> firstNode;
     std::vector<std::shared_ptr<HashMapNode>> buckets;
 };
 

@@ -5,10 +5,11 @@ int main() {
 	HashMap<std::string, int> hashmap(8);
 
 	hashmap.insert("hello world", 1);
-	std::optional<int> value = hashmap.find("hello world");
-	if(value.has_value())
-		std::cout << "contains: " << value.value();
-	else 
-		std::cout << "not contains";
+	hashmap.insert("meow", 2);
+	hashmap.insert("nigga", 123);
+	hashmap.insert("higger", 10);
+	for(auto start = hashmap.begin(); start != hashmap.end(); ++start)
+		std::cout << start->key << " " << start->value << std::endl;
+
 	return 0;
 }
