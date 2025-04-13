@@ -14,10 +14,19 @@ HashMap<K, V>::HashMap(const size_t initialSize)
 {
 	size = 0;
     sentinelNode = std::make_shared<HashMapNode<K, V>>(K(), V(), nullptr, nullptr, nullptr, 0);
-    firstNode = nullptr;
-    lastNode = nullptr;
+    firstNode = sentinelNode;
+    lastNode = sentinelNode;
     buckets.resize(initialSize);
 }
+
+template <HashAndEqual K, MoveAndCopy V>
+HashMap<K, V>::HashMap(HashMapIterator<K, V>&& begin, HashMapIterator<K, V> &&end) : HashMap() {
+	while(begin != end) {
+		insert(std::move(begin->key), std::move(begin->value));
+		++begin;
+	}
+}
+
 template <HashAndEqual K, MoveAndCopy V>
 bool HashMap<K, V>::contains(const K &key) const
 {
@@ -40,10 +49,10 @@ void HashMap<K, V>::insert(const K &key, const V &value)
         std::make_shared<HashMapNode<K, V>>(key, value, nullptr, lastNode, sentinelNode, hash);
     std::shared_ptr<HashMapNode<K, V>> bucket = buckets[index];
 
-    if (firstNode == nullptr)
+    if (firstNode == sentinelNode)
         firstNode = newNode;
 
-    if (lastNode != nullptr)
+    if (lastNode != sentinelNode)
     {
         lastNode->nextInOrder = newNode;
         newNode->previousInOrder = lastNode;

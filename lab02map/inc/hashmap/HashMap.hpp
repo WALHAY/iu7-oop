@@ -20,6 +20,7 @@ class HashMap : public BaseCollection
      */
     HashMap();
     explicit HashMap(const size_t initialSize);
+	HashMap(HashMapIterator<K, V>&& begin, HashMapIterator<K, V> &&end);
     virtual ~HashMap() = default;
 
     /*
