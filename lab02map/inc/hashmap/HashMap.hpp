@@ -1,37 +1,18 @@
 #pragma once
 
 #include "collection/BaseCollection.hpp"
-#include "hashmap/HashMapConcepts.hpp"
 #include "hashmap/HashMapIter.hpp"
-#include <memory>
+#include "hashmap/HashMapNode.hpp"
 #include <optional>
 
 template <HashAndEqual K, typename V>
 class HashMap : public BaseCollection
 {
-    friend class Iterator<K, V>;
+    friend class HashMapIterator<K, V>;
+	friend class HashMapNode<K, V>;
 
   public:
-    class HashMapNode
-    {
-		friend class HashMap<K, V>;
-      public:
-        HashMapNode(K key, V value, std::shared_ptr<HashMapNode> next, std::shared_ptr<HashMapNode> previousInOrder,
-                    std::shared_ptr<HashMapNode> nextInOrder, size_t hash);
-
-        K key;
-        V value;
-
-		std::shared_ptr<HashMapNode> getNext();
-		std::shared_ptr<HashMapNode> getPrevious();
-
-      private:
-        std::shared_ptr<HashMapNode> next;
-        std::shared_ptr<HashMapNode> previousInOrder;
-        std::shared_ptr<HashMapNode> nextInOrder;
-
-        size_t hash;
-    };
+	using iterator = HashMapIterator<K, V>;
 
     HashMap();
     explicit HashMap(const size_t initialSize);
@@ -46,8 +27,8 @@ class HashMap : public BaseCollection
 
     void remove(const K &key);
 
-    Iterator<K, V> begin();
-    Iterator<K, V> end();
+    HashMapIterator<K, V> begin() const;
+    HashMapIterator<K, V> end() const;
 
   private:
     size_t getEffectiveIndex(const K &key);
@@ -62,9 +43,9 @@ class HashMap : public BaseCollection
 
     size_t keyHash(const K &key);
 
-    std::shared_ptr<HashMapNode> lastNode;
-    std::shared_ptr<HashMapNode> firstNode;
-    std::vector<std::shared_ptr<HashMapNode>> buckets;
+    std::shared_ptr<HashMapNode<K, V>> lastNode;
+    std::shared_ptr<HashMapNode<K, V>> firstNode;
+    std::vector<std::shared_ptr<HashMapNode<K, V>>> buckets;
 };
 
 #include <hashmap/HashMapImpl.hpp>

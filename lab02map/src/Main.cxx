@@ -1,6 +1,5 @@
 #include "hashmap/HashMap.hpp"
 #include <iostream>
-#include <string>
 int main() {
 	HashMap<std::string, int> hashmap(8);
 
@@ -8,7 +7,7 @@ int main() {
 	hashmap.insert("meow", 2);
 	hashmap.insert("nigga", 123);
 	hashmap.insert("higger", 10);
-	for(auto start = hashmap.begin(); start != hashmap.end(); ++start)
+	for(auto start = hashmap.end(); start != hashmap.begin(); --start)
 		std::cout << start->key << " " << start->value << std::endl;
 
 	return 0;

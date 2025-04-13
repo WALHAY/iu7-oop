@@ -1,57 +1,51 @@
 #pragma once
 
 #include <hashmap/HashMapIter.hpp>
-#include <iostream>
 
 template <HashAndEqual K, typename V>
-Iterator<K, V>::Iterator()
-{
-}
-
-template <HashAndEqual K, typename V>
-Iterator<K, V>::Iterator(const HashMap<K, V> &map)
+HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map)
 {
     nodePtr = map.lastNode;
 }
 
 template <HashAndEqual K, typename V>
-Iterator<K, V>::Iterator(const Iterator<K, V> &iterator)
+HashMapIterator<K, V>::HashMapIterator(const HashMapIterator<K, V> &iterator)
 {
     nodePtr = iterator->nodePtr;
 }
 
 template <HashAndEqual K, typename V>
-Iterator<K,V>::Iterator(const std::weak_ptr<typename HashMap<K, V>::HashMapNode> &ptr) {
+HashMapIterator<K,V>::HashMapIterator(const std::weak_ptr<HashMapNode<K, V>> &ptr) {
 	nodePtr = ptr;
 }
 
 template <HashAndEqual K, typename V>
-const HashMap<K, V>::HashMapNode &Iterator<K,V>::operator*() const
+const HashMapNode<K, V> &HashMapIterator<K,V>::operator*() const
 {
 	return *getPtr();
 }
 
 template <HashAndEqual K, typename V>
-HashMap<K, V>::HashMapNode &Iterator<K,V>::operator*()
+HashMapNode<K, V> &HashMapIterator<K,V>::operator*()
 {
 	return *getPtr();
 }
 
 template <HashAndEqual K, typename V>
-const HashMap<K, V>::HashMapNode *Iterator<K,V>::operator->() const
+const HashMapNode<K, V> *HashMapIterator<K,V>::operator->() const
 {
 	return getPtr();
 }
 
 template <HashAndEqual K, typename V>
-HashMap<K, V>::HashMapNode *Iterator<K,V>::operator->()
+HashMapNode<K, V> *HashMapIterator<K,V>::operator->()
 {
 	return getPtr();
 }
 
 // prefix
 template <HashAndEqual K, typename V>
-Iterator<K, V> &Iterator<K, V>::operator++()
+HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
 {
 	nodePtr = nodePtr.lock()->getNext();
     return *this;
@@ -59,9 +53,9 @@ Iterator<K, V> &Iterator<K, V>::operator++()
 
 // postfix
 template <HashAndEqual K, typename V>
-Iterator<K, V> Iterator<K, V>::operator++(int)
+HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int)
 {
-    Iterator<K, V> oldIter(*this);
+    HashMapIterator<K, V> oldIter(*this);
 
     ++(*this);
 
@@ -69,44 +63,53 @@ Iterator<K, V> Iterator<K, V>::operator++(int)
 }
 
 template <HashAndEqual K, typename V>
-Iterator<K, V> &Iterator<K, V>::operator+=(int size)
+HashMapIterator<K, V> &HashMapIterator<K, V>::operator+=(int size)
 {
     while (size--)
         ++(*this);
 }
 
 template <HashAndEqual K, typename V>
-Iterator<K, V> Iterator<K, V>::operator-(int offset) const
+HashMapIterator<K, V> HashMapIterator<K, V>::operator-(int offset) const
 {
 }
 
 template <HashAndEqual K, typename V>
-Iterator<K, V> &Iterator<K, V>::operator--()
+HashMapIterator<K, V> &HashMapIterator<K, V>::operator--()
 {
+	nodePtr = nodePtr.lock()->getPrevious();
+	return *this;
 }
 
 template <HashAndEqual K, typename V>
-Iterator<K, V> Iterator<K, V>::operator--(int)
+HashMapIterator<K, V> HashMapIterator<K, V>::operator--(int)
 {
+	HashMapIterator<K, V> oldIter(*this);
+
+	nodePtr = nodePtr.lock()->getPrevious();
+
+	return oldIter;
 }
 
 template <HashAndEqual K, typename V>
-Iterator<K, V> &Iterator<K, V>::operator-=(int size)
+HashMapIterator<K, V> &HashMapIterator<K, V>::operator-=(int size)
 {
+    while (size--)
+        --(*this);
 }
 
 template <HashAndEqual K, typename V>
-bool Iterator<K, V>::operator==(const Iterator<K, V> &other) {
+bool HashMapIterator<K, V>::operator==(const HashMapIterator<K, V> &other) {
 	return other.nodePtr.lock() == nodePtr.lock();
 }
 
 template <HashAndEqual K, typename V>
-bool Iterator<K, V>::operator!=(const Iterator<K, V> &other) {
+bool HashMapIterator<K, V>::operator!=(const HashMapIterator<K, V> &other) {
 	return other.nodePtr.lock() != nodePtr.lock();
 }
 
 template <HashAndEqual K, typename V>
-HashMap<K, V>::HashMapNode *Iterator<K, V>::getPtr()
+HashMapNode<K, V> *HashMapIterator<K, V>::getPtr()
 {
     return nodePtr.lock().get();
 }
