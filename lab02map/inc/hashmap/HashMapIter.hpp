@@ -5,7 +5,7 @@
 #include "hashmap/HashMapNode.hpp"
 #include <memory>
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 class HashMapIterator : public BaseIterator
 {
   public:
@@ -14,8 +14,6 @@ class HashMapIterator : public BaseIterator
     using value_type = V;
     using difference_type = std::ptrdiff_t;
     using size_type = size_t;
-    using reference = const value_type &;
-    using pointer = const value_type *;
     using iterator = HashMapIterator<K, V>;
 
     HashMapIterator(const HashMap<K, V> &map);

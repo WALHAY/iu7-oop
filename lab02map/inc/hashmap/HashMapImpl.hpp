@@ -4,12 +4,12 @@
 #include "hashmap/HashMapConcepts.hpp"
 #include "hashmap/HashMapNode.hpp"
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap() : HashMap(8)
 {
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap(const size_t initialSize)
 {
     sentinelNode = std::make_shared<HashMapNode<K, V>>(K(), V(), nullptr, nullptr, nullptr, 0);
@@ -17,7 +17,7 @@ HashMap<K, V>::HashMap(const size_t initialSize)
     lastNode = nullptr;
     buckets.resize(initialSize);
 }
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 bool HashMap<K, V>::contains(const K &key)
 {
     size_t index = getEffectiveIndex(key);
@@ -29,7 +29,7 @@ bool HashMap<K, V>::contains(const K &key)
     return node != nullptr && node->key == key;
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 void HashMap<K, V>::insert(const K &key, const V &value)
 {
     size_t hash = keyHash(key);
@@ -62,7 +62,7 @@ void HashMap<K, V>::insert(const K &key, const V &value)
     bucket->next = newNode;
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 std::optional<V> HashMap<K, V>::find(const K &key)
 {
     size_t index = getEffectiveIndex(key);
@@ -79,7 +79,7 @@ std::optional<V> HashMap<K, V>::find(const K &key)
     return std::nullopt;
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 void HashMap<K, V>::remove(const K &key)
 {
     size_t index = getEffectiveIndex(key);
@@ -105,32 +105,32 @@ void HashMap<K, V>::remove(const K &key)
     }
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> HashMap<K, V>::begin() const
 {
     return HashMapIterator<K, V>(firstNode);
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> HashMap<K, V>::end() const
 {
     return HashMapIterator<K, V>(sentinelNode);
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 size_t HashMap<K, V>::getEffectiveIndex(const K &key)
 {
     return keyHash(key) % buckets.size();
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 size_t HashMap<K, V>::keyHash(const K &key)
 {
     std::hash<K> hasher;
     return hasher(key);
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 float HashMap<K, V>::calculateLoadFactor()
 {
     return this->size / this->buckets.size();

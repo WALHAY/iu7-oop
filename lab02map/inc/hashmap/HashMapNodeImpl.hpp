@@ -4,12 +4,11 @@
 #include "hashmap/HashMapNode.hpp"
 #include <memory>
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 HashMapNode<K, V>::HashMapNode(K key, V value, std::shared_ptr<HashMapNode> next,
                                std::shared_ptr<HashMapNode> previousInOrder, std::shared_ptr<HashMapNode> nextInOrder,
-                               size_t hash)
+                               size_t hash) : key(key)
 {
-    this->key = key;
     this->value = value;
     this->next = next;
     this->previousInOrder = previousInOrder;
@@ -17,13 +16,13 @@ HashMapNode<K, V>::HashMapNode(K key, V value, std::shared_ptr<HashMapNode> next
     this->hash = hash;
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 std::shared_ptr<HashMapNode<K, V>> HashMapNode<K, V>::getNext()
 {
     return nextInOrder;
 }
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 std::shared_ptr<HashMapNode<K, V>> HashMapNode<K, V>::getPrevious()
 {
     return previousInOrder;

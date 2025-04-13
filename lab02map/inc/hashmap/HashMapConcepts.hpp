@@ -13,3 +13,12 @@ concept Hashable = requires(T a) {
 
 template <typename T>
 concept HashAndEqual = EqualitiyComparable<T> && Hashable<T>;
+
+template <typename T>
+concept Movable = std::movable<T>;
+
+template <typename T>
+concept Copyable = std::copyable<T>;
+
+template<typename T>
+concept MoveAndCopy = Movable<T> && Copyable<T>;

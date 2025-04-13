@@ -4,10 +4,10 @@
 #include <cstddef>
 #include <memory>
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 class HashMap;
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 class HashMapNode
 {
 
@@ -17,7 +17,7 @@ class HashMapNode
     HashMapNode(K key, V value, std::shared_ptr<HashMapNode> next, std::shared_ptr<HashMapNode> previousInOrder,
                 std::shared_ptr<HashMapNode> nextInOrder, size_t hash);
 
-    K key;
+    const K key;
     V value;
 
     std::shared_ptr<HashMapNode> getNext();

@@ -5,7 +5,7 @@
 #include "hashmap/HashMapNode.hpp"
 #include <optional>
 
-template <HashAndEqual K, typename V>
+template <HashAndEqual K, MoveAndCopy V>
 class HashMap : public BaseCollection
 {
     friend class HashMapIterator<K, V>;
