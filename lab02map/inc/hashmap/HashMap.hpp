@@ -3,7 +3,6 @@
 #include "collection/BaseCollection.hpp"
 #include "hashmap/HashMapIter.hpp"
 #include "hashmap/HashMapNode.hpp"
-#include <optional>
 
 template <HashAndEqual K, MoveAndCopy V>
 class HashMap : public BaseCollection
@@ -16,34 +15,42 @@ class HashMap : public BaseCollection
     using value_type = V;
     using iterator = HashMapIterator<K, V>;
 
+    /*
+     * CONSTRUCTORS
+     */
     HashMap();
     explicit HashMap(const size_t initialSize);
-
     virtual ~HashMap() = default;
 
+    /*
+     * DEFAULT OPERATIONS
+     */
     void insert(const K &key, const V &value);
-
-    std::optional<V> find(const K &key);
-
-    bool contains(const K &key);
-
+    HashMapIterator<K, V> find(const K &key) const;
+    bool contains(const K &key) const;
     void remove(const K &key);
 
+    void clear();
+
+    /*
+     * ITERATORS
+     */
     HashMapIterator<K, V> begin() const;
     HashMapIterator<K, V> end() const;
 
   private:
-    size_t getEffectiveIndex(const K &key);
-
+    /*
+     * REBUILD
+     */
     void rebuild();
-
-    size_t getNextPrime();
-
-    float calculateLoadFactor();
-
+    float getLoadFactor() const;
     void resize(size_t newSize);
+    size_t getNextPrime() const;
 
-    size_t keyHash(const K &key);
+    size_t keyHash(const K &key) const;
+    size_t getEffectiveIndex(const K &key) const;
+
+    float loadFactorThreshold = 1.0f;
 
     std::shared_ptr<HashMapNode<K, V>> lastNode;
     std::shared_ptr<HashMapNode<K, V>> firstNode;

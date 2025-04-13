@@ -21,6 +21,11 @@ HashMapIterator<K, V>::HashMapIterator(const std::weak_ptr<HashMapNode<K, V>> &p
 }
 
 template <HashAndEqual K, MoveAndCopy V>
+HashMapIterator<K, V>::operator bool() {
+	return isValid();
+}
+
+template <HashAndEqual K, MoveAndCopy V>
 const HashMapNode<K, V> &HashMapIterator<K, V>::operator*() const
 {
     return *getPtr();
@@ -109,6 +114,11 @@ template <HashAndEqual K, MoveAndCopy V>
 bool HashMapIterator<K, V>::operator!=(const HashMapIterator<K, V> &other)
 {
     return other.nodePtr.lock() != nodePtr.lock();
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+bool HashMapIterator<K, V>::isValid() {
+	return nodePtr != nullptr && !nodePtr.expired();
 }
 
 template <HashAndEqual K, MoveAndCopy V>

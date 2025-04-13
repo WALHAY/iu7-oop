@@ -20,6 +20,8 @@ class HashMapIterator : public BaseIterator
     HashMapIterator(const HashMapIterator<K, V> &iterator);
     HashMapIterator(const std::weak_ptr<HashMapNode<K, V>> &ptr);
 
+	operator bool();
+
     const HashMapNode<K, V> &operator*() const;
     HashMapNode<K, V> &operator*();
     const HashMapNode<K, V> *operator->() const;
@@ -38,10 +40,12 @@ class HashMapIterator : public BaseIterator
     bool operator==(const HashMapIterator<K, V> &other);
     bool operator!=(const HashMapIterator<K, V> &other);
 
-    HashMapNode<K, V> *getPtr();
+	bool isValid();
 
   private:
     std::weak_ptr<HashMapNode<K, V>> nodePtr;
+
+    HashMapNode<K, V> *getPtr();
 };
 
 #include <hashmap/HashMapIterImpl.hpp>

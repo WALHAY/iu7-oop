@@ -1,7 +1,6 @@
 #include "collection/BaseCollection.hpp"
 
 BaseCollection::BaseCollection() {
-
 }
 
 BaseCollection::~BaseCollection() = default;

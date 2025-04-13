@@ -12,13 +12,14 @@ HashMap<K, V>::HashMap() : HashMap(8)
 template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap(const size_t initialSize)
 {
+	size = 0;
     sentinelNode = std::make_shared<HashMapNode<K, V>>(K(), V(), nullptr, nullptr, nullptr, 0);
     firstNode = nullptr;
     lastNode = nullptr;
     buckets.resize(initialSize);
 }
 template <HashAndEqual K, MoveAndCopy V>
-bool HashMap<K, V>::contains(const K &key)
+bool HashMap<K, V>::contains(const K &key) const
 {
     size_t index = getEffectiveIndex(key);
 
@@ -49,6 +50,7 @@ void HashMap<K, V>::insert(const K &key, const V &value)
     }
     sentinelNode->previousInOrder = newNode;
     lastNode = newNode;
+    size++;
 
     if (bucket == nullptr)
     {
@@ -63,7 +65,7 @@ void HashMap<K, V>::insert(const K &key, const V &value)
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-std::optional<V> HashMap<K, V>::find(const K &key)
+HashMapIterator<K, V> HashMap<K, V>::find(const K &key) const
 {
     size_t index = getEffectiveIndex(key);
 
@@ -71,12 +73,12 @@ std::optional<V> HashMap<K, V>::find(const K &key)
     while (node != nullptr)
     {
         if (node->key == key)
-            return node->value;
+            return HashMapIterator<K, V>(node);
 
         node = node->next;
     }
 
-    return std::nullopt;
+    return end();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -88,7 +90,8 @@ void HashMap<K, V>::remove(const K &key)
     if (node != nullptr && node->key == key)
     {
         buckets[index] = node->next;
-		node->removeInOrder();
+        node->removeInOrder();
+		size--;
         return;
     }
 
@@ -97,10 +100,20 @@ void HashMap<K, V>::remove(const K &key)
         if (node->next->key == key)
         {
             std::shared_ptr<HashMapNode<K, V>> previous = node->next->previousInOrder;
-			node->removeInOrder();
+            node->removeInOrder();
+			size--;
             return;
         }
     }
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+void HashMap<K, V>::clear()
+{
+	for(auto it = begin(); it != end(); ++it)
+	{
+		remove(it->key);
+	}
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -116,20 +129,20 @@ HashMapIterator<K, V> HashMap<K, V>::end() const
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-size_t HashMap<K, V>::getEffectiveIndex(const K &key)
+size_t HashMap<K, V>::getEffectiveIndex(const K &key) const
 {
     return keyHash(key) % buckets.size();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-size_t HashMap<K, V>::keyHash(const K &key)
+size_t HashMap<K, V>::keyHash(const K &key) const
 {
     std::hash<K> hasher;
     return hasher(key);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-float HashMap<K, V>::calculateLoadFactor()
+float HashMap<K, V>::getLoadFactor() const
 {
-    return this->size / this->buckets.size();
+    return static_cast<float>(size) / this->buckets.size();
 }
