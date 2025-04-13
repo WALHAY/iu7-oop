@@ -20,6 +20,8 @@ class HashMapNode
     const K key;
     V value;
 
+	void removeInOrder();
+
     std::shared_ptr<HashMapNode> getNext();
     std::shared_ptr<HashMapNode> getPrevious();
 

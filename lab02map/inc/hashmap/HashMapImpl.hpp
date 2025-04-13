@@ -88,8 +88,7 @@ void HashMap<K, V>::remove(const K &key)
     if (node != nullptr && node->key == key)
     {
         buckets[index] = node->next;
-        std::shared_ptr<HashMapNode<K, V>> previous = node->previousInOrder;
-        previous->nextInOrder = node->nextInOrder;
+		node->removeInOrder();
         return;
     }
 
@@ -98,8 +97,7 @@ void HashMap<K, V>::remove(const K &key)
         if (node->next->key == key)
         {
             std::shared_ptr<HashMapNode<K, V>> previous = node->next->previousInOrder;
-            previous->nextInOrder = node->next->nextInOrder;
-            node->next = node->next->next;
+			node->removeInOrder();
             return;
         }
     }

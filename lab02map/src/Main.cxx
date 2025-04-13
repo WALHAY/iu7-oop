@@ -10,10 +10,15 @@ int main()
     hashmap.insert("nigga", 123);
     hashmap.insert("higger", 10);
 
+
     for (auto start = hashmap.begin(); start != hashmap.end(); ++start)
     {
+		if(true)
+		{
+			hashmap.remove(start->key);
+			continue;
+		}
         std::cout << start->key << " " << start->value << std::endl;
     }
-
     return 0;
 }

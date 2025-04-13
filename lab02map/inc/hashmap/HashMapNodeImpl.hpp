@@ -27,3 +27,13 @@ std::shared_ptr<HashMapNode<K, V>> HashMapNode<K, V>::getPrevious()
 {
     return previousInOrder;
 }
+
+template <HashAndEqual K, MoveAndCopy V>
+void HashMapNode<K, V>::removeInOrder() {
+	if(previousInOrder)
+		previousInOrder->nextInOrder = nextInOrder;
+
+	if(nextInOrder)
+		nextInOrder->previousInOrder = previousInOrder;
+}
+
