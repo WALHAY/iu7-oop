@@ -13,11 +13,11 @@ class HashMap : public BaseCollection
   public:
     using key_type = K;
     using mapped_type = V;
-	using size_type = size_t;
-	using difference_type = std::ptrdiff_t;
+    using size_type = size_t;
+    using difference_type = std::ptrdiff_t;
     using iterator = HashMapIterator<K, V>;
     using const_iterator = HashMapIterator<K, V>;
-	using node_type = HashMapNode<K, V>;
+    using node_type = HashMapNode<K, V>;
 
     /*
      * CONSTRUCTORS
@@ -33,11 +33,10 @@ class HashMap : public BaseCollection
     /*
      * DEFAULT OPERATIONS
      */
-	std::pair<iterator, bool> emplace(const K &key, const V &value);
-	std::pair<iterator, bool> emplace(std::pair<K, V> pair);
+    std::pair<iterator, bool> emplace(const K &key, const V &value);
+    std::pair<iterator, bool> emplace(std::pair<K, V> entry);
 
     iterator find(const K &key);
-    iterator find(K &&key);
 
     bool contains(const K &key) const;
 
@@ -51,7 +50,7 @@ class HashMap : public BaseCollection
      * INDEX ACCESS
      */
     V &at(const K &key);
-    const V &at(const K& key) const;
+    const V &at(const K &key) const;
 
     V &operator[](const K &key);
     V &operator[](K &&key);
@@ -62,7 +61,7 @@ class HashMap : public BaseCollection
     iterator begin() const;
     iterator end() const;
 
-    size_t getBucketCount();
+    size_t getBucketCount() const;
 
   private:
     /*
@@ -77,16 +76,15 @@ class HashMap : public BaseCollection
 
     void fixRemovedHeadTail(std::shared_ptr<HashMapNode<K, V>> node);
 
-    std::pair<iterator, bool> insertIntoBuckets(std::shared_ptr<std::shared_ptr<HashMapNode<K, V>>[]> buckets, const K &key, const V &value);
+	std::pair<iterator, bool> insert(std::vector<std::shared_ptr<HashMapNode<K, V>>> &buckets, const K &key, const V &value);
 
-    float loadFactorThreshold = 1.0f;
+    const float loadFactorThreshold = 1.0f;
 
     std::shared_ptr<HashMapNode<K, V>> lastNode;
     std::shared_ptr<HashMapNode<K, V>> firstNode;
     std::shared_ptr<HashMapNode<K, V>> sentinelNode;
 
-    std::shared_ptr<std::shared_ptr<HashMapNode<K, V>>[]> buckets;
-    size_t bucketCount;
+    std::vector<std::shared_ptr<HashMapNode<K, V>>> buckets;
 };
 
 #include <hashmap/HashMapImpl.hpp>
