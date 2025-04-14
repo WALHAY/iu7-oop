@@ -14,15 +14,16 @@ class HashMap : public BaseCollection
     using key_type = K;
     using value_type = V;
     using iterator = HashMapIterator<K, V>;
+    using const_iterator = HashMapIterator<K, V>;
 
     /*
      * CONSTRUCTORS
      */
     HashMap();
     explicit HashMap(const size_t initialSize);
-	HashMap(HashMapIterator<K, V>&& begin, HashMapIterator<K, V> &&end);
-	HashMap(HashMap<K, V> &&map) = default;
-	explicit HashMap(const HashMap<K, V> &map);
+    HashMap(iterator &&begin, iterator &&end);
+    HashMap(HashMap<K, V> &&map) = default;
+    explicit HashMap(const HashMap<K, V> &map) = default;
 
     virtual ~HashMap() = default;
 
@@ -30,11 +31,28 @@ class HashMap : public BaseCollection
      * DEFAULT OPERATIONS
      */
     void insert(const K &key, const V &value);
-    HashMapIterator<K, V> find(const K &key) const;
+    template <Container C>
+    void insertAll(const C &container);
+
+    iterator find(const K &key);
+    const_iterator find(const K &key) const;
+
     bool contains(const K &key) const;
+
     void remove(const K &key);
+    void remove(K &&key);
+    void remove(iterator pos);
 
     void clear();
+
+    /*
+     * INDEX ACCESS
+     */
+    V &at(const K &key);
+    const V &at(const K& key) const;
+
+    V &operator[](const K &key);
+    V &operator[](K &&key);
 
     /*
      * ITERATORS
@@ -42,7 +60,7 @@ class HashMap : public BaseCollection
     HashMapIterator<K, V> begin() const;
     HashMapIterator<K, V> end() const;
 
-	size_t getBucketCount();
+    size_t getBucketCount();
 
   private:
     /*
@@ -55,7 +73,9 @@ class HashMap : public BaseCollection
     size_t keyHash(const K &key) const;
     size_t getEffectiveIndex(const K &key) const;
 
-	void insertIntoBuckets(std::vector<std::shared_ptr<HashMapNode<K, V>>> &buckets, const K& key, const V& value);
+    void fixRemovedHeadTail(std::shared_ptr<HashMapNode<K, V>> node);
+
+    void insertIntoBuckets(std::shared_ptr<std::shared_ptr<HashMapNode<K, V>>[]> buckets, const K &key, const V &value);
 
     float loadFactorThreshold = 1.0f;
 
@@ -63,7 +83,8 @@ class HashMap : public BaseCollection
     std::shared_ptr<HashMapNode<K, V>> firstNode;
     std::shared_ptr<HashMapNode<K, V>> sentinelNode;
 
-    std::vector<std::shared_ptr<HashMapNode<K, V>>> buckets;
+    std::shared_ptr<std::shared_ptr<HashMapNode<K, V>>[]> buckets;
+    size_t bucketCount;
 };
 
 #include <hashmap/HashMapImpl.hpp>

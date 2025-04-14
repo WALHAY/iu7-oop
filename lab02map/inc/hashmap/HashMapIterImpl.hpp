@@ -1,7 +1,6 @@
 #pragma once
 
 #include <hashmap/HashMapIter.hpp>
-#include <iostream>
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map)
@@ -56,7 +55,6 @@ HashMapIterator<K, V> HashMapIterator<K, V>::operator+(size_t offset) const
 	HashMapIterator<K, V> newIter(*this);
 	for(int i = 0; i < offset; ++i)
 		++newIter;
-
 
     return newIter;
 }

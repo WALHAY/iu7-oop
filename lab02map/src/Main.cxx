@@ -1,5 +1,6 @@
 #include "hashmap/HashMap.hpp"
 #include <iostream>
+#include <string>
 
 int main()
 {
@@ -8,7 +9,6 @@ int main()
 	for(int i = 'a'; i < 'z'; ++i)
 	{
     	hashmap2.insert(std::format("cat{}", char(i)), i);
-		std::cout << "Buckets: " << hashmap2.getBucketCount() << " Size: " <<hashmap2.getSize() << std::endl;
 	}
 
     for (auto start = hashmap2.begin(); start != hashmap2.end(); ++start)
