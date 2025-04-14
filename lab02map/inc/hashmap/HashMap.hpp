@@ -1,7 +1,8 @@
 #pragma once
 
 #include "collection/BaseCollection.hpp"
-#include "hashmap/HashMapIter.hpp"
+#include "hashmap/iterators/ConstHashMapIter.hpp"
+#include "hashmap/iterators/HashMapIter.hpp"
 #include "hashmap/HashMapNode.hpp"
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -16,7 +17,7 @@ class HashMap : public BaseCollection
     using size_type = size_t;
     using difference_type = std::ptrdiff_t;
     using iterator = HashMapIterator<K, V>;
-    using const_iterator = HashMapIterator<K, V>;
+    using const_iterator = ConstHashMapIterator<K, V>;
     using node_type = HashMapNode<K, V>;
 
     /*
@@ -38,7 +39,7 @@ class HashMap : public BaseCollection
     std::pair<iterator, bool> emplace(std::pair<K, V> entry);
 
     iterator find(const K &key);
-	// const_iterator find(const K &key) const;
+	const_iterator find(const K &key) const;
 
     bool contains(const K &key) const;
     bool contains(K&& key) const;
@@ -49,7 +50,7 @@ class HashMap : public BaseCollection
     void clear();
 
     /*
-     * INDEX ACCESS
+     * KEY ACCESS
      */
     V &at(const K &key);
     const V &at(const K &key) const;
@@ -62,6 +63,8 @@ class HashMap : public BaseCollection
      */
     iterator begin() const;
     iterator end() const;
+    const_iterator cbegin() const;
+    const_iterator cend() const;
 
     size_t getBucketCount() const;
 

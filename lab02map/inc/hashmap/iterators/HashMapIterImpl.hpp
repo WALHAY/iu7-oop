@@ -1,6 +1,6 @@
 #pragma once
 
-#include <hashmap/HashMapIter.hpp>
+#include <hashmap/iterators/HashMapIter.hpp>
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map)
@@ -28,30 +28,35 @@ HashMapIterator<K, V>::operator bool() {
 template <HashAndEqual K, MoveAndCopy V>
 const HashMapNode<K, V> &HashMapIterator<K, V>::operator*() const
 {
+	validatePtr(__LINE__);
     return *getPtr();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMapNode<K, V> &HashMapIterator<K, V>::operator*()
 {
+	validatePtr(__LINE__);
     return *getPtr();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 const HashMapNode<K, V> *HashMapIterator<K, V>::operator->() const
 {
+	validatePtr(__LINE__);
     return getPtr();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMapNode<K, V> *HashMapIterator<K, V>::operator->()
 {
+	validatePtr(__LINE__);
     return getPtr();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> HashMapIterator<K, V>::operator+(size_t offset) const
 {
+	validatePtr(__LINE__);
 	HashMapIterator<K, V> newIter(*this);
 	for(int i = 0; i < offset; ++i)
 		++newIter;
@@ -63,6 +68,7 @@ HashMapIterator<K, V> HashMapIterator<K, V>::operator+(size_t offset) const
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
 {
+	validatePtr(__LINE__);
     nodePtr = nodePtr.lock()->getNext();
     return *this;
 }
@@ -71,6 +77,7 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int)
 {
+	validatePtr(__LINE__);
     HashMapIterator<K, V> oldIter(*this);
 
     ++(*this);
@@ -81,6 +88,7 @@ HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int)
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator+=(size_type size)
 {
+	validatePtr(__LINE__);
     while (size--)
         ++(*this);
 	return *this;
@@ -89,11 +97,18 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator+=(size_type size)
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> HashMapIterator<K, V>::operator-(size_type offset) const
 {
+	validatePtr(__LINE__);
+	HashMapIterator<K, V> newIter(*this);
+	for(int i = 0; i < offset; ++i)
+		--newIter;
+
+    return newIter;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator--()
 {
+	validatePtr(__LINE__);
     nodePtr = nodePtr.lock()->getPrevious();
     return *this;
 }
@@ -101,6 +116,7 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator--()
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> HashMapIterator<K, V>::operator--(int)
 {
+	validatePtr(__LINE__);
     HashMapIterator<K, V> oldIter(*this);
 
     nodePtr = nodePtr.lock()->getPrevious();
@@ -111,35 +127,53 @@ HashMapIterator<K, V> HashMapIterator<K, V>::operator--(int)
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator-=(size_type size)
 {
+	validatePtr(__LINE__);
+
     while (size--)
         --(*this);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator=(const HashMapIterator<K, V>& other) {
+	other.validatePtr(__LINE__);
+	validatePtr(__LINE__);
+
 	nodePtr = other.nodePtr;
 	return *this;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-bool HashMapIterator<K, V>::operator==(const HashMapIterator<K, V> &other)
+bool HashMapIterator<K, V>::operator==(const HashMapIterator<K, V> &other) const
 {
+	other.validatePtr(__LINE__);
+	validatePtr(__LINE__);
+
     return other.nodePtr.lock() == nodePtr.lock();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-bool HashMapIterator<K, V>::operator!=(const HashMapIterator<K, V> &other)
+bool HashMapIterator<K, V>::operator!=(const HashMapIterator<K, V> &other) const
 {
+	other.validatePtr(__LINE__);
+	validatePtr(__LINE__);
+
     return other.nodePtr.lock() != nodePtr.lock();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-bool HashMapIterator<K, V>::isValid() {
+bool HashMapIterator<K, V>::isValid() const {
 	return nodePtr.lock() != nullptr && !nodePtr.expired();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-HashMapNode<K, V> *HashMapIterator<K, V>::getPtr()
+void HashMapIterator<K, V>::validatePtr(int line) const {
+	if(!isValid())
+		throw InvalidIterator(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
+
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+HashMapNode<K, V> *HashMapIterator<K, V>::getPtr() const
 {
     return nodePtr.lock().get();
 }

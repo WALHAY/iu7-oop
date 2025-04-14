@@ -5,19 +5,13 @@
 int main()
 {
 	HashMap<std::string, int> hashmap = { {"hello", 1}, {"hi", 2} };
-    HashMap<std::string, int> hashmap2(3);
 
-    for (int i = 0; i < 1230; ++i)
-    {
-        auto start = hashmap2.emplace(std::format("cat{}", i), i);
-    }
-
-	   for (auto start = hashmap.begin(); start != hashmap.end(); ++start)
+	auto it = hashmap.cend();
+	while(it != hashmap.cbegin())
 	   {
-	       std::cout << start->key << " : " << start->value << std::endl;
+		   --it;
+	       std::cout << it->key << " : " << it->value << std::endl;
 	   }
-	// hashmap2.clear();
-	//    std::cout << "Found: " << (hashmap2.contains("cata")) << std::endl;
 
 
     return 0;

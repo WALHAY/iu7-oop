@@ -3,6 +3,7 @@
 #include "collection/BaseIterator.hpp"
 #include "hashmap/HashMapConcepts.hpp"
 #include "hashmap/HashMapNode.hpp"
+#include <hashmap/HashMapExceptions.hpp>
 #include <memory>
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -39,15 +40,17 @@ class HashMapIterator : public BaseIterator
 
     HashMapIterator<K, V> &operator=(const HashMapIterator<K, V>& other);
 
-    bool operator==(const HashMapIterator<K, V> &other);
-    bool operator!=(const HashMapIterator<K, V> &other);
+    bool operator==(const HashMapIterator<K, V> &other) const;
+    bool operator!=(const HashMapIterator<K, V> &other) const;
 
-	bool isValid();
+	bool isValid() const;
 
   private:
+	void validatePtr(int line) const;
+
     std::weak_ptr<HashMapNode<K, V>> nodePtr;
 
-    HashMapNode<K, V> *getPtr();
+    HashMapNode<K, V> *getPtr() const;
 };
 
-#include <hashmap/HashMapIterImpl.hpp>
+#include <hashmap/iterators/HashMapIterImpl.hpp>

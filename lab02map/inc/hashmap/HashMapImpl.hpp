@@ -183,6 +183,18 @@ HashMapIterator<K, V> HashMap<K, V>::end() const
 }
 
 template <HashAndEqual K, MoveAndCopy V>
+ConstHashMapIterator<K, V> HashMap<K, V>::cbegin() const
+{
+    return ConstHashMapIterator<K, V>(firstNode);
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+ConstHashMapIterator<K, V> HashMap<K, V>::cend() const
+{
+    return ConstHashMapIterator<K, V>(sentinelNode);
+}
+
+template <HashAndEqual K, MoveAndCopy V>
 size_t HashMap<K, V>::getKeyIndex(const K &key) const
 {
     return getKeyHash(key) % getBucketCount();
@@ -205,8 +217,6 @@ template <HashAndEqual K, MoveAndCopy V>
 void HashMap<K, V>::rebuild()
 {
     auto newBuckets = std::vector<std::shared_ptr<HashMapNode<K, V>>>(getNextPrime(getBucketCount() * sizeFactor));
-
-	std::cout << "New size : " << newBuckets.size() << std::endl;
 
     HashMapIterator<K, V> beginIt = begin();
     HashMapIterator<K, V> endIt = end();
