@@ -37,11 +37,12 @@ class HashMap : public BaseCollection
     std::pair<iterator, bool> emplace(std::pair<K, V> entry);
 
     iterator find(const K &key);
+	// const_iterator find(const K &key) const;
 
     bool contains(const K &key) const;
+    bool contains(K&& key) const;
 
-    iterator erase(const K &key);
-    iterator erase(K &&key);
+    bool erase(const K &key);
     iterator erase(iterator pos);
 
     void clear();
@@ -68,17 +69,24 @@ class HashMap : public BaseCollection
      * REBUILD
      */
     void rebuild();
-    float getLoadFactor() const;
-    size_t getNextPrime(size_t size) const;
+    float countLoadFactor() const;
 
-    size_t keyHash(const K &key) const;
-    size_t getEffectiveIndex(const K &key) const;
+	bool isPrime(size_type value) const;
+    size_t getNextPrime(size_type size) const;
+
+	/*
+	* KEYS & HASH
+	*/
+    size_t getKeyHash(const K &key) const;
+    size_t getKeyIndex(const K &key) const;
 
     void fixRemovedHeadTail(std::shared_ptr<HashMapNode<K, V>> node);
 
-	std::pair<iterator, bool> insert(std::vector<std::shared_ptr<HashMapNode<K, V>>> &buckets, const K &key, const V &value);
+    std::pair<iterator, bool> insert(std::vector<std::shared_ptr<HashMapNode<K, V>>> &buckets, const K &key,
+                                     const V &value);
 
     const float loadFactorThreshold = 1.0f;
+	const float sizeFactor = 1.5f;
 
     std::shared_ptr<HashMapNode<K, V>> lastNode;
     std::shared_ptr<HashMapNode<K, V>> firstNode;
