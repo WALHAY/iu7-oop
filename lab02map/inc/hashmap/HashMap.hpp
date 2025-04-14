@@ -25,6 +25,7 @@ class HashMap : public BaseCollection
     HashMap();
     explicit HashMap(const size_t initialSize);
     HashMap(iterator &&begin, iterator &&end);
+	HashMap(const std::initializer_list<std::pair<K, V>> list);
     HashMap(HashMap<K, V> &&map) = default;
     explicit HashMap(const HashMap<K, V> &map) = default;
 

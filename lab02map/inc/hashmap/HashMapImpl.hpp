@@ -4,7 +4,6 @@
 #include "hashmap/HashMapConcepts.hpp"
 #include "hashmap/HashMapExceptions.hpp"
 #include "hashmap/HashMapNode.hpp"
-#include <cmath>
 #include <iostream>
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -23,6 +22,12 @@ HashMap<K, V>::HashMap(const size_t initialSize)
     firstNode = sentinelNode;
     lastNode = sentinelNode;
     buckets = std::vector<std::shared_ptr<HashMapNode<K, V>>>(initialSize);
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+HashMap<K, V>::HashMap(const std::initializer_list<std::pair<K, V>> list) : HashMap(list.size()) {
+	for(auto &pair : list)
+		emplace(pair);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -77,6 +82,11 @@ HashMapIterator<K, V> HashMap<K, V>::find(const K &key)
     }
 
     return end();
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::emplace(std::pair<K, V> entry) {
+	return emplace(entry.first, entry.second);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -219,7 +229,7 @@ std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(
 
     std::shared_ptr<HashMapNode<K, V>> bucket = buckets[index];
     std::shared_ptr<HashMapNode<K, V>> node =
-        std::make_shared<HashMapNode<K, V>>(key, value, nullptr, lastNode, sentinelNode, hash);
+    std::make_shared<HashMapNode<K, V>>(key, value, nullptr, lastNode, sentinelNode, hash);
 
     if (firstNode == sentinelNode)
         firstNode = node;
@@ -254,7 +264,7 @@ std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(
 template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::size_type HashMap<K, V>::getNextPrime(size_type size) const
 {
-	while(!isPrime(++size));
+	while(size < std::numeric_limits<size_type>::max() && !isPrime(++size));
 	return size;
 }
 
