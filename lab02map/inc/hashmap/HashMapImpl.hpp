@@ -2,6 +2,7 @@
 
 #include "hashmap/HashMap.hpp"
 #include "hashmap/HashMapConcepts.hpp"
+#include "hashmap/HashMapExceptions.hpp"
 #include "hashmap/HashMapNode.hpp"
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -43,16 +44,16 @@ bool HashMap<K, V>::contains(const K &key) const
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-void HashMap<K, V>::insert(const K &key, const V &value)
+std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::emplace(const K &key, const V &value)
 {
-    insertIntoBuckets(buckets, key, value);
-
     if (getLoadFactor() > loadFactorThreshold)
         rebuild();
+
+    return insertIntoBuckets(buckets, key, value);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-HashMapIterator<K, V> HashMap<K, V>::find(const K &key) const
+HashMapIterator<K, V> HashMap<K, V>::find(const K &key) 
 {
     size_t index = getEffectiveIndex(key);
 
@@ -69,7 +70,13 @@ HashMapIterator<K, V> HashMap<K, V>::find(const K &key) const
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-void HashMap<K, V>::remove(const K &key)
+HashMapIterator<K, V> HashMap<K, V>::find(K &&key)
+{
+	return find(key);
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+HashMap<K, V>::iterator HashMap<K, V>::erase(const K &key)
 {
     size_t index = getEffectiveIndex(key);
 
@@ -78,9 +85,9 @@ void HashMap<K, V>::remove(const K &key)
     {
         buckets[index] = node->next;
         node->removeInOrder();
-		fixRemovedHeadTail(node);
+        fixRemovedHeadTail(node);
         size--;
-        return;
+        return node->nextInOrder;
     }
 
     while (node != nullptr && node->next != nullptr)
@@ -89,11 +96,12 @@ void HashMap<K, V>::remove(const K &key)
         {
             node->next = node->next->next;
             node->removeInOrder();
-			fixRemovedHeadTail(node);
+            fixRemovedHeadTail(node);
             size--;
-            return;
+            return node->nextInOrder;
         }
     }
+    return nullptr;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -103,9 +111,49 @@ void HashMap<K, V>::clear()
     while (it.isValid() && it != end())
     {
         auto next = it + std::size_t(1);
-        remove(it->key);
+        erase(it->key);
         it = next;
     }
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+V &HashMap<K, V>::at(const K &key)
+{
+	auto it = find(key);
+	if(it == end())
+		throw OutOfRangeException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
+
+	return it->value;
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+const V &HashMap<K, V>::at(const K &key) const
+{
+	auto it = find(key);
+	if(it == end())
+		throw OutOfRangeException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
+
+	return it->value;
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+V &HashMap<K, V>::operator[](const K &key)
+{
+	auto it = find(key);
+	if(it == end())
+		throw OutOfRangeException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
+
+	return it->value;
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+V &HashMap<K, V>::operator[](K &&key)
+{
+	auto it = find(key);
+	if(it == end())
+		throw OutOfRangeException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
+
+	return it->value;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -157,8 +205,8 @@ void HashMap<K, V>::rebuild()
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-void HashMap<K, V>::insertIntoBuckets(std::shared_ptr<std::shared_ptr<HashMapNode<K, V>>[]> buckets, const K &key,
-                                      const V &value)
+std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insertIntoBuckets(
+    std::shared_ptr<std::shared_ptr<HashMapNode<K, V>>[]> buckets, const K &key, const V &value)
 {
     size_t hash = keyHash(key);
     size_t index = hash % bucketCount;
@@ -183,13 +231,18 @@ void HashMap<K, V>::insertIntoBuckets(std::shared_ptr<std::shared_ptr<HashMapNod
     if (bucket == nullptr)
     {
         buckets[index] = newNode;
-        return;
+        return std::make_pair(HashMap<K, V>::iterator(newNode), true);
     }
 
     while (bucket != nullptr && bucket->next != nullptr)
+    {
         bucket = bucket->next;
+        if (bucket->key == key)
+            return std::make_pair(HashMap<K, V>::iterator(bucket), false);
+    }
 
     bucket->next = newNode;
+    return std::make_pair(HashMap<K, V>::iterator(newNode), true);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -218,5 +271,5 @@ void HashMap<K, V>::fixRemovedHeadTail(std::shared_ptr<HashMapNode<K, V>> node)
 template <HashAndEqual K, MoveAndCopy V>
 size_t HashMap<K, V>::getBucketCount()
 {
-    return buckets.size();
+    return bucketCount;
 }

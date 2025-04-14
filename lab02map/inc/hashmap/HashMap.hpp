@@ -12,9 +12,12 @@ class HashMap : public BaseCollection
 
   public:
     using key_type = K;
-    using value_type = V;
+    using mapped_type = V;
+	using size_type = size_t;
+	using difference_type = std::ptrdiff_t;
     using iterator = HashMapIterator<K, V>;
     using const_iterator = HashMapIterator<K, V>;
+	using node_type = HashMapNode<K, V>;
 
     /*
      * CONSTRUCTORS
@@ -30,18 +33,17 @@ class HashMap : public BaseCollection
     /*
      * DEFAULT OPERATIONS
      */
-    void insert(const K &key, const V &value);
-    template <Container C>
-    void insertAll(const C &container);
+	std::pair<iterator, bool> emplace(const K &key, const V &value);
+	std::pair<iterator, bool> emplace(std::pair<K, V> pair);
 
     iterator find(const K &key);
-    const_iterator find(const K &key) const;
+    iterator find(K &&key);
 
     bool contains(const K &key) const;
 
-    void remove(const K &key);
-    void remove(K &&key);
-    void remove(iterator pos);
+    iterator erase(const K &key);
+    iterator erase(K &&key);
+    iterator erase(iterator pos);
 
     void clear();
 
@@ -57,8 +59,8 @@ class HashMap : public BaseCollection
     /*
      * ITERATORS
      */
-    HashMapIterator<K, V> begin() const;
-    HashMapIterator<K, V> end() const;
+    iterator begin() const;
+    iterator end() const;
 
     size_t getBucketCount();
 
@@ -75,7 +77,7 @@ class HashMap : public BaseCollection
 
     void fixRemovedHeadTail(std::shared_ptr<HashMapNode<K, V>> node);
 
-    void insertIntoBuckets(std::shared_ptr<std::shared_ptr<HashMapNode<K, V>>[]> buckets, const K &key, const V &value);
+    std::pair<iterator, bool> insertIntoBuckets(std::shared_ptr<std::shared_ptr<HashMapNode<K, V>>[]> buckets, const K &key, const V &value);
 
     float loadFactorThreshold = 1.0f;
 
