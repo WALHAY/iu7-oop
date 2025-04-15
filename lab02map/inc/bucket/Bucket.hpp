@@ -1,13 +1,13 @@
 #pragma once
 
-#include "bucket/BucketIter.hpp"
-#include "collection/BaseCollection.hpp"
-#include <memory>
+#include <bucket/BucketNode.hpp>
+#include <bucket/iterators/BucketIter.hpp>
+#include <collection/BaseCollection.hpp>
 
 template <typename T>
-class Bucket : public BaseCollection
+class Bucket
 {
-	friend class BucketNode<T>;
+    friend class BucketNode<T>;
 
     using iterator = BucketIterator<T>;
     using value_type = T;
@@ -20,15 +20,14 @@ class Bucket : public BaseCollection
     void insertHead(const T &value);
     void insertTail(const T &value);
 
-	/*
-	 * ITERATORS
-	 */
-	iterator begin();
-	iterator end();
+    /*
+     * ITERATORS
+     */
+    iterator begin();
+    iterator end();
 
   protected:
     std::shared_ptr<BucketNode<T>> head;
-    std::shared_ptr<BucketNode<T>> sentinelNode;
 };
 
 #include <bucket/BucketImpl.hpp>

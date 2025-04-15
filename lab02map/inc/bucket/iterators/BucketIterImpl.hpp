@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bucket/BucketIter.hpp>
+#include <bucket/iterators/BucketIter.hpp>
 #include <hashmap/HashMapExceptions.hpp>
 
 template <typename T>
@@ -16,7 +16,7 @@ BucketIterator<T>::BucketIterator(const BucketIterator<T> &iterator)
 }
 
 template <typename T>
-BucketIterator<T>::BucketIterator(const std::weak_ptr<BucketNode<T>> &node)
+BucketIterator<T>::BucketIterator(const std::shared_ptr<BucketNode<T>> &node)
 {
 	nodePtr = node;
 }
@@ -28,7 +28,7 @@ BucketIterator<T>::operator bool()
 }
 
 template <typename T>
-auto BucketIterator<T>::operator*() const -> const T &
+auto BucketIterator<T>::operator*() const -> const_reference
 {
     validatePtr(__LINE__);
     return getPtr()->getValueRef();
@@ -42,7 +42,7 @@ auto BucketIterator<T>::operator*() -> reference
 }
 
 template <typename T>
-auto BucketIterator<T>::operator->() const -> const pointer
+auto BucketIterator<T>::operator->() const -> const_pointer
 {
     validatePtr(__LINE__);
     return getPtr()->getValueRef();
@@ -53,17 +53,6 @@ auto BucketIterator<T>::operator->() -> pointer
 {
     validatePtr(__LINE__);
     return getPtr()->getValueRef();
-}
-
-template <typename T>
-BucketIterator<T> BucketIterator<T>::operator+(size_t offset) const
-{
-    validatePtr(__LINE__);
-    BucketIterator<T> newIter(*this);
-    for (int i = 0; i < offset; ++i)
-        ++newIter;
-
-    return newIter;
 }
 
 // prefix
@@ -88,15 +77,6 @@ BucketIterator<T> BucketIterator<T>::operator++(int)
 }
 
 template <typename T>
-BucketIterator<T> &BucketIterator<T>::operator+=(size_type size)
-{
-    validatePtr(__LINE__);
-    while (size--)
-        ++(*this);
-    return *this;
-}
-
-template <typename T>
 BucketIterator<T> &BucketIterator<T>::operator=(const BucketIterator<T> &other)
 {
     other.validatePtr(__LINE__);
@@ -109,18 +89,12 @@ BucketIterator<T> &BucketIterator<T>::operator=(const BucketIterator<T> &other)
 template <typename T>
 bool BucketIterator<T>::operator==(const BucketIterator<T> &other) const
 {
-    other.validatePtr(__LINE__);
-    validatePtr(__LINE__);
-
     return other.nodePtr.lock() == nodePtr.lock();
 }
 
 template <typename T>
 bool BucketIterator<T>::operator!=(const BucketIterator<T> &other) const
 {
-    other.validatePtr(__LINE__);
-    validatePtr(__LINE__);
-
     return other.nodePtr.lock() != nodePtr.lock();
 }
 
@@ -138,9 +112,9 @@ void BucketIterator<T>::validatePtr(int line) const
 }
 
 template <typename T>
-auto BucketIterator<T>::getPtr() const -> value_type
+auto BucketIterator<T>::getPtr() const -> node_type
 {
-    return nodePtr.lock().get()->value;
+    return nodePtr.lock().get();
 }
-
+//
 // static_assert(std::forward_iterator<BucketIterator<int>>);

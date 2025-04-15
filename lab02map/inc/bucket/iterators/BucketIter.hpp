@@ -1,41 +1,44 @@
 #pragma once
 
-#include "bucket/BucketNode.hpp"
-#include "collection/BaseIterator.hpp"
 #include <cstddef>
 #include <iterator>
+#include <memory>
 
 template <typename T>
 class Bucket;
 
 template <typename T>
-class BucketIterator : public BaseIterator
+class BucketNode;
+
+template <typename T>
+class BucketIterator
 {
-    using iterator_category = std::forward_iterator_tag;
     using value_type = T;
-    using difference_type = std::ptrdiff_t;
-    using size_type = size_t;
-    using iterator = BucketIterator<T>;
     using pointer = T *;
+	using const_pointer = const T*;
     using reference = T &;
+    using const_reference = const T &;
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
+	using node_type = BucketNode<T>*;
+    using iterator = BucketIterator<T>;
+    using iterator_category = std::forward_iterator_tag;
 
   public:
     BucketIterator();
     BucketIterator(const Bucket<T> &bucket);
     BucketIterator(const BucketIterator<T> &iterator);
-    BucketIterator(const std::weak_ptr<BucketNode<T>> &node);
+    BucketIterator(const std::shared_ptr<BucketNode<T>> &node);
 
     operator bool();
 
-    const T &operator*() const;
+    const_reference operator*() const;
     reference operator*();
-    const pointer operator->() const;
+    const_pointer operator->() const;
     pointer operator->();
 
-    BucketIterator<T> operator+(size_type offset) const;
     BucketIterator<T> &operator++();
     BucketIterator<T> operator++(int);
-    BucketIterator<T> &operator+=(size_type offset);
 
     BucketIterator<T> &operator=(const BucketIterator<T> &other);
 
@@ -49,7 +52,7 @@ class BucketIterator : public BaseIterator
 
     std::weak_ptr<BucketNode<T>> nodePtr;
 
-    T getPtr() const;
+    node_type getPtr() const;
 };
 
-#include <bucket/BucketIterImpl.hpp>
+#include <bucket/iterators/BucketIterImpl.hpp>

@@ -1,6 +1,5 @@
-#include "bucket/Bucket.hpp"
+#include <bucket/Bucket.hpp>
 #include <iostream>
-#include <string>
 
 int main()
 {
@@ -11,8 +10,8 @@ int main()
 	bucket.insertTail(3);
 	for(auto it = bucket.begin(); it != bucket.end(); ++it)
 	{
-		std::cout << "Value: " << it << std::endl;
-		std::fflush(stdout);
+		std::cout << "Value: " << *it << std::endl;
+		// std::fflush(stdout);
 	}
 
     return 0;

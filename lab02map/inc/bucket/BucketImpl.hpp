@@ -1,10 +1,10 @@
 #pragma once
 
-#include <bucket/Bucket.hpp>
+#include "Bucket.hpp"
+#include <iostream>
 
 template <typename T>
 Bucket<T>::Bucket() {
-	sentinelNode = std::make_shared<BucketNode<T>>(T(), nullptr);
 }
 
 template <typename T>
@@ -16,22 +16,19 @@ void Bucket<T>::insertHead(const T &value)
 template <typename T>
 void Bucket<T>::insertTail(const T &value) 
 {
-    auto node = std::make_shared<BucketNode<T>>(value, head);
+    auto node = std::make_shared<BucketNode<T>>(value, nullptr);
 
 	auto tail = head;
-	while(tail != nullptr && tail->next != sentinelNode)
-		tail = tail->next;
-
 	if(tail == nullptr)
 	{
 		head = node;
-		node->next = sentinelNode;
 		return;
 	}
 
+	while(tail->next != nullptr)
+		tail = tail->next;
+
 	tail->next = node;
-	tail = node;
-	node->next = sentinelNode;
 }
 
 template <typename T>
@@ -41,5 +38,5 @@ auto Bucket<T>::begin() -> iterator {
 
 template <typename T>
 auto Bucket<T>::end() -> iterator {
-	return iterator(sentinelNode);
+	return iterator(nullptr);
 }
