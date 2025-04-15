@@ -93,12 +93,6 @@ bool BucketIterator<T>::operator==(const BucketIterator<T> &other) const
 }
 
 template <typename T>
-bool BucketIterator<T>::operator!=(const BucketIterator<T> &other) const
-{
-    return other.nodePtr.lock() != nodePtr.lock();
-}
-
-template <typename T>
 bool BucketIterator<T>::isValid() const
 {
     return nodePtr.lock() != nullptr && !nodePtr.expired();
@@ -116,5 +110,5 @@ auto BucketIterator<T>::getPtr() const -> node_type
 {
     return nodePtr.lock().get();
 }
-//
+
 // static_assert(std::forward_iterator<BucketIterator<int>>);

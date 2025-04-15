@@ -20,9 +20,9 @@ class BucketNode
 	T getValue() const;
 	T& getValueRef();
 
+private:
 	T value;
 
-private:
     std::shared_ptr<BucketNode<T>> next;
 };
 

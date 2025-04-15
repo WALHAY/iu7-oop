@@ -1,28 +1,29 @@
 #pragma once
 
-#include "bucket/Bucket.hpp"
+#include "bucket/iterators/BucketIter.hpp"
 #include "collection/BaseCollection.hpp"
-#include "hashmap/HashMapNode.hpp"
-
+#include "hashmap/HashMapConcepts.hpp"
+#include "hashmap/iterators/HashMapIter.hpp"
 template <HashAndEqual K, MoveAndCopy V>
+
 class HashMap : public BaseCollection
 {
-    friend class HashMapIterator<K, V>;
-
   public:
     using key_type = K;
     using mapped_type = V;
+    using value_type = std::pair<const K, V>;
     using size_type = size_t;
     using difference_type = std::ptrdiff_t;
     using iterator = HashMapIterator<K, V>;
+    using local_iterator = BucketIterator<value_type>;
 
     /*
      * CONSTRUCTORS
      */
     HashMap();
     explicit HashMap(const size_type initialSize);
-    HashMap(iterator &&begin, iterator &&end);
-	HashMap(const std::initializer_list<std::pair<K, V>> list);
+    // HashMap(iterator &&begin, iterator &&end);
+    HashMap(const std::initializer_list<std::pair<K, V>> list);
     HashMap(HashMap<K, V> &&map) = default;
     explicit HashMap(const HashMap<K, V> &map) = default;
 
@@ -35,10 +36,10 @@ class HashMap : public BaseCollection
     std::pair<iterator, bool> emplace(std::pair<K, V> entry);
 
     iterator find(const K &key);
-	// const_iterator find(const K &key) const;
+    // const_iterator find(const K &key) const;
 
     bool contains(const K &key) const;
-    bool contains(K&& key) const;
+    bool contains(K &&key) const;
 
     bool erase(const K &key);
     iterator erase(iterator pos);
@@ -60,6 +61,9 @@ class HashMap : public BaseCollection
     iterator begin() const;
     iterator end() const;
 
+	local_iterator begin(size_type bucket);
+	local_iterator end(size_type bucket);
+
     size_type getBucketCount() const;
 
   private:
@@ -69,28 +73,22 @@ class HashMap : public BaseCollection
     void rebuild();
     float countLoadFactor() const;
 
-	bool isPrime(size_type value) const;
+    bool isPrime(size_type value) const;
     size_type getNextPrime(size_type size) const;
 
-	/*
-	* KEYS & HASH
-	*/
+    /*
+     * KEYS & HASH
+     */
     size_t getKeyHash(const K &key) const;
-    size_type getKeyIndex(const K &key) const;
+    size_type getBucket(const K &key) const;
 
-    void fixRemovedHeadTail(std::shared_ptr<HashMapNode<K, V>> node);
-
-    std::pair<iterator, bool> insert(std::vector<std::shared_ptr<HashMapNode<K, V>>> &buckets, const K& key,
-                                     const V &value);
+    std::pair<iterator, bool> insert(std::shared_ptr<Bucket<value_type>[]> &buckets, const K &key, const V &value);
 
     const float loadFactorThreshold = 1.0f;
-	const float sizeFactor = 1.5f;
+    const float sizeFactor = 1.5f;
 
-    std::shared_ptr<HashMapNode<K, V>> lastNode;
-    std::shared_ptr<HashMapNode<K, V>> firstNode;
-    std::shared_ptr<HashMapNode<K, V>> sentinelNode;
-
-    std::vector<Bucket<HashMapNode<K, V>>> buckets;
+    std::shared_ptr<Bucket<value_type>[]> buckets;
+	size_type bucketCount;
 };
 
 #include <hashmap/HashMapImpl.hpp>

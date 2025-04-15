@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Bucket.hpp"
-#include <iostream>
 
 template <typename T>
 Bucket<T>::Bucket() {

@@ -13,6 +13,7 @@ class BucketNode;
 template <typename T>
 class BucketIterator
 {
+  public:
     using value_type = T;
     using pointer = T *;
 	using const_pointer = const T*;
@@ -24,13 +25,10 @@ class BucketIterator
     using iterator = BucketIterator<T>;
     using iterator_category = std::forward_iterator_tag;
 
-  public:
     BucketIterator();
     BucketIterator(const Bucket<T> &bucket);
     BucketIterator(const BucketIterator<T> &iterator);
     BucketIterator(const std::shared_ptr<BucketNode<T>> &node);
-
-    operator bool();
 
     const_reference operator*() const;
     reference operator*();
@@ -43,9 +41,11 @@ class BucketIterator
     BucketIterator<T> &operator=(const BucketIterator<T> &other);
 
     bool operator==(const BucketIterator<T> &other) const;
-    bool operator!=(const BucketIterator<T> &other) const;
+    bool operator!=(const BucketIterator<T> &other) const = default;
 
     bool isValid() const;
+
+    operator bool();
 
   private:
     void validatePtr(int line) const;

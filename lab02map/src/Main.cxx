@@ -1,18 +1,13 @@
+#include "hashmap/HashMap.hpp"
 #include <bucket/Bucket.hpp>
 #include <iostream>
 
 int main()
 {
-	Bucket<int> bucket;
+	HashMap<std::string, int> hashmap;
 
-	bucket.insertTail(1);
-	bucket.insertTail(2);
-	bucket.insertTail(3);
-	for(auto it = bucket.begin(); it != bucket.end(); ++it)
-	{
-		std::cout << "Value: " << *it << std::endl;
-		// std::fflush(stdout);
-	}
+	hashmap.emplace("Nigga", 1);
+	// std::cout << "Found: " << (hashmap.find("Nigga") != hashmap.end()) << std::endl;
 
     return 0;
 }
