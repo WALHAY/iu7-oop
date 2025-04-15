@@ -4,6 +4,11 @@
 #include <hashmap/HashMapExceptions.hpp>
 
 template <typename T>
+BucketIterator<T>::BucketIterator()
+{
+}
+
+template <typename T>
 BucketIterator<T>::BucketIterator(const Bucket<T> &map)
 {
     nodePtr = map.lastNode;
@@ -22,7 +27,7 @@ BucketIterator<T>::BucketIterator(const std::shared_ptr<BucketNode<T>> &node)
 }
 
 template <typename T>
-BucketIterator<T>::operator bool()
+BucketIterator<T>::operator bool() const
 {
     return isValid();
 }
@@ -45,14 +50,14 @@ template <typename T>
 auto BucketIterator<T>::operator->() const -> const_pointer
 {
     validatePtr(__LINE__);
-    return getPtr()->getValueRef();
+    return &getPtr()->getValueRef();
 }
 
 template <typename T>
 auto BucketIterator<T>::operator->() -> pointer
 {
     validatePtr(__LINE__);
-    return getPtr()->getValueRef();
+    return &getPtr()->getValueRef();
 }
 
 // prefix
@@ -106,7 +111,13 @@ void BucketIterator<T>::validatePtr(int line) const
 }
 
 template <typename T>
-auto BucketIterator<T>::getPtr() const -> node_type
+auto BucketIterator<T>::getPtr() -> node_type
+{
+    return nodePtr.lock().get();
+}
+
+template <typename T>
+auto BucketIterator<T>::getPtr() const -> const_node_type
 {
     return nodePtr.lock().get();
 }

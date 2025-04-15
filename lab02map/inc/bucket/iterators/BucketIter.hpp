@@ -16,12 +16,13 @@ class BucketIterator
   public:
     using value_type = T;
     using pointer = T *;
-	using const_pointer = const T*;
+    using const_pointer = const T *;
     using reference = T &;
     using const_reference = const T &;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-	using node_type = BucketNode<T>*;
+    using node_type = BucketNode<T> *;
+    using const_node_type = const BucketNode<T> *;
     using iterator = BucketIterator<T>;
     using iterator_category = std::forward_iterator_tag;
 
@@ -45,14 +46,15 @@ class BucketIterator
 
     bool isValid() const;
 
-    operator bool();
+    operator bool() const;
 
   private:
     void validatePtr(int line) const;
 
     std::weak_ptr<BucketNode<T>> nodePtr;
 
-    node_type getPtr() const;
+    node_type getPtr();
+    const_node_type getPtr() const;
 };
 
 #include <bucket/iterators/BucketIterImpl.hpp>

@@ -4,15 +4,17 @@
 #include "collection/BaseCollection.hpp"
 #include "hashmap/HashMapConcepts.hpp"
 #include "hashmap/iterators/HashMapIter.hpp"
-template <HashAndEqual K, MoveAndCopy V>
 
+template <HashAndEqual K, MoveAndCopy V>
 class HashMap : public BaseCollection
 {
+    friend class HashMapIterator<K, V>;
+
   public:
     using key_type = K;
     using mapped_type = V;
     using value_type = std::pair<const K, V>;
-    using size_type = size_t;
+    using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using iterator = HashMapIterator<K, V>;
     using local_iterator = BucketIterator<value_type>;
@@ -58,11 +60,11 @@ class HashMap : public BaseCollection
     /*
      * ITERATORS
      */
-    iterator begin() const;
-    iterator end() const;
+    iterator begin();
+    iterator end();
 
-	local_iterator begin(size_type bucket);
-	local_iterator end(size_type bucket);
+    local_iterator begin(size_type bucket);
+    local_iterator end(size_type bucket);
 
     size_type getBucketCount() const;
 
@@ -88,7 +90,7 @@ class HashMap : public BaseCollection
     const float sizeFactor = 1.5f;
 
     std::shared_ptr<Bucket<value_type>[]> buckets;
-	size_type bucketCount;
+    size_type bucketCount;
 };
 
 #include <hashmap/HashMapImpl.hpp>

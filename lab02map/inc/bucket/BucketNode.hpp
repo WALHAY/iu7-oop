@@ -19,6 +19,7 @@ class BucketNode
 
 	T getValue() const;
 	T& getValueRef();
+	const T& getValueRef() const;
 
 private:
 	T value;

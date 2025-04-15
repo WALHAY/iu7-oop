@@ -4,10 +4,15 @@
 
 int main()
 {
-	HashMap<std::string, int> hashmap;
+	HashMap<std::string, int> hashmap(1);
 
-	hashmap.emplace("Nigga", 1);
-	// std::cout << "Found: " << (hashmap.find("Nigga") != hashmap.end()) << std::endl;
+	auto res = hashmap.emplace("Nigga", 1);
+	std::cout << "Result: " << " " << res.second << std::endl;
+	auto it = hashmap.begin(0);
+	for(; it != hashmap.end(0); ++it)
+	{
+		std::cout << "Value: " << it->first << std::endl;
+	}
 
     return 0;
 }

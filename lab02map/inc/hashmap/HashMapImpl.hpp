@@ -108,27 +108,27 @@ V &HashMap<K, V>::operator[](K &&key)
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::begin() const -> iterator
+auto HashMap<K, V>::begin() -> iterator
 {
-    return HashMapIterator<K, V>(buckets);
+    return HashMapIterator<K, V>(*this);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::end() const -> iterator
+auto HashMap<K, V>::end() -> iterator
 {
-    return HashMapIterator<K, V>(buckets + bucketCount);
+    return HashMapIterator<K, V>(*this, bucketCount);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::begin(size_type bucket)  -> local_iterator
 {
-	return buckets[bucket].begin();
+	return buckets.get()[bucket].begin();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::end(size_type bucket)  -> local_iterator
 {
-    return buckets[bucket].end();
+    return buckets.get()[bucket].end();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -167,6 +167,7 @@ std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(std::sha
 	if(it != end(bucket))
 		return std::make_pair(iterator(), false);
 
+	buckets[bucket].insertHead(std::make_pair(key, value));
 	return std::make_pair(begin(), true);
 }
 
