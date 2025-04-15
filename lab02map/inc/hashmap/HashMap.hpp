@@ -17,7 +17,9 @@ class HashMap : public BaseCollection
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using iterator = HashMapIterator<K, V>;
+    using const_iterator = const HashMapIterator<K, V>;
     using local_iterator = BucketIterator<value_type>;
+    using const_local_iterator = const BucketIterator<value_type>;
 
     /*
      * CONSTRUCTORS
@@ -38,7 +40,9 @@ class HashMap : public BaseCollection
     std::pair<iterator, bool> emplace(std::pair<K, V> entry);
 
     iterator find(const K &key);
-    // const_iterator find(const K &key) const;
+    const_iterator find(const K &key) const;
+    iterator find(K &&key);
+    const_iterator find(K &&key) const;
 
     bool contains(const K &key) const;
     bool contains(K &&key) const;
@@ -65,6 +69,9 @@ class HashMap : public BaseCollection
 
     local_iterator begin(size_type bucket);
     local_iterator end(size_type bucket);
+
+    const_local_iterator cbegin(size_type bucket) const;
+    const_local_iterator cend(size_type bucket) const;
 
     size_type getBucketCount() const;
 
