@@ -4,10 +4,6 @@
 #include "hashmap/HashMapConcepts.hpp"
 #include "hashmap/HashMapExceptions.hpp"
 #include "hashmap/HashMapNode.hpp"
-#include <iostream>
-
-template <HashAndEqual K, MoveAndCopy V>
-using size_type = HashMap<K, V>::size_type;
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap() : HashMap(8)
@@ -59,7 +55,7 @@ bool HashMap<K, V>::contains(K &&key) const
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::emplace(const K &key, const V &value)
+auto HashMap<K, V>::emplace(const K &key, const V &value) -> std::pair<iterator, bool>
 {
     if (countLoadFactor() > loadFactorThreshold)
         rebuild();
@@ -68,7 +64,7 @@ std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::emplace(const K
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-HashMapIterator<K, V> HashMap<K, V>::find(const K &key)
+auto HashMap<K, V>::find(const K &key) -> iterator
 {
     size_t index = getKeyIndex(key);
 
@@ -85,7 +81,7 @@ HashMapIterator<K, V> HashMap<K, V>::find(const K &key)
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::emplace(std::pair<K, V> entry) {
+auto HashMap<K, V>::emplace(std::pair<K, V> entry) -> std::pair<iterator, bool> { 
 	return emplace(entry.first, entry.second);
 }
 
@@ -143,59 +139,35 @@ V &HashMap<K, V>::at(const K &key)
 template <HashAndEqual K, MoveAndCopy V>
 const V &HashMap<K, V>::at(const K &key) const
 {
-    auto it = find(key);
-    if (it == end())
-        throw OutOfRangeException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
-
-    return it->value;
+	return at(key);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 V &HashMap<K, V>::operator[](const K &key)
 {
-    auto it = find(key);
-    if (it == end())
-        throw OutOfRangeException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
-
-    return it->value;
+	return at(key);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 V &HashMap<K, V>::operator[](K &&key)
 {
-    auto it = find(key);
-    if (it == end())
-        throw OutOfRangeException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
-
-    return it->value;
+	return at(key);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-HashMapIterator<K, V> HashMap<K, V>::begin() const
+auto HashMap<K, V>::begin() const -> iterator
 {
     return HashMapIterator<K, V>(firstNode);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-HashMapIterator<K, V> HashMap<K, V>::end() const
+auto HashMap<K, V>::end() const -> iterator
 {
     return HashMapIterator<K, V>(sentinelNode);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-ConstHashMapIterator<K, V> HashMap<K, V>::cbegin() const
-{
-    return ConstHashMapIterator<K, V>(firstNode);
-}
-
-template <HashAndEqual K, MoveAndCopy V>
-ConstHashMapIterator<K, V> HashMap<K, V>::cend() const
-{
-    return ConstHashMapIterator<K, V>(sentinelNode);
-}
-
-template <HashAndEqual K, MoveAndCopy V>
-size_t HashMap<K, V>::getKeyIndex(const K &key) const
+auto HashMap<K, V>::getKeyIndex(const K &key) const -> size_type
 {
     return getKeyHash(key) % getBucketCount();
 }
@@ -272,7 +244,7 @@ std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-HashMap<K, V>::size_type HashMap<K, V>::getNextPrime(size_type size) const
+auto HashMap<K, V>::getNextPrime(size_type size) const -> size_type
 {
 	while(size < std::numeric_limits<size_type>::max() && !isPrime(++size));
 	return size;

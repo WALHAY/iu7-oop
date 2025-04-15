@@ -1,18 +1,19 @@
-#include "hashmap/HashMap.hpp"
+#include "bucket/Bucket.hpp"
 #include <iostream>
 #include <string>
 
 int main()
 {
-	HashMap<std::string, int> hashmap = { {"hello", 1}, {"hi", 2} };
+	Bucket<int> bucket;
 
-	auto it = hashmap.cend();
-	while(it != hashmap.cbegin())
-	   {
-		   --it;
-	       std::cout << it->key << " : " << it->value << std::endl;
-	   }
-
+	bucket.insertTail(1);
+	bucket.insertTail(2);
+	bucket.insertTail(3);
+	for(auto it = bucket.begin(); it != bucket.end(); ++it)
+	{
+		std::cout << "Value: " << it << std::endl;
+		std::fflush(stdout);
+	}
 
     return 0;
 }
