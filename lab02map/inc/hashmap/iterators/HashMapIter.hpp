@@ -15,11 +15,10 @@ class HashMapIterator
     using iterator_category = std::forward_iterator_tag;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using value_type = HashMap<K, V>::value_type;
+    using value_type = std::pair<const K, V>;
     using pointer = value_type *;
-    using const_pointer = const value_type *;
     using reference = value_type &;
-    using const_reference = const value_type &;
+    using local_iterator = BucketIterator<value_type>;
     using iterator = HashMapIterator<K, V>;
 
     HashMapIterator();
@@ -28,10 +27,10 @@ class HashMapIterator
     HashMapIterator(HashMapIterator<K, V> &&map) = default;
     HashMapIterator(const HashMapIterator<K, V> &map) = default;
 
-    pointer operator->();
-    const_pointer operator->() const;
-    reference operator*();
-    const_reference operator*() const;
+    pointer operator->() const;
+    reference operator*() const;
+
+    HashMapIterator<K, V> &operator=(const HashMapIterator<K, V> &other);
 
     HashMapIterator<K, V> &operator++();
     HashMapIterator<K, V> operator++(int);
@@ -46,7 +45,7 @@ class HashMapIterator
 
     size_type bucketIndex;
     size_type bucketCount;
-    HashMap<K, V>::local_iterator localIterator;
+    local_iterator localIterator;
 };
 
 #include <hashmap/iterators/HashMapIterImpl.hpp>
