@@ -18,6 +18,23 @@ void List<T>::insertHead(const T &value)
 }
 
 template <typename T>
+void List<T>::removeHead() 
+{
+	if(head != nullptr)
+		head = head->next;
+}
+
+template <typename T>
+void List<T>::removeTail() 
+{
+	auto node = head;
+	while(node != nullptr && node->next != nullptr && node->next->next != nullptr)
+		node = node->next;
+
+	node->next = nullptr;
+}
+
+template <typename T>
 void List<T>::insertTail(const T &value) 
 {
     auto node = std::make_shared<ListNode<T>>(value, nullptr);

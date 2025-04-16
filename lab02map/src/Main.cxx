@@ -12,31 +12,54 @@ int main()
 	std::cout << "list.[0]: " << strList[0] << std::endl;
 	std::cout << "list.at(0): " << strList.at(0) << std::endl;
 
-	std::cout << "\nAdded cat and meow into list head" << std::endl;
+	std::cout << "\nInsert head: cat & meow" << std::endl;
 	strList.insertHead("cat");
 	strList.insertHead("meow");
 
 	std::cout << "List size: " << strList.getSize() << std::endl;
 	std::cout << "Is empty: " << strList.isEmpty() << std::endl;
-	std::cout << "Iterating head -> tail: ";
+	std::cout << "List: ";
 	for(auto &it : strList)
 		std::cout << it << " ";
 	std::cout << "\nHead: " << strList.getHead() << std::endl;
 	std::cout << "Tail: " << strList.getTail() << std::endl;
-	std::cout << "\n";
 
-	std::cout << "\nAdded dog and brr into list tail" << std::endl;
+	std::cout << "\nInsert tail: dog & brr" << std::endl;
 	strList.insertTail("dog");
 	strList.insertTail("brr");
 
 	std::cout << "List size: " << strList.getSize() << std::endl;
 	std::cout << "Is empty: " << strList.isEmpty() << std::endl;
-	std::cout << "Iterating head -> tail: ";
+	std::cout << "List: ";
 	for(auto &it : strList)
 		std::cout << it << " ";
 	std::cout << "\nHead: " << strList.getHead() << std::endl;
 	std::cout << "Tail: " << strList.getTail() << std::endl;
 	std::cout << "\n";
+
+	std::cout << "List: ";
+	for(auto &it : strList)
+		std::cout << it << " ";
+	std::cout << "\nRemove head" << std::endl;
+	strList.removeHead();
+	std::cout << "List: ";
+	for(auto &it : strList)
+		std::cout << it << " ";
+	std::cout << "\nList size: " << strList.getSize() << std::endl;
+	std::cout << "Head: " << strList.getHead() << std::endl;
+	std::cout << "Tail: " << strList.getTail() << "\n\n";
+
+	std::cout << "List: ";
+	for(auto &it : strList)
+		std::cout << it << " ";
+	std::cout << "\nRemove tail" << std::endl;
+	strList.removeTail();
+	std::cout << "List: ";
+	for(auto &it : strList)
+		std::cout << it << " ";
+	std::cout << "\nList size: " << strList.getSize() << std::endl;
+	std::cout << "Head: " << strList.getHead() << std::endl;
+	std::cout << "Tail: " << strList.getTail() << std::endl;
 
 	std::cout << "\n--- HashMap zone ---" << std::endl;
 
