@@ -1,7 +1,6 @@
 #pragma once
 
 #include "hashmap/HashMap.hpp"
-#include <algorithm>
 
 template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap() : HashMap(8)
@@ -27,7 +26,7 @@ bool HashMap<K, V>::contains(const K &key) const
 {
     size_type bucket = getBucket(key);
 
-    return std::any_of(cbegin(bucket), cend(bucket), [&key](const value_type &value) { return value.first == key; });
+	return false;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -47,21 +46,20 @@ auto HashMap<K, V>::emplace(const K &key, const V &value) -> std::pair<iterator,
 }
 
 template <HashAndEqual K, MoveAndCopy V>
+auto HashMap<K, V>::emplace(std::pair<K, V> entry) -> std::pair<iterator, bool>
+{
+    return emplace(entry.first, entry.second);
+}
+
+template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::find(const K &key) -> iterator
 {
-	return find(key);
+    return find(key);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::find(const K &key) const -> const_iterator
 {
-
-}
-
-template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::emplace(std::pair<K, V> entry) -> std::pair<iterator, bool>
-{
-    return emplace(entry.first, entry.second);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -102,37 +100,13 @@ V &HashMap<K, V>::operator[](K &&key)
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::begin() -> iterator
 {
-    return HashMapIterator<K, V>(*this);
+    return iterator(*this);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::end() -> iterator
 {
-    return HashMapIterator<K, V>(*this, buckets.getSize());
-}
-
-template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::begin(size_type bucket) -> local_iterator
-{
-    return buckets[bucket].begin();
-}
-
-template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::end(size_type bucket) -> local_iterator
-{
-    return buckets[bucket].end();
-}
-
-template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::cbegin(size_type bucket) const -> const_local_iterator
-{
-    return buckets[bucket].begin();
-}
-
-template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::cend(size_type bucket) const -> const_local_iterator
-{
-    return buckets[bucket].end();
+    return iterator(buckets.end(), buckets.end());
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -160,10 +134,14 @@ void HashMap<K, V>::rebuild()
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(List<List<value_type>> &buckets,
-                                                                        const K &key, const V &value)
+std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(List<List<value_type>> &buckets, const K &key,
+                                                                        const V &value)
 {
-	
+    size_type index = getBucket(key);
+	auto &bucket = buckets[index];
+
+	ListIterator<value_type> res = bucket.insertHead(std::make_pair(key, value));
+	return std::make_pair(HashMapIterator(buckets.begin() + index, buckets.end(), res), true);
 }
 
 template <HashAndEqual K, MoveAndCopy V>

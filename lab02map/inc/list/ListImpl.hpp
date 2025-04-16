@@ -12,9 +12,10 @@ List<T>::List(size_type size) {
 }
 
 template <typename T>
-void List<T>::insertHead(const T &value) 
+auto List<T>::insertHead(const T &value) -> iterator
 {
 	head = std::make_shared<ListNode<T>>(value, head);
+	return iterator(head);
 }
 
 template <typename T>
@@ -35,7 +36,7 @@ void List<T>::removeTail()
 }
 
 template <typename T>
-void List<T>::insertTail(const T &value) 
+auto List<T>::insertTail(const T &value) -> iterator
 {
     auto node = std::make_shared<ListNode<T>>(value, nullptr);
 
@@ -43,13 +44,14 @@ void List<T>::insertTail(const T &value)
 	if(tail == nullptr)
 	{
 		head = node;
-		return;
+		return iterator(node);
 	}
 
 	while(tail->next != nullptr)
 		tail = tail->next;
 
 	tail->next = node;
+	return iterator(node);
 }
 
 template <typename T>

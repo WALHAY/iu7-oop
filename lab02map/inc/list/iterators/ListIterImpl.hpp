@@ -1,7 +1,7 @@
 #pragma once
 
-#include <list/iterators/ListIter.hpp>
 #include <hashmap/HashMapExceptions.hpp>
+#include <list/iterators/ListIter.hpp>
 
 template <typename T>
 ListIterator<T>::ListIterator()
@@ -23,7 +23,7 @@ ListIterator<T>::ListIterator(const ListIterator<T> &iterator)
 template <typename T>
 ListIterator<T>::ListIterator(const std::shared_ptr<ListNode<T>> &node)
 {
-	nodePtr = node;
+    nodePtr = node;
 }
 
 template <typename T>
@@ -68,6 +68,22 @@ ListIterator<T> ListIterator<T>::operator++(int)
 }
 
 template <typename T>
+ListIterator<T> ListIterator<T>::operator+(size_type offset) const {
+	ListIterator<T> offsetIter(*this);
+	while(offset-- > 0)
+		++offsetIter;
+	return offsetIter;
+}
+
+template <typename T>
+ListIterator<T> &ListIterator<T>::operator+=(size_type offset) {
+	
+	while(offset-- > 0)
+		++(*this);
+	return *this;
+}
+
+template <typename T>
 ListIterator<T> &ListIterator<T>::operator=(const ListIterator<T> &other)
 {
     nodePtr = other.nodePtr;
@@ -83,7 +99,7 @@ bool ListIterator<T>::operator==(const ListIterator<T> &other) const
 template <typename T>
 bool ListIterator<T>::operator!=(const ListIterator<T> &other) const
 {
-	return !(*this == other);
+    return !(*this == other);
 }
 
 template <typename T>

@@ -23,8 +23,8 @@ class List
     List();
 	List(size_type size);
 
-    void insertHead(const T &value);
-    void insertTail(const T &value);
+    iterator insertHead(const T &value);
+    iterator insertTail(const T &value);
 
     void removeHead();
     void removeTail();

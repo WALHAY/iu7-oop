@@ -37,6 +37,8 @@ class ListIterator
 
     ListIterator<T> &operator++();
     ListIterator<T> operator++(int);
+    ListIterator<T> operator+(size_type offset) const;
+    ListIterator<T> &operator+=(size_type offset);
 
     ListIterator<T> &operator=(const ListIterator<T> &other);
 

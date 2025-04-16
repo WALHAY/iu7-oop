@@ -8,90 +8,75 @@ HashMapIterator<K, V>::HashMapIterator()
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map) : HashMapIterator(map, 0)
+HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map) : HashMapIterator(map.begin(), map.end())
 {
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map, size_type bucket)
+HashMapIterator<K, V>::HashMapIterator(const buckets_iterator &current, const buckets_iterator &end)
+    : HashMapIterator(current, end, current->begin())
 {
-    bucketIndex = bucket;
-    bucketCount = map.getBucketCount();
-    bucketsPtr = map.buckets;
-    if (bucket >= bucketCount)
-        localIterator = map.buckets[bucket].end();
-    else
-        localIterator = map.buckets[bucket].begin();
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V>::HashMapIterator(ListIterator<value_type> &iterator, size_type bucket) {
-	this->bucketIndex = bucket;
-	this->localIterator = iterator;
+HashMapIterator<K, V>::HashMapIterator(const buckets_iterator &current, const buckets_iterator &end, const local_iterator &element)
+{
+	this->currentBucket = current;
+	this->endBucket = end;
+	this->elementIterator = element;
 }
 
 template <typename K, typename V>
 auto HashMapIterator<K, V>::operator->() const -> pointer
 {
-    return &(localIterator.nodePtr.lock().get()->getValueRef());
+    return &(elementIterator.nodePtr.lock().get()->getValueRef());
 }
 
 template <typename K, typename V>
 auto HashMapIterator<K, V>::operator*() const -> reference
 {
-    return localIterator.nodePtr.lock().get()->getValueRef();
+    return elementIterator.nodePtr.lock().get()->getValueRef();
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V>::operator bool () const {
-	return localIterator;
+HashMapIterator<K, V>::operator bool() const
+{
+    return elementIterator;
 }
 
 template <typename K, typename V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator=(const HashMapIterator<K, V> &other)
 {
-    this->localIterator = other->localIterator;
-    this->bucketCount = other->bucketCount;
-    this->bucketsPtr = other->bucketsPtr;
-    this->bucketIndex = other->bucketIndex;
 }
 
 template <typename K, typename V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
 {
-	if(localIterator == local_iterator(nullptr))
+	if(++elementIterator == currentBucket->end())
 	{
-		while(bucketIndex < bucketCount)
-			if(!bucketsPtr.lock()[bucketIndex].isEmpty())
-				break;
-
-		if(bucketIndex >= bucketCount)
-			throw InvalidIterator("", "", "", 1);
-
-		localIterator = bucketsPtr.lock()[bucketIndex].begin();
-	} else {
-		++localIterator;
-	}
-    return *this;
+		++currentBucket;
+	} 
+	return *this;
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int) {
-	iterator copy(*this);
-	++(*this);
-	return copy;
+HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int)
+{
+    iterator copy(*this);
+    ++(*this);
+    return copy;
 }
 
 template <typename K, typename V>
 bool HashMapIterator<K, V>::operator==(const HashMapIterator<K, V> &iterator) const
 {
-    return bucketsPtr.lock() == iterator.bucketsPtr.lock() && bucketIndex == iterator.bucketIndex && localIterator == iterator.localIterator;
+    return true;
 }
 
 template <typename K, typename V>
 bool HashMapIterator<K, V>::operator!=(const HashMapIterator<K, V> &iterator) const
 {
-	return !(*this == iterator);
+    return !(*this == iterator);
 }
 
 static_assert(std::forward_iterator<HashMapIterator<std::string, int>>);

@@ -65,12 +65,6 @@ class HashMap : public BaseCollection
     iterator begin();
     iterator end();
 
-    local_iterator begin(size_type list);
-    local_iterator end(size_type list);
-
-    const_local_iterator cbegin(size_type list) const;
-    const_local_iterator cend(size_type list) const;
-
     size_type getBucketCount() const;
 
   private:

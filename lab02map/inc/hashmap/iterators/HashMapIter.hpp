@@ -19,15 +19,14 @@ class HashMapIterator
     using value_type = std::pair<const K, V>;
     using pointer = value_type *;
     using reference = value_type &;
-    using local_iterator = ListIterator<value_type>;
+    using local_iterator = List<value_type>::iterator;
     using iterator = HashMapIterator<K, V>;
+	using buckets_iterator = List<List<value_type>>::iterator;
 
     HashMapIterator();
     HashMapIterator(const HashMap<K, V> &map);
-    HashMapIterator(const HashMap<K, V> &map, size_type bucket);
-	HashMapIterator(ListIterator<value_type> &iterator, size_type bucket);
-    // HashMapIterator(HashMapIterator<K, V> &&map) = default;
-    // HashMapIterator(const HashMapIterator<K, V> &map) = default;
+    HashMapIterator(const buckets_iterator &current, const buckets_iterator &end);
+    HashMapIterator(const buckets_iterator &current, const buckets_iterator &end, const local_iterator &element);
 
 	operator bool () const;
 
@@ -45,9 +44,9 @@ class HashMapIterator
   protected:
     std::weak_ptr<List<List<value_type>>> bucketsPtr;
 
-    size_type bucketIndex;
-    size_type bucketCount;
-    local_iterator localIterator;
+    local_iterator elementIterator;
+	buckets_iterator currentBucket;
+	buckets_iterator endBucket;
 };
 
 #include <hashmap/iterators/HashMapIterImpl.hpp>
