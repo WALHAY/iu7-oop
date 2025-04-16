@@ -79,6 +79,30 @@ auto List<T>::operator[](size_type index) const -> const_reference {
 }
 
 template <typename T>
+auto List<T>::getHead() -> reference {
+	return head->value;
+}
+
+template <typename T>
+auto List<T>::getHead() const -> const_reference {
+	return getHead();
+}
+
+template <typename T>
+auto List<T>::getTail() -> reference {
+	auto node = head;
+	while(node != nullptr && node->next != nullptr)
+		node = node->next;
+
+	return node->value;
+}
+
+template <typename T>
+auto List<T>::getTail() const -> const_reference {
+	return getTail();
+}
+
+template <typename T>
 void List<T>::resize(size_type size)
 {
 	for(int i = 0; i < size; ++i)

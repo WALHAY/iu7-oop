@@ -21,6 +21,8 @@ int main()
 	std::cout << "Iterating head -> tail: ";
 	for(auto &it : strList)
 		std::cout << it << " ";
+	std::cout << "\nHead: " << strList.getHead() << std::endl;
+	std::cout << "Tail: " << strList.getTail() << std::endl;
 	std::cout << "\n";
 
 	std::cout << "\nAdded dog and brr into list tail" << std::endl;
@@ -32,6 +34,8 @@ int main()
 	std::cout << "Iterating head -> tail: ";
 	for(auto &it : strList)
 		std::cout << it << " ";
+	std::cout << "\nHead: " << strList.getHead() << std::endl;
+	std::cout << "Tail: " << strList.getTail() << std::endl;
 	std::cout << "\n";
 
 	std::cout << "\n--- HashMap zone ---" << std::endl;
