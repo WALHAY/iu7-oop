@@ -1,20 +1,29 @@
 #include "hashmap/HashMap.hpp"
-#include <bucket/Bucket.hpp>
+#include <list/List.hpp>
 #include <iostream>
 
 int main()
 {
-    HashMap<std::string, int> hashmap(4);
+    HashMap<std::string, int> hashmap(10);
 
-	hashmap.emplace("Nigga1", 1);
-	hashmap.emplace("Nigga2", 2);
-	hashmap.emplace("Nigga3", 3);
-	hashmap.emplace("Nigga4", 4);
-	auto it = hashmap.begin();
-    for (; it != hashmap.end(); ++it)
+    for (int i = 0; i < 10; ++i)
     {
-        std::cout << "Value: " << it->first << " : " << it->second << std::endl;
+        auto res = hashmap.emplace(std::format("Nigga{}", i), i);
+        std::cout << "Has been added: " << res.second << "\n";
     }
+
+    for (auto &it : hashmap)
+    {
+        // std::cout << "Value: " << it.first << " : " << it.second << std::endl;
+        std::fflush(stdout);
+    }
+
+    //  for (int i = 0; i < hashmap.bucketCount; ++i)
+    //  {
+    // std::cout << "Bucket: " << i << std::endl;
+    //      for (auto &it : hashmap.buckets[i])
+    //          std::cout << "\t" << it.first << std::endl;
+    //  }
 
     return 0;
 }

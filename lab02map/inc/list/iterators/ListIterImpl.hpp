@@ -1,46 +1,46 @@
 #pragma once
 
-#include <bucket/iterators/BucketIter.hpp>
+#include <list/iterators/ListIter.hpp>
 #include <hashmap/HashMapExceptions.hpp>
 
 template <typename T>
-BucketIterator<T>::BucketIterator()
+ListIterator<T>::ListIterator()
 {
 }
 
 template <typename T>
-BucketIterator<T>::BucketIterator(const Bucket<T> &map)
+ListIterator<T>::ListIterator(const List<T> &map)
 {
     nodePtr = map.lastNode;
 }
 
 template <typename T>
-BucketIterator<T>::BucketIterator(const BucketIterator<T> &iterator)
+ListIterator<T>::ListIterator(const ListIterator<T> &iterator)
 {
     nodePtr = iterator.nodePtr;
 }
 
 template <typename T>
-BucketIterator<T>::BucketIterator(const std::shared_ptr<BucketNode<T>> &node)
+ListIterator<T>::ListIterator(const std::shared_ptr<ListNode<T>> &node)
 {
 	nodePtr = node;
 }
 
 template <typename T>
-BucketIterator<T>::operator bool() const
+ListIterator<T>::operator bool() const
 {
     return isValid();
 }
 
 template <typename T>
-auto BucketIterator<T>::operator*() const -> reference
+auto ListIterator<T>::operator*() const -> reference
 {
     validatePtr(__LINE__);
     return nodePtr.lock().get()->getValueRef();
 }
 
 template <typename T>
-auto BucketIterator<T>::operator->() const -> pointer
+auto ListIterator<T>::operator->() const -> pointer
 {
     validatePtr(__LINE__);
     return &(nodePtr.lock().get()->getValueRef());
@@ -48,7 +48,7 @@ auto BucketIterator<T>::operator->() const -> pointer
 
 // prefix
 template <typename T>
-BucketIterator<T> &BucketIterator<T>::operator++()
+ListIterator<T> &ListIterator<T>::operator++()
 {
     validatePtr(__LINE__);
     nodePtr = nodePtr.lock()->next;
@@ -57,40 +57,46 @@ BucketIterator<T> &BucketIterator<T>::operator++()
 
 // postfix
 template <typename T>
-BucketIterator<T> BucketIterator<T>::operator++(int)
+ListIterator<T> ListIterator<T>::operator++(int)
 {
     validatePtr(__LINE__);
-    BucketIterator<T> oldIter(*this);
+    ListIterator<T> copy(*this);
 
     ++(*this);
 
-    return oldIter;
+    return copy;
 }
 
 template <typename T>
-BucketIterator<T> &BucketIterator<T>::operator=(const BucketIterator<T> &other)
+ListIterator<T> &ListIterator<T>::operator=(const ListIterator<T> &other)
 {
     nodePtr = other.nodePtr;
     return *this;
 }
 
 template <typename T>
-bool BucketIterator<T>::operator==(const BucketIterator<T> &other) const
+bool ListIterator<T>::operator==(const ListIterator<T> &other) const
 {
     return other.nodePtr.lock() == nodePtr.lock();
 }
 
 template <typename T>
-bool BucketIterator<T>::isValid() const
+bool ListIterator<T>::operator!=(const ListIterator<T> &other) const
+{
+	return !(*this == other);
+}
+
+template <typename T>
+bool ListIterator<T>::isValid() const
 {
     return nodePtr.lock() != nullptr && !nodePtr.expired();
 }
 
 template <typename T>
-void BucketIterator<T>::validatePtr(int line) const
+void ListIterator<T>::validatePtr(int line) const
 {
     if (!isValid())
         throw InvalidIterator(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
 }
 
-static_assert(std::forward_iterator<BucketIterator<int>>);
+static_assert(std::forward_iterator<ListIterator<int>>);

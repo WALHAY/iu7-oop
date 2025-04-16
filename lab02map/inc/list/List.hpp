@@ -1,17 +1,17 @@
 #pragma once
 
-#include <bucket/BucketNode.hpp>
-#include <bucket/iterators/BucketIter.hpp>
+#include <list/ListNode.hpp>
+#include <list/iterators/ListIter.hpp>
 #include <collection/BaseCollection.hpp>
 
 template <typename T>
-class Bucket
+class List
 {
   public:
-    friend class BucketNode<T>;
+    friend class ListNode<T>;
 
-    using iterator = BucketIterator<T>;
-    using const_iterator = const BucketIterator<T>;
+    using iterator = ListIterator<T>;
+    using const_iterator = const ListIterator<T>;
     using value_type = T;
     using reference = T &;
     using const_reference = const T &;
@@ -20,7 +20,7 @@ class Bucket
 	using size_type = std::size_t;
 	using difference_type = std::ptrdiff_t;
 
-    Bucket();
+    List();
 
     void insertHead(const T &value);
     void insertTail(const T &value);
@@ -36,8 +36,8 @@ class Bucket
 	reference getTail();
 	const_reference getTail() const;
 
-	void merge(Bucket &&bucket);
-	void merge(const Bucket &bucket);
+	void merge(List &&bucket);
+	void merge(const List &bucket);
 	
 	bool isEmpty() const;
 
@@ -48,7 +48,7 @@ class Bucket
     iterator end();
 
   protected:
-    std::shared_ptr<BucketNode<T>> head;
+    std::shared_ptr<ListNode<T>> head;
 };
 
-#include <bucket/BucketImpl.hpp>
+#include <list/ListImpl.hpp>

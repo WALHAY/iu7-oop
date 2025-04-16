@@ -12,7 +12,7 @@ template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap(const size_t initialSize)
 {
     size = 0;
-    buckets = std::make_shared<Bucket<value_type>[]>(initialSize);
+    buckets = std::make_shared<List<value_type>[]>(initialSize);
     bucketCount = initialSize;
 }
 
@@ -26,7 +26,7 @@ HashMap<K, V>::HashMap(const std::initializer_list<std::pair<K, V>> list) : Hash
 template <HashAndEqual K, MoveAndCopy V>
 bool HashMap<K, V>::contains(const K &key) const
 {
-    size_type bucket = getBucket(key);
+    size_type bucket = getList(key);
 
     return std::any_of(cbegin(bucket), cend(bucket), [&key](const value_type &value) { return value.first == key; });
 }
@@ -50,7 +50,7 @@ auto HashMap<K, V>::emplace(const K &key, const V &value) -> std::pair<iterator,
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::find(const K &key) -> iterator
 {
-    size_t bucket = getBucket(key);
+    size_t bucket = getList(key);
 
     auto it = std::find_if(begin(bucket), end(bucket), [&key](const K &l_key) { return key == l_key; });
 
@@ -68,7 +68,7 @@ auto HashMap<K, V>::find(K &&key) -> iterator {
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::find(const K &key) const -> const_iterator
 {
-    size_t bucket = getBucket(key);
+    size_t bucket = getList(key);
 
     auto it = std::find_if(cbegin(bucket), cend(bucket), [&key](const K &l_key) { return key == l_key; });
 
@@ -166,9 +166,9 @@ auto HashMap<K, V>::cend(size_type bucket) const -> const_local_iterator
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::getBucket(const K &key) const -> size_type
+auto HashMap<K, V>::getList(const K &key) const -> size_type
 {
-    return getKeyHash(key) % getBucketCount();
+    return getKeyHash(key) % getListCount();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -181,7 +181,7 @@ size_t HashMap<K, V>::getKeyHash(const K &key) const
 template <HashAndEqual K, MoveAndCopy V>
 float HashMap<K, V>::countLoadFactor() const
 {
-    return static_cast<float>(size) / getBucketCount();
+    return static_cast<float>(size) / getListCount();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -190,18 +190,17 @@ void HashMap<K, V>::rebuild()
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(std::shared_ptr<Bucket<value_type>[]> &buckets,
+std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(std::shared_ptr<List<value_type>[]> &buckets,
                                                                         const K &key, const V &value)
 {
-    // TODO: implement
-    size_type bucket = getBucket(key);
+    size_type bucket = getList(key);
 
     auto it = std::find_if(begin(bucket), end(bucket), [&key](const value_type &value) { return value.first == key; });
 
     if (it != end(bucket))
         return std::make_pair(iterator(), false);
 
-    buckets[bucket].insertHead(std::make_pair(key, value));
+    buckets[bucket].insertTail(std::make_pair(key, value));
     return std::make_pair(begin(), true);
 }
 
@@ -223,7 +222,7 @@ bool HashMap<K, V>::isPrime(size_type value) const
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-size_t HashMap<K, V>::getBucketCount() const
+size_t HashMap<K, V>::getListCount() const
 {
     return bucketCount;
 }

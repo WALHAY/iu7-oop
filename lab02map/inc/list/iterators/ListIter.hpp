@@ -5,13 +5,13 @@
 #include <memory>
 
 template <typename T>
-class Bucket;
+class List;
 
 template <typename T>
-class BucketNode;
+class ListNode;
 
 template <typename T>
-class BucketIterator
+class ListIterator
 {
 	template <typename K, typename V>
 	friend class HashMapIterator;
@@ -24,24 +24,24 @@ class BucketIterator
     using const_reference = const T &;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using iterator = BucketIterator<T>;
+    using iterator = ListIterator<T>;
     using iterator_category = std::forward_iterator_tag;
 
-    BucketIterator();
-    BucketIterator(const Bucket<T> &bucket);
-    BucketIterator(const BucketIterator<T> &iterator);
-    BucketIterator(const std::shared_ptr<BucketNode<T>> &node);
+    ListIterator();
+    ListIterator(const List<T> &bucket);
+    ListIterator(const ListIterator<T> &iterator);
+    ListIterator(const std::shared_ptr<ListNode<T>> &node);
 
     reference operator*() const;
     pointer operator->() const;
 
-    BucketIterator<T> &operator++();
-    BucketIterator<T> operator++(int);
+    ListIterator<T> &operator++();
+    ListIterator<T> operator++(int);
 
-    BucketIterator<T> &operator=(const BucketIterator<T> &other);
+    ListIterator<T> &operator=(const ListIterator<T> &other);
 
-    bool operator==(const BucketIterator<T> &other) const;
-    bool operator!=(const BucketIterator<T> &other) const = default;
+    bool operator==(const ListIterator<T> &other) const;
+    bool operator!=(const ListIterator<T> &other) const;
 
     bool isValid() const;
 
@@ -50,7 +50,7 @@ class BucketIterator
   private:
     void validatePtr(int line) const;
 
-    std::weak_ptr<BucketNode<T>> nodePtr;
+    std::weak_ptr<ListNode<T>> nodePtr;
 };
 
-#include <bucket/iterators/BucketIterImpl.hpp>
+#include <list/iterators/ListIterImpl.hpp>

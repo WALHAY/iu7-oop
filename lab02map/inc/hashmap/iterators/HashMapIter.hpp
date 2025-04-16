@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bucket/Bucket.hpp"
+#include "list/List.hpp"
 #include "hashmap/HashMapConcepts.hpp"
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -10,7 +10,7 @@ template <typename K, typename V>
 class HashMapIterator
 {
     friend class HashMap<K, V>;
-	friend class BucketIterator<std::pair<const K, V>>;
+	friend class ListIterator<std::pair<const K, V>>;
 
   public:
     using iterator_category = std::forward_iterator_tag;
@@ -19,14 +19,16 @@ class HashMapIterator
     using value_type = std::pair<const K, V>;
     using pointer = value_type *;
     using reference = value_type &;
-    using local_iterator = BucketIterator<value_type>;
+    using local_iterator = ListIterator<value_type>;
     using iterator = HashMapIterator<K, V>;
 
     HashMapIterator();
     HashMapIterator(const HashMap<K, V> &map);
     HashMapIterator(const HashMap<K, V> &map, size_type bucket);
-    HashMapIterator(HashMapIterator<K, V> &&map) = default;
-    HashMapIterator(const HashMapIterator<K, V> &map) = default;
+    // HashMapIterator(HashMapIterator<K, V> &&map) = default;
+    // HashMapIterator(const HashMapIterator<K, V> &map) = default;
+
+	operator bool () const;
 
     pointer operator->() const;
     reference operator*() const;
@@ -40,7 +42,7 @@ class HashMapIterator
     bool operator!=(const HashMapIterator<K, V> &iterator) const;
 
   protected:
-    std::weak_ptr<Bucket<value_type>[]> bucketsPtr;
+    std::weak_ptr<List<value_type>[]> bucketsPtr;
 
     size_type bucketIndex;
     size_type bucketCount;

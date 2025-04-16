@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bucket/iterators/BucketIter.hpp"
+#include "list/iterators/ListIter.hpp"
 #include "collection/BaseCollection.hpp"
 #include "hashmap/HashMapConcepts.hpp"
 #include "hashmap/iterators/HashMapIter.hpp"
@@ -18,8 +18,8 @@ class HashMap : public BaseCollection
     using difference_type = std::ptrdiff_t;
     using iterator = HashMapIterator<K, V>;
     using const_iterator = const HashMapIterator<K, V>;
-    using local_iterator = BucketIterator<value_type>;
-    using const_local_iterator = const BucketIterator<value_type>;
+    using local_iterator = ListIterator<value_type>;
+    using const_local_iterator = const ListIterator<value_type>;
 
     /*
      * CONSTRUCTORS
@@ -67,13 +67,13 @@ class HashMap : public BaseCollection
     iterator begin();
     iterator end();
 
-    local_iterator begin(size_type bucket);
-    local_iterator end(size_type bucket);
+    local_iterator begin(size_type list);
+    local_iterator end(size_type list);
 
-    const_local_iterator cbegin(size_type bucket) const;
-    const_local_iterator cend(size_type bucket) const;
+    const_local_iterator cbegin(size_type list) const;
+    const_local_iterator cend(size_type list) const;
 
-    size_type getBucketCount() const;
+    size_type getListCount() const;
 
   private:
     /*
@@ -89,14 +89,15 @@ class HashMap : public BaseCollection
      * KEYS & HASH
      */
     size_t getKeyHash(const K &key) const;
-    size_type getBucket(const K &key) const;
+    size_type getList(const K &key) const;
 
-    std::pair<iterator, bool> insert(std::shared_ptr<Bucket<value_type>[]> &buckets, const K &key, const V &value);
+    std::pair<iterator, bool> insert(std::shared_ptr<List<value_type>[]> &lists, const K &key, const V &value);
 
     const float loadFactorThreshold = 1.0f;
     const float sizeFactor = 1.5f;
 
-    std::shared_ptr<Bucket<value_type>[]> buckets;
+public:
+    std::shared_ptr<List<value_type>[]> buckets;
     size_type bucketCount;
 };
 

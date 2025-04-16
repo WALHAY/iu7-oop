@@ -38,6 +38,11 @@ auto HashMapIterator<K, V>::operator*() const -> reference
 }
 
 template <typename K, typename V>
+HashMapIterator<K, V>::operator bool () const {
+	return localIterator;
+}
+
+template <typename K, typename V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator=(const HashMapIterator<K, V> &other)
 {
     this->localIterator = other->localIterator;
@@ -49,35 +54,39 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator=(const HashMapIterator<K,
 template <typename K, typename V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
 {
-    local_iterator bucketEnd = bucketsPtr.lock()[bucketIndex].end();
-    if (++localIterator == bucketEnd)
-    {
-        while (bucketIndex + 1 < bucketCount)
-        {
-            auto &bucket = bucketsPtr.lock()[++bucketIndex];
-            if (!bucket.isEmpty())
+	if(localIterator == local_iterator(nullptr))
+	{
+		while(bucketIndex < bucketCount)
+			if(!bucketsPtr.lock()[bucketIndex].isEmpty())
 				break;
-        }
 
 		if(bucketIndex >= bucketCount)
-			throw new InvalidIterator("", "", "", 1);
+			throw InvalidIterator("", "", "", 1);
 
 		localIterator = bucketsPtr.lock()[bucketIndex].begin();
-    }
-
+	} else {
+		++localIterator;
+	}
     return *this;
+}
+
+template <typename K, typename V>
+HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int) {
+	iterator copy(*this);
+	++(*this);
+	return copy;
 }
 
 template <typename K, typename V>
 bool HashMapIterator<K, V>::operator==(const HashMapIterator<K, V> &iterator) const
 {
-    return localIterator == iterator.localIterator;
+    return bucketsPtr.lock() == iterator.bucketsPtr.lock() && bucketIndex == iterator.bucketIndex && localIterator == iterator.localIterator;
 }
 
 template <typename K, typename V>
 bool HashMapIterator<K, V>::operator!=(const HashMapIterator<K, V> &iterator) const
 {
-    return localIterator != iterator.localIterator;
+	return !(*this == iterator);
 }
 
 static_assert(std::forward_iterator<HashMapIterator<std::string, int>>);
