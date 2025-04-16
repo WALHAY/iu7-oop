@@ -70,9 +70,6 @@ BucketIterator<T> BucketIterator<T>::operator++(int)
 template <typename T>
 BucketIterator<T> &BucketIterator<T>::operator=(const BucketIterator<T> &other)
 {
-    other.validatePtr(__LINE__);
-    validatePtr(__LINE__);
-
     nodePtr = other.nodePtr;
     return *this;
 }

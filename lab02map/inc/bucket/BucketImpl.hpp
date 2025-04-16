@@ -31,6 +31,11 @@ void Bucket<T>::insertTail(const T &value)
 }
 
 template <typename T>
+bool Bucket<T>::isEmpty() const {
+	return head == nullptr;
+}
+
+template <typename T>
 auto Bucket<T>::begin() -> iterator {
 	return iterator(head);
 }

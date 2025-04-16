@@ -38,6 +38,8 @@ class Bucket
 
 	void merge(Bucket &&bucket);
 	void merge(const Bucket &bucket);
+	
+	bool isEmpty() const;
 
     /*
      * ITERATORS

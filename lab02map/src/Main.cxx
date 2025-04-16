@@ -4,18 +4,16 @@
 
 int main()
 {
-    HashMap<std::string, int> hashmap(1);
+    HashMap<std::string, int> hashmap(4);
 
-    std::cout << "Contains: " << " " << hashmap.contains("Nigga") << std::endl;
-    auto res = hashmap.emplace("Nigga", 1);
-    std::cout << "Result: " << " " << res.second << std::endl;
-    auto res2 = hashmap.emplace("Nigga", 1);
-    std::cout << "Result: " << " " << res2.second << std::endl;
-    auto it = hashmap.begin(0);
-    std::cout << "Contains: " << " " << hashmap.contains("Nigga") << std::endl;
-    for (; it != hashmap.end(0); ++it)
+	hashmap.emplace("Nigga1", 1);
+	hashmap.emplace("Nigga2", 2);
+	hashmap.emplace("Nigga3", 3);
+	hashmap.emplace("Nigga4", 4);
+	auto it = hashmap.begin();
+    for (; it != hashmap.end(); ++it)
     {
-        std::cout << "Value: " << it->first << std::endl;
+        std::cout << "Value: " << it->first << " : " << it->second << std::endl;
     }
 
     return 0;

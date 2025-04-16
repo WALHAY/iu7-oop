@@ -13,6 +13,9 @@ class BucketNode;
 template <typename T>
 class BucketIterator
 {
+	template <typename K, typename V>
+	friend class HashMapIterator;
+
   public:
     using value_type = T;
     using pointer = T *;

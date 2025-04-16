@@ -10,6 +10,7 @@ template <typename K, typename V>
 class HashMapIterator
 {
     friend class HashMap<K, V>;
+	friend class BucketIterator<std::pair<const K, V>>;
 
   public:
     using iterator_category = std::forward_iterator_tag;
@@ -37,8 +38,6 @@ class HashMapIterator
 
     bool operator==(const HashMapIterator<K, V> &iterator) const;
     bool operator!=(const HashMapIterator<K, V> &iterator) const;
-
-    size_type findNextBucket();
 
   protected:
     std::weak_ptr<Bucket<value_type>[]> bucketsPtr;
