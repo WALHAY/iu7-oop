@@ -18,8 +18,8 @@ class HashMap : public BaseCollection
     using difference_type = std::ptrdiff_t;
     using iterator = HashMapIterator<K, V>;
     using const_iterator = const HashMapIterator<K, V>;
-    using local_iterator = ListIterator<value_type>;
-    using const_local_iterator = const ListIterator<value_type>;
+    using local_iterator = List<value_type>::iterator;
+    using const_local_iterator = const List<value_type>::iterator;
 
     /*
      * CONSTRUCTORS

@@ -42,6 +42,7 @@ class HashMapIterator
     bool operator!=(const HashMapIterator<K, V> &iterator) const;
 
   protected:
+	void moveNextBucket();
     std::weak_ptr<List<List<value_type>>> bucketsPtr;
 
     local_iterator elementIterator;

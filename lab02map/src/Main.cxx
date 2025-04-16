@@ -80,7 +80,13 @@ int main()
     HashMap<std::string, int> hashmap;
 
     hashmap.emplace("hello", 1);
+    hashmap.emplace("hi", 2);
     std::cout << "Hashmap emplace {\"hello\", 1}" << std::endl;
+
+	for(auto &it : hashmap)
+	{
+		std::cout << it.first << " " <<it.second<<std::endl;
+	}
     // std::cout << "hashmap[\"hello\"]: " << hashmap["hello"] << std::endl;
     // std::cout << "hashmap[\"hello\"]: " << hashmap.at("hello") << std::endl;
 
