@@ -1,7 +1,6 @@
 #pragma once
 
 #include "hashmap/iterators/HashMapIter.hpp"
-#include <iostream>
 
 template <typename K, typename V>
 HashMapIterator<K, V>::HashMapIterator()

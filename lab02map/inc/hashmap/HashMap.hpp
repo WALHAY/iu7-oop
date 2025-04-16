@@ -91,13 +91,13 @@ class HashMap : public BaseCollection
     size_t getKeyHash(const K &key) const;
     size_type getList(const K &key) const;
 
-    std::pair<iterator, bool> insert(std::shared_ptr<List<value_type>[]> &lists, const K &key, const V &value);
+    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, const K &key, const V &value);
 
     const float loadFactorThreshold = 1.0f;
     const float sizeFactor = 1.5f;
 
 public:
-    std::shared_ptr<List<value_type>[]> buckets;
+	List<List<value_type>> buckets;
     size_type bucketCount;
 };
 

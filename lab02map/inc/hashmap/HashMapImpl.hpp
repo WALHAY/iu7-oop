@@ -12,7 +12,7 @@ template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap(const size_t initialSize)
 {
     size = 0;
-    buckets = std::make_shared<List<value_type>[]>(initialSize);
+    buckets = List<List<value_type>>(initialSize);
     bucketCount = initialSize;
 }
 
@@ -190,7 +190,7 @@ void HashMap<K, V>::rebuild()
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(std::shared_ptr<List<value_type>[]> &buckets,
+std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(List<List<value_type>> &buckets,
                                                                         const K &key, const V &value)
 {
     size_type bucket = getList(key);
