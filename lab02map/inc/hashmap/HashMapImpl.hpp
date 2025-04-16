@@ -13,7 +13,6 @@ HashMap<K, V>::HashMap(const size_t initialSize)
 {
     size = 0;
     buckets = List<List<value_type>>(initialSize);
-    bucketCount = initialSize;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -138,7 +137,7 @@ auto HashMap<K, V>::begin() -> iterator
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::end() -> iterator
 {
-    return HashMapIterator<K, V>(*this, bucketCount);
+    return HashMapIterator<K, V>(*this, buckets.getSize());
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -168,7 +167,7 @@ auto HashMap<K, V>::cend(size_type bucket) const -> const_local_iterator
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::getList(const K &key) const -> size_type
 {
-    return getKeyHash(key) % getListCount();
+    return getKeyHash(key) % getBucketCount();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -181,7 +180,7 @@ size_t HashMap<K, V>::getKeyHash(const K &key) const
 template <HashAndEqual K, MoveAndCopy V>
 float HashMap<K, V>::countLoadFactor() const
 {
-    return static_cast<float>(size) / getListCount();
+    return static_cast<float>(size) / getBucketCount();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -222,7 +221,7 @@ bool HashMap<K, V>::isPrime(size_type value) const
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-size_t HashMap<K, V>::getListCount() const
+auto HashMap<K, V>::getBucketCount() const -> size_type
 {
-    return bucketCount;
+    return buckets.getSize();
 }

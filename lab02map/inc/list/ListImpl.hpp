@@ -41,10 +41,24 @@ bool List<T>::isEmpty() const {
 }
 
 template <typename T>
+auto List<T>::getSize() const -> size_type {
+	auto node = head;
+	size_type size = 0;
+	while(node != nullptr)
+	{
+		size++;
+		node = node->next;
+	}
+	return size;
+}
+
+template <typename T>
 auto List<T>::at(size_type index) -> reference {
 	auto node = head;
-	while(--index != 0 && node != nullptr)
+	while(index-- != 0 && node != nullptr)
 		node = node->next;
+
+	// TODO: throw error if invalid element
 
 	return node->value;
 }
@@ -76,7 +90,7 @@ void List<T>::resize(size_type size)
 
 template <typename T>
 List<T> &List<T>::operator=(const List<T> &list) {
-	this->head = list->head;
+	this->head = list.head;
 	return *this;
 }
 

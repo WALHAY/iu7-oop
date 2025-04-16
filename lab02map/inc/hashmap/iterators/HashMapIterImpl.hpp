@@ -16,7 +16,7 @@ template <typename K, typename V>
 HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map, size_type bucket)
 {
     bucketIndex = bucket;
-    bucketCount = map.bucketCount;
+    bucketCount = map.getBucketCount();
     bucketsPtr = map.buckets;
     if (bucket >= bucketCount)
         localIterator = map.buckets[bucket].end();

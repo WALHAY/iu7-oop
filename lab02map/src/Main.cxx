@@ -4,26 +4,44 @@
 
 int main()
 {
-    HashMap<std::string, int> hashmap(10);
+	std::cout << "\n--- Linked list zone ---" << std::endl;
+	List<std::string> strList;
+	std::cout << "Is empty: " << strList.isEmpty() << std::endl;
+	std::cout << "List insert head \"hello\"" << std::endl;
+	strList.insertHead("hello");
+	std::cout << "list.[0]: " << strList[0] << std::endl;
+	std::cout << "list.at(0): " << strList.at(0) << std::endl;
 
-    for (int i = 0; i < 10; ++i)
-    {
-        auto res = hashmap.emplace(std::format("Nigga{}", i), i);
-        std::cout << "Has been added: " << res.second << "\n";
-    }
+	std::cout << "\nAdded cat and meow into list head" << std::endl;
+	strList.insertHead("cat");
+	strList.insertHead("meow");
 
-    for (auto &it : hashmap)
-    {
-        // std::cout << "Value: " << it.first << " : " << it.second << std::endl;
-        std::fflush(stdout);
-    }
+	std::cout << "List size: " << strList.getSize() << std::endl;
+	std::cout << "Is empty: " << strList.isEmpty() << std::endl;
+	std::cout << "Iterating head -> tail: ";
+	for(auto &it : strList)
+		std::cout << it << " ";
+	std::cout << "\n";
 
-    //  for (int i = 0; i < hashmap.bucketCount; ++i)
-    //  {
-    // std::cout << "Bucket: " << i << std::endl;
-    //      for (auto &it : hashmap.buckets[i])
-    //          std::cout << "\t" << it.first << std::endl;
-    //  }
+	std::cout << "\nAdded dog and brr into list tail" << std::endl;
+	strList.insertTail("dog");
+	strList.insertTail("brr");
+
+	std::cout << "List size: " << strList.getSize() << std::endl;
+	std::cout << "Is empty: " << strList.isEmpty() << std::endl;
+	std::cout << "Iterating head -> tail: ";
+	for(auto &it : strList)
+		std::cout << it << " ";
+	std::cout << "\n";
+
+	std::cout << "\n--- HashMap zone ---" << std::endl;
+
+	// HashMap<std::string, int> hashmap;
+	//
+	// hashmap.emplace("hello", 1);
+	// std::cout << "Hashmap emplace {\"hello\", 1}" << std::endl;
+	// std::cout << "hashmap[\"hello\"]: " << hashmap["hello"] << std::endl;
+	// std::cout << "hashmap[\"hello\"]: " << hashmap.at("hello") << std::endl;
 
     return 0;
 }

@@ -73,7 +73,7 @@ class HashMap : public BaseCollection
     const_local_iterator cbegin(size_type list) const;
     const_local_iterator cend(size_type list) const;
 
-    size_type getListCount() const;
+    size_type getBucketCount() const;
 
   private:
     /*
@@ -98,7 +98,6 @@ class HashMap : public BaseCollection
 
 public:
 	List<List<value_type>> buckets;
-    size_type bucketCount;
 };
 
 #include <hashmap/HashMapImpl.hpp>

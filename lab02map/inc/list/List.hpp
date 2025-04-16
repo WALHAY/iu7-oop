@@ -37,12 +37,10 @@ class List
     reference getTail();
     const_reference getTail() const;
 
-    void merge(List &&bucket);
-    void merge(const List &bucket);
-
     bool isEmpty() const;
 
 	void resize(size_type size);
+	size_type getSize() const;
 
     reference at(size_type index);
     const_reference at(size_type index) const;
@@ -51,9 +49,6 @@ class List
 
 	List<T> &operator=(const List<T> &list);
 
-    /*
-     * ITERATORS
-     */
     iterator begin();
     iterator end();
 
