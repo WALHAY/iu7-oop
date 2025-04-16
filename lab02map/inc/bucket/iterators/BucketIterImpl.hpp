@@ -33,31 +33,17 @@ BucketIterator<T>::operator bool() const
 }
 
 template <typename T>
-auto BucketIterator<T>::operator*() const -> const_reference
+auto BucketIterator<T>::operator*() const -> reference
 {
     validatePtr(__LINE__);
-    return getPtr()->getValueRef();
+    return nodePtr.lock().get()->getValueRef();
 }
 
 template <typename T>
-auto BucketIterator<T>::operator*() -> reference
+auto BucketIterator<T>::operator->() const -> pointer
 {
     validatePtr(__LINE__);
-    return getPtr()->getValueRef();
-}
-
-template <typename T>
-auto BucketIterator<T>::operator->() const -> const_pointer
-{
-    validatePtr(__LINE__);
-    return &getPtr()->getValueRef();
-}
-
-template <typename T>
-auto BucketIterator<T>::operator->() -> pointer
-{
-    validatePtr(__LINE__);
-    return &getPtr()->getValueRef();
+    return &(nodePtr.lock().get()->getValueRef());
 }
 
 // prefix
@@ -110,16 +96,4 @@ void BucketIterator<T>::validatePtr(int line) const
         throw InvalidIterator(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
 }
 
-template <typename T>
-auto BucketIterator<T>::getPtr() -> node_type
-{
-    return nodePtr.lock().get();
-}
-
-template <typename T>
-auto BucketIterator<T>::getPtr() const -> const_node_type
-{
-    return nodePtr.lock().get();
-}
-
-// static_assert(std::forward_iterator<BucketIterator<int>>);
+static_assert(std::forward_iterator<BucketIterator<int>>);

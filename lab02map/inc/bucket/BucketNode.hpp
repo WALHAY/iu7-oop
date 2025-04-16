@@ -17,12 +17,12 @@ class BucketNode
   public:
     BucketNode(const T &value, std::shared_ptr<BucketNode<T>> next);
 
-	T getValue() const;
-	T& getValueRef();
-	const T& getValueRef() const;
+    T getValue() const;
+    T &getValueRef();
+    const T &getValueRef() const;
 
-private:
-	T value;
+  private:
+    T value;
 
     std::shared_ptr<BucketNode<T>> next;
 };

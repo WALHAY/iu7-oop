@@ -28,10 +28,10 @@ class HashMapIterator
     HashMapIterator(HashMapIterator<K, V> &&map) = default;
     HashMapIterator(const HashMapIterator<K, V> &map) = default;
 
-    // pointer operator->();
-    // const_pointer operator->() const;
-    // reference operator*();
-    // const_reference operator*() const;
+    pointer operator->();
+    const_pointer operator->() const;
+    reference operator*();
+    const_reference operator*() const;
 
     HashMapIterator<K, V> &operator++();
     HashMapIterator<K, V> operator++(int);

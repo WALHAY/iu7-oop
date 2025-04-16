@@ -21,8 +21,6 @@ class BucketIterator
     using const_reference = const T &;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using node_type = BucketNode<T> *;
-    using const_node_type = const BucketNode<T> *;
     using iterator = BucketIterator<T>;
     using iterator_category = std::forward_iterator_tag;
 
@@ -31,10 +29,8 @@ class BucketIterator
     BucketIterator(const BucketIterator<T> &iterator);
     BucketIterator(const std::shared_ptr<BucketNode<T>> &node);
 
-    const_reference operator*() const;
-    reference operator*();
-    const_pointer operator->() const;
-    pointer operator->();
+    reference operator*() const;
+    pointer operator->() const;
 
     BucketIterator<T> &operator++();
     BucketIterator<T> operator++(int);
@@ -52,9 +48,6 @@ class BucketIterator
     void validatePtr(int line) const;
 
     std::weak_ptr<BucketNode<T>> nodePtr;
-
-    node_type getPtr();
-    const_node_type getPtr() const;
 };
 
 #include <bucket/iterators/BucketIterImpl.hpp>

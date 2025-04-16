@@ -20,28 +20,28 @@ HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map, size_type bucke
     bucketsPtr = map.buckets;
 }
 
-// template <typename K, typename V>
-// auto HashMapIterator<K, V>::operator->() -> pointer
-// {
-//     return localIterator.getPtr()->getValueRef();
-// }
-//
-// template <typename K, typename V>
-// auto HashMapIterator<K, V>::operator->() const -> const_pointer
-// {
-//     return localIterator.getPtr()->getValueRef();
-// }
-//
-// template <typename K, typename V>
-// auto HashMapIterator<K, V>::operator*() -> reference
-// {
-//     return localIterator.getPtr()->getValueRef();
-// }
-// template <typename K, typename V>
-// auto HashMapIterator<K, V>::operator*() const -> const_reference
-// {
-//     return localIterator.getPtr()->getValueRef();
-// }
+template <typename K, typename V>
+auto HashMapIterator<K, V>::operator->() -> pointer
+{
+    return localIterator.getPtr()->getValueRef();
+}
+
+template <typename K, typename V>
+auto HashMapIterator<K, V>::operator->() const -> const_pointer
+{
+    return localIterator.getPtr()->getValueRef();
+}
+
+template <typename K, typename V>
+auto HashMapIterator<K, V>::operator*() -> reference
+{
+    return localIterator.getPtr()->getValueRef();
+}
+template <typename K, typename V>
+auto HashMapIterator<K, V>::operator*() const -> const_reference
+{
+    return localIterator.getPtr()->getValueRef();
+}
 
 template <typename K, typename V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
