@@ -41,8 +41,6 @@ class HashMap : public BaseCollection
 
     iterator find(const K &key);
     const_iterator find(const K &key) const;
-    iterator find(K &&key);
-    const_iterator find(K &&key) const;
 
     bool contains(const K &key) const;
     bool contains(K &&key) const;
@@ -89,7 +87,7 @@ class HashMap : public BaseCollection
      * KEYS & HASH
      */
     size_t getKeyHash(const K &key) const;
-    size_type getList(const K &key) const;
+    size_type getBucket(const K &key) const;
 
     std::pair<iterator, bool> insert(List<List<value_type>> &buckets, const K &key, const V &value);
 

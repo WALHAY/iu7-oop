@@ -25,6 +25,12 @@ HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map, size_type bucke
 }
 
 template <typename K, typename V>
+HashMapIterator<K, V>::HashMapIterator(ListIterator<value_type> &iterator, size_type bucket) {
+	this->bucketIndex = bucket;
+	this->localIterator = iterator;
+}
+
+template <typename K, typename V>
 auto HashMapIterator<K, V>::operator->() const -> pointer
 {
     return &(localIterator.nodePtr.lock().get()->getValueRef());

@@ -25,6 +25,7 @@ class HashMapIterator
     HashMapIterator();
     HashMapIterator(const HashMap<K, V> &map);
     HashMapIterator(const HashMap<K, V> &map, size_type bucket);
+	HashMapIterator(ListIterator<value_type> &iterator, size_type bucket);
     // HashMapIterator(HashMapIterator<K, V> &&map) = default;
     // HashMapIterator(const HashMapIterator<K, V> &map) = default;
 

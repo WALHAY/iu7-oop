@@ -11,7 +11,7 @@ class List
     friend class ListNode<T>;
 
     using iterator = ListIterator<T>;
-    using const_iterator = const ListIterator<T>;
+    using const_iterator = ListIterator<const T>;
     using value_type = T;
     using reference = T &;
     using const_reference = const T &;

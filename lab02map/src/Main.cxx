@@ -63,10 +63,10 @@ int main()
 
 	std::cout << "\n--- HashMap zone ---" << std::endl;
 
-	// HashMap<std::string, int> hashmap;
-	//
+	HashMap<std::string, int> hashmap;
+
 	// hashmap.emplace("hello", 1);
-	// std::cout << "Hashmap emplace {\"hello\", 1}" << std::endl;
+	std::cout << "Hashmap emplace {\"hello\", 1}" << std::endl;
 	// std::cout << "hashmap[\"hello\"]: " << hashmap["hello"] << std::endl;
 	// std::cout << "hashmap[\"hello\"]: " << hashmap.at("hello") << std::endl;
 

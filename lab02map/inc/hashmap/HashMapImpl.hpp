@@ -25,7 +25,7 @@ HashMap<K, V>::HashMap(const std::initializer_list<std::pair<K, V>> list) : Hash
 template <HashAndEqual K, MoveAndCopy V>
 bool HashMap<K, V>::contains(const K &key) const
 {
-    size_type bucket = getList(key);
+    size_type bucket = getBucket(key);
 
     return std::any_of(cbegin(bucket), cend(bucket), [&key](const value_type &value) { return value.first == key; });
 }
@@ -49,37 +49,13 @@ auto HashMap<K, V>::emplace(const K &key, const V &value) -> std::pair<iterator,
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::find(const K &key) -> iterator
 {
-    size_t bucket = getList(key);
-
-    auto it = std::find_if(begin(bucket), end(bucket), [&key](const K &l_key) { return key == l_key; });
-
-    if (it == end(bucket))
-        return end();
-
-    return iterator(it);
-}
-
-template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::find(K &&key) -> iterator {
 	return find(key);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::find(const K &key) const -> const_iterator
 {
-    size_t bucket = getList(key);
 
-    auto it = std::find_if(cbegin(bucket), cend(bucket), [&key](const K &l_key) { return key == l_key; });
-
-    if (it == end(bucket))
-        return end();
-
-    return iterator(it);
-}
-
-template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::find(K &&key) const -> const_iterator {
-	return find(key);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -103,11 +79,6 @@ void HashMap<K, V>::clear()
 template <HashAndEqual K, MoveAndCopy V>
 V &HashMap<K, V>::at(const K &key)
 {
-    auto it = find(key);
-    if (it == end())
-        throw OutOfRangeException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
-
-    return it->value;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -143,29 +114,29 @@ auto HashMap<K, V>::end() -> iterator
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::begin(size_type bucket) -> local_iterator
 {
-    return buckets.get()[bucket].begin();
+    return buckets[bucket].begin();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::end(size_type bucket) -> local_iterator
 {
-    return buckets.get()[bucket].end();
+    return buckets[bucket].end();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::cbegin(size_type bucket) const -> const_local_iterator
 {
-    return buckets.get()[bucket].begin();
+    return buckets[bucket].begin();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::cend(size_type bucket) const -> const_local_iterator
 {
-    return buckets.get()[bucket].end();
+    return buckets[bucket].end();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
-auto HashMap<K, V>::getList(const K &key) const -> size_type
+auto HashMap<K, V>::getBucket(const K &key) const -> size_type
 {
     return getKeyHash(key) % getBucketCount();
 }
@@ -192,15 +163,7 @@ template <HashAndEqual K, MoveAndCopy V>
 std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(List<List<value_type>> &buckets,
                                                                         const K &key, const V &value)
 {
-    size_type bucket = getList(key);
-
-    auto it = std::find_if(begin(bucket), end(bucket), [&key](const value_type &value) { return value.first == key; });
-
-    if (it != end(bucket))
-        return std::make_pair(iterator(), false);
-
-    buckets[bucket].insertTail(std::make_pair(key, value));
-    return std::make_pair(begin(), true);
+	
 }
 
 template <HashAndEqual K, MoveAndCopy V>
