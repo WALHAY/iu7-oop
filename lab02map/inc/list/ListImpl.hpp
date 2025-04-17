@@ -8,6 +8,20 @@ List<T>::List()
 }
 
 template <typename T>
+template <Iterator Iter>
+List<T>::List(const Iter &begin, const Iter &end)
+{
+	for(auto it = begin; it != end; ++it)
+		pushBack(*it);
+}
+
+template <typename T>
+List<T>::List(const std::initializer_list<T>& list) : List(list.begin(), list.end())
+{
+
+}
+
+template <typename T>
 List<T>::List(size_type size)
     requires DefaultConstructible<T>
 {
@@ -29,14 +43,14 @@ auto List<T>::pushFront(const T &value) -> iterator
 }
 
 template <typename T>
-void List<T>::popFront()
+void List<T>::popFront() noexcept
 {
     if (head != nullptr)
         head = head->next;
 }
 
 template <typename T>
-void List<T>::popBack()
+void List<T>::popBack() noexcept
 {
     auto node = head;
     while (node != nullptr && node->next != nullptr && node->next->next != nullptr)
@@ -87,7 +101,7 @@ auto List<T>::pushBack(const T &value) -> iterator
 }
 
 template <typename T>
-auto List<T>::getSize() const -> size_type
+auto List<T>::getSize() const noexcept -> size_type
 {
     auto node = head;
     size_type size = 0;
@@ -100,7 +114,7 @@ auto List<T>::getSize() const -> size_type
 }
 
 template <typename T>
-void List<T>::clear()
+void List<T>::clear() noexcept
 {
     head = nullptr;
 }
@@ -136,19 +150,19 @@ auto List<T>::operator[](size_type index) const -> const_reference
 }
 
 template <typename T>
-auto List<T>::getFront() -> reference
+auto List<T>::getFront() noexcept -> reference
 {
     return head->value;
 }
 
 template <typename T>
-auto List<T>::getFront() const -> const_reference
+auto List<T>::getFront() const noexcept -> const_reference
 {
     return getFront();
 }
 
 template <typename T>
-auto List<T>::getBack() -> reference
+auto List<T>::getBack() noexcept -> reference
 {
     auto node = head;
     while (node != nullptr && node->next != nullptr)
@@ -158,7 +172,7 @@ auto List<T>::getBack() -> reference
 }
 
 template <typename T>
-auto List<T>::getBack() const -> const_reference
+auto List<T>::getBack() const noexcept -> const_reference
 {
     return getBack();
 }
@@ -184,7 +198,9 @@ void List<T>::resize(size_type size, const value_type &instance)
 template <typename T>
 List<T> &List<T>::operator=(const List<T> &list)
 {
-    this->head = list.head;
+	head = nullptr;
+	for(auto &it : list)
+		pushBack(it);
     return *this;
 }
 

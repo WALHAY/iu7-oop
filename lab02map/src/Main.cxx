@@ -8,63 +8,80 @@ int main()
     List<std::string> strList;
     std::cout << "Is empty: " << strList.isEmpty() << std::endl;
     std::cout << "List insert head \"hello\"" << std::endl;
-    strList.insertHead("hello");
+    strList.pushFront("hello");
     std::cout << "list.[0]: " << strList[0] << std::endl;
     std::cout << "list.at(0): " << strList.at(0) << std::endl;
 
     std::cout << "\nInsert head: cat & meow" << std::endl;
-    strList.insertHead("cat");
-    strList.insertHead("meow");
+    strList.pushFront("cat");
+    strList.pushFront("meow");
 
     std::cout << "List size: " << strList.getSize() << std::endl;
     std::cout << "Is empty: " << strList.isEmpty() << std::endl;
     std::cout << "List: ";
     for (auto &it : strList)
         std::cout << it << " ";
-    std::cout << "\nHead: " << strList.getHead() << std::endl;
-    std::cout << "Tail: " << strList.getTail() << std::endl;
+    std::cout << "\nHead: " << strList.getFront() << std::endl;
+    std::cout << "Tail: " << strList.getBack() << std::endl;
 
     std::cout << "\nInsert tail: dog & brr" << std::endl;
-    strList.insertTail("dog");
-    strList.insertTail("brr");
+    strList.pushBack("dog");
+    strList.pushBack("brr");
 
     std::cout << "List size: " << strList.getSize() << std::endl;
     std::cout << "Is empty: " << strList.isEmpty() << std::endl;
     std::cout << "List: ";
     for (auto &it : strList)
         std::cout << it << " ";
-    std::cout << "\nHead: " << strList.getHead() << std::endl;
-    std::cout << "Tail: " << strList.getTail() << std::endl;
+    std::cout << "\nHead: " << strList.getFront() << std::endl;
+    std::cout << "Tail: " << strList.getBack() << std::endl;
     std::cout << "\n";
 
     std::cout << "List: ";
     for (auto &it : strList)
         std::cout << it << " ";
     std::cout << "\nRemove head" << std::endl;
-    strList.removeHead();
+    strList.popFront();
     std::cout << "List: ";
     for (auto &it : strList)
         std::cout << it << " ";
     std::cout << "\nList size: " << strList.getSize() << std::endl;
-    std::cout << "Head: " << strList.getHead() << std::endl;
-    std::cout << "Tail: " << strList.getTail() << "\n\n";
+    std::cout << "Head: " << strList.getFront() << std::endl;
+    std::cout << "Tail: " << strList.getBack() << "\n\n";
 
     std::cout << "List: ";
     for (auto &it : strList)
         std::cout << it << " ";
     std::cout << "\nRemove tail" << std::endl;
-    strList.removeTail();
+    strList.popBack();
     std::cout << "List: ";
     for (auto &it : strList)
         std::cout << it << " ";
     std::cout << "\nList size: " << strList.getSize() << std::endl;
-    std::cout << "Head: " << strList.getHead() << std::endl;
-    std::cout << "Tail: " << strList.getTail() << std::endl;
+    std::cout << "Head: " << strList.getFront() << std::endl;
+    std::cout << "Tail: " << strList.getBack() << std::endl;
 
-	std::cout << "\n2-Dim List:" << std::endl;
+	List<std::string> copyList(strList);
+	std::cout << "\nCopied list: ";
+	for(auto &it : copyList)
+		std::cout << it << " ";
+
+	List<std::string> copyList2;
+	copyList2 = copyList;
+	std::cout << "\nCopied list 2: ";
+	for(auto &it : copyList2)
+		std::cout << it << " ";
+
+	List<std::string> initList = {"This", "initialized", "by", "list"};
+	std::cout << "\nList initializer: ";
+	for(auto &it : initList)
+		std::cout << it << " ";
+
+
+	std::cout << "\n\n2-Dim List:" << std::endl;
     List<List<std::string>> doubleList;
-    doubleList.insertHead(strList);
-    doubleList.insertHead(strList);
+    doubleList.pushFront(strList);
+    doubleList.pushFront(strList);
 
     for (auto &list : doubleList)
     {
@@ -87,23 +104,13 @@ int main()
 
 	for(auto &it : hashmap)
 	{
-		std::cout << it.first << " " << it.second<<std::endl;
+		std::cout << it.first << " : " << it.second<<std::endl;
 	}
 
 	std::cout << "Removed: " << hashmap.erase("meow") << std::endl;
 
     std::cout << "hashmap[\"hello\"]: " << hashmap["hello"] << std::endl;
     std::cout << "hashmap.at(\"hi\"): " << hashmap.at("hi") << std::endl;
-
-	for(size_t i = 0; i < hashmap.getBucketCount(); ++i)
-	{
-		std::cout << "Bucket: " << i <<std::endl;
-
-		for(auto it = hashmap.begin(i); it != hashmap.end(i); ++it)
-		{
-			std ::cout << "\t" << it->first << std::endl;
-		}
-	}
 
     return 0;
 }

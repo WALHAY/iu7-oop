@@ -23,45 +23,57 @@ class List : public BaseCollection
     using difference_type = std::ptrdiff_t;
 
     List();
-	List(size_type size) requires DefaultConstructible<T>;
-	List(size_type size, const value_type &) requires CopyConstructible<T>;
+    List(const std::initializer_list<T> &list);
+    List(const List<T> &list) = default;
+    List(List<T> &&list) noexcept = default;
+    explicit List(size_type size)
+        requires DefaultConstructible<T>;
+    List(size_type size, const value_type &)
+        requires CopyConstructible<T>;
+
+    template <Iterator Iter>
+    List(const Iter &begin, const Iter &end);
 
     iterator pushFront(const T &value);
     iterator pushBack(const T &value);
 
-    void popFront();
-    void popBack();
+    void popFront() noexcept;
+    void popBack() noexcept;
 
     void erase(iterator pos);
 
-	virtual void clear() override;
+    virtual void clear() noexcept override;
 
-    reference getFront();
-    const_reference getFront() const;
+    reference getFront() noexcept;
+    const_reference getFront() const noexcept;
 
-    reference getBack();
-    const_reference getBack() const;
+    reference getBack() noexcept;
+    const_reference getBack() const noexcept;
 
-	void resize(size_type size) requires DefaultConstructible<T>;
-	void resize(size_type size, const value_type& instance) requires CopyConstructible<T>;
-	virtual size_type getSize() const override;
+    void resize(size_type size)
+        requires DefaultConstructible<T>;
+    void resize(size_type size, const value_type &instance)
+        requires CopyConstructible<T>;
+
+    virtual size_type getSize() const noexcept override;
 
     reference at(size_type index);
     const_reference at(size_type index) const;
     reference operator[](size_type index);
     const_reference operator[](size_type index) const;
 
-	List<T> &operator=(const List<T> &list);
+    List<T> &operator=(const List<T> &list);
+    List<T> &operator=(List<T> &&list) noexcept = default;
 
     iterator begin();
     iterator end();
-	const_iterator begin() const;
-	const_iterator end() const;
-	const_iterator cbegin() const;
-	const_iterator cend() const;
+    const_iterator begin() const;
+    const_iterator end() const;
+    const_iterator cbegin() const;
+    const_iterator cend() const;
 
   protected:
-	void eraseNode(std::shared_ptr<ListNode<T>> node);
+    void eraseNode(std::shared_ptr<ListNode<T>> node);
 
     std::shared_ptr<ListNode<T>> head;
 };
