@@ -10,7 +10,6 @@ HashMap<K, V>::HashMap() : HashMap(8)
 template <HashAndEqual K, MoveAndCopy V>
 HashMap<K, V>::HashMap(const size_t initialSize)
 {
-    size = 0;
     buckets = List<List<value_type>>(initialSize);
 }
 
@@ -120,6 +119,18 @@ auto HashMap<K, V>::end() -> iterator
 }
 
 template <HashAndEqual K, MoveAndCopy V>
+auto HashMap<K, V>::begin() const -> const_iterator
+{
+    return ConstHashMapIterator<K, V>(buckets.begin(), buckets.end());
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+auto HashMap<K, V>::end() const -> const_iterator
+{
+    return ConstHashMapIterator<K, V>(buckets.end(), buckets.end());
+}
+
+template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::begin(size_type bucket) -> local_iterator
 {
     return buckets[bucket].begin();
@@ -147,7 +158,7 @@ size_t HashMap<K, V>::getKeyHash(const K &key) const
 template <HashAndEqual K, MoveAndCopy V>
 float HashMap<K, V>::countLoadFactor() const
 {
-    return static_cast<float>(size) / getBucketCount();
+    return static_cast<float>(getSize()) / getBucketCount();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -188,4 +199,13 @@ template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::getBucketCount() const -> size_type
 {
     return buckets.getSize();
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+auto HashMap<K, V>::getSize() const -> size_type
+{
+	size_type size = 0;
+	for(auto &bucket : buckets)
+		size += bucket.getSize();
+	return size;
 }

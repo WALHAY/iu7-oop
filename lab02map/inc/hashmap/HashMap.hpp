@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hashmap/iterators/ConstHashMapIter.hpp"
 #include "list/iterators/ListIter.hpp"
 #include "collection/BaseCollection.hpp"
 #include "hashmap/HashMapConcepts.hpp"
@@ -17,7 +18,7 @@ class HashMap : public BaseCollection
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using iterator = HashMapIterator<K, V>;
-    using const_iterator = const HashMapIterator<K, V>;
+    using const_iterator = ConstHashMapIterator<K, V>;
     using local_iterator = List<value_type>::iterator;
 
     /*
@@ -64,10 +65,14 @@ class HashMap : public BaseCollection
     iterator begin();
     iterator end();
 
+    const_iterator begin() const;
+    const_iterator end() const;
+
     local_iterator begin(size_type bucket);
     local_iterator end(size_type bucket);
 
     size_type getBucketCount() const;
+	virtual size_type getSize() const override;
 
   private:
     /*

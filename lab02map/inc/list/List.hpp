@@ -1,18 +1,19 @@
 #pragma once
 
 #include "list/ListConcepts.hpp"
+#include "list/iterators/ConstListIter.hpp"
 #include <collection/BaseCollection.hpp>
 #include <list/ListNode.hpp>
 #include <list/iterators/ListIter.hpp>
 
 template <typename T>
-class List
+class List : public BaseCollection
 {
   public:
     friend class ListNode<T>;
 
     using iterator = ListIterator<T>;
-    using const_iterator = ListIterator<const T>;
+    using const_iterator = ConstListIterator<T>;
     using value_type = T;
     using reference = T &;
     using const_reference = const T &;
@@ -39,11 +40,9 @@ class List
     reference getTail();
     const_reference getTail() const;
 
-    bool isEmpty() const;
-
 	void resize(size_type size) requires TrivialContstructor<T>;
 	void resize(size_type size, const value_type& instance) requires CopyConstructible<T>;
-	size_type getSize() const;
+	virtual size_type getSize() const override;
 
     reference at(size_type index);
     const_reference at(size_type index) const;
@@ -54,6 +53,8 @@ class List
 
     iterator begin();
     iterator end();
+	const_iterator begin() const;
+	const_iterator end() const;
 
   protected:
     std::shared_ptr<ListNode<T>> head;

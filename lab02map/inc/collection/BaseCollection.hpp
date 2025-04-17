@@ -11,8 +11,5 @@ class BaseCollection
 
     bool isEmpty() const;
 
-    size_t getSize() const;
-
-  protected:
-    size_t size;
+    virtual size_t getSize() const = 0;
 };

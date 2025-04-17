@@ -62,11 +62,6 @@ auto List<T>::insertTail(const T &value) -> iterator
 }
 
 template <typename T>
-bool List<T>::isEmpty() const {
-	return head == nullptr;
-}
-
-template <typename T>
 auto List<T>::getSize() const -> size_type {
 	auto node = head;
 	size_type size = 0;
@@ -158,4 +153,14 @@ auto List<T>::begin() -> iterator {
 template <typename T>
 auto List<T>::end() -> iterator {
 	return iterator(nullptr);
+}
+
+template <typename T>
+auto List<T>::begin() const -> const_iterator {
+	return const_iterator(head);
+}
+
+template <typename T>
+auto List<T>::end() const -> const_iterator {
+	return const_iterator(nullptr);
 }

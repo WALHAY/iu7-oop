@@ -1,21 +1,20 @@
 #pragma once
 
-#include "hashmap/iterators/HashMapIter.hpp"
-#include <iostream>
+#include "hashmap/iterators/ConstHashMapIter.hpp"
 
 template <typename K, typename V>
-HashMapIterator<K, V>::HashMapIterator()
+ConstHashMapIterator<K, V>::ConstHashMapIterator()
 {
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V>::HashMapIterator(const buckets_iterator &current, const buckets_iterator &end)
-    : HashMapIterator(current, end, current != end ? current->begin() : local_iterator(nullptr))
+ConstHashMapIterator<K, V>::ConstHashMapIterator(const buckets_iterator &current, const buckets_iterator &end)
+    : ConstHashMapIterator(current, end, current != end ? current->begin() : local_iterator(nullptr))
 {
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V>::HashMapIterator(const buckets_iterator &current, const buckets_iterator &end,
+ConstHashMapIterator<K, V>::ConstHashMapIterator(const buckets_iterator &current, const buckets_iterator &end,
                                        const local_iterator &element)
 {
     this->currentBucket = current;
@@ -24,30 +23,30 @@ HashMapIterator<K, V>::HashMapIterator(const buckets_iterator &current, const bu
 }
 
 template <typename K, typename V>
-auto HashMapIterator<K, V>::operator->() const -> pointer
+auto ConstHashMapIterator<K, V>::operator->() const -> const_pointer
 {
     return &(elementIterator.getPtr()->getValueRef());
 }
 
 template <typename K, typename V>
-auto HashMapIterator<K, V>::operator*() const -> reference
+auto ConstHashMapIterator<K, V>::operator*() const -> const_reference
 {
     return elementIterator.getPtr()->getValueRef();
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V>::operator bool() const
+ConstHashMapIterator<K, V>::operator bool() const
 {
     return elementIterator;
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V> &HashMapIterator<K, V>::operator=(const HashMapIterator<K, V> &other)
+ConstHashMapIterator<K, V> &ConstHashMapIterator<K, V>::operator=(const ConstHashMapIterator<K, V> &other)
 {
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
+ConstHashMapIterator<K, V> &ConstHashMapIterator<K, V>::operator++()
 {
     ++elementIterator;
     moveNextBucket();
@@ -55,7 +54,7 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int)
+ConstHashMapIterator<K, V> ConstHashMapIterator<K, V>::operator++(int)
 {
     iterator copy(*this);
     ++(*this);
@@ -63,14 +62,14 @@ HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int)
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V> HashMapIterator<K, V>::operator+(size_type offset) const
+ConstHashMapIterator<K, V> ConstHashMapIterator<K, V>::operator+(size_type offset) const
 {
-	HashMapIterator<K, V> newIter(*this);
+	ConstHashMapIterator<K, V> newIter(*this);
 	return newIter + offset;
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V> &HashMapIterator<K, V>::operator+=(size_type offset)
+ConstHashMapIterator<K, V> &ConstHashMapIterator<K, V>::operator+=(size_type offset)
 {
 	while(--offset > 0)
 		++(*this);
@@ -78,20 +77,20 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator+=(size_type offset)
 }
 
 template <typename K, typename V>
-bool HashMapIterator<K, V>::operator==(const HashMapIterator<K, V> &iterator) const
+bool ConstHashMapIterator<K, V>::operator==(const ConstHashMapIterator<K, V> &iterator) const
 {
     return currentBucket == iterator.currentBucket && endBucket == iterator.endBucket &&
            elementIterator == iterator.elementIterator;
 }
 
 template <typename K, typename V>
-bool HashMapIterator<K, V>::operator!=(const HashMapIterator<K, V> &iterator) const
+bool ConstHashMapIterator<K, V>::operator!=(const ConstHashMapIterator<K, V> &iterator) const
 {
     return !(*this == iterator);
 }
 
 template <typename K, typename V>
-void HashMapIterator<K, V>::moveNextBucket()
+void ConstHashMapIterator<K, V>::moveNextBucket()
 {
     while (currentBucket != endBucket && elementIterator == currentBucket->end())
     {
@@ -103,4 +102,4 @@ void HashMapIterator<K, V>::moveNextBucket()
     }
 }
 
-static_assert(std::forward_iterator<HashMapIterator<std::string, int>>);
+static_assert(std::forward_iterator<ConstHashMapIterator<std::string, int>>);

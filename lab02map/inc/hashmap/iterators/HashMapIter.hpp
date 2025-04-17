@@ -7,7 +7,7 @@ template <HashAndEqual K, MoveAndCopy V>
 class HashMap;
 
 template <typename K, typename V>
-class HashMapIterator
+class HashMapIterator : public BaseIterator
 {
   public:
     using iterator_category = std::forward_iterator_tag;
@@ -23,7 +23,6 @@ class HashMapIterator
     HashMapIterator();
     HashMapIterator(const buckets_iterator &current, const buckets_iterator &end);
     HashMapIterator(const buckets_iterator &current, const buckets_iterator &end, const local_iterator &element);
-    HashMapIterator(buckets_iterator &&current, buckets_iterator &&end, local_iterator &&element);
 
 	operator bool () const;
 

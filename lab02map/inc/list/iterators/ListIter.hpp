@@ -1,5 +1,6 @@
 #pragma once
 
+#include "collection/BaseIterator.hpp"
 #include <cstddef>
 #include <iterator>
 #include <memory>
@@ -11,7 +12,7 @@ template <typename T>
 class ListNode;
 
 template <typename T>
-class ListIterator
+class ListIterator : public BaseIterator
 {
   public:
     using value_type = T;
