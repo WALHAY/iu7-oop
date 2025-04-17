@@ -6,9 +6,6 @@ template <typename T>
 class List;
 
 template <typename T>
-class ListIterator;
-
-template <typename T>
 class ListNode
 {
     friend class List<T>;

@@ -23,26 +23,26 @@ class List : public BaseCollection
     using difference_type = std::ptrdiff_t;
 
     List();
-	List(size_type size) requires TrivialContstructor<T>;
+	List(size_type size) requires DefaultConstructible<T>;
 	List(size_type size, const value_type &) requires CopyConstructible<T>;
 
-    iterator insertHead(const T &value);
-    iterator insertTail(const T &value);
+    iterator pushFront(const T &value);
+    iterator pushBack(const T &value);
 
-    void removeHead();
-    void removeTail();
+    void popFront();
+    void popBack();
 
     void erase(iterator pos);
 
 	virtual void clear() override;
 
-    reference getHead();
-    const_reference getHead() const;
+    reference getFront();
+    const_reference getFront() const;
 
-    reference getTail();
-    const_reference getTail() const;
+    reference getBack();
+    const_reference getBack() const;
 
-	void resize(size_type size) requires TrivialContstructor<T>;
+	void resize(size_type size) requires DefaultConstructible<T>;
 	void resize(size_type size, const value_type& instance) requires CopyConstructible<T>;
 	virtual size_type getSize() const override;
 

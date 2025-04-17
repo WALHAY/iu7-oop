@@ -3,7 +3,7 @@
 #include <type_traits>
 
 template <typename T>
-concept TrivialContstructor = requires
+concept DefaultConstructible = requires
 {
 	T();
 };

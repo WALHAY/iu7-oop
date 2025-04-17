@@ -1,10 +1,10 @@
 #pragma once
 
-#include "hashmap/iterators/ConstHashMapIter.hpp"
-#include "list/iterators/ListIter.hpp"
 #include "collection/BaseCollection.hpp"
 #include "hashmap/HashMapConcepts.hpp"
+#include "hashmap/iterators/ConstHashMapIter.hpp"
 #include "hashmap/iterators/HashMapIter.hpp"
+#include "list/iterators/ListIter.hpp"
 
 template <HashAndEqual K, MoveAndCopy V, HashFunction<K> Hash = std::hash<K>>
 class HashMap : public BaseCollection
@@ -25,11 +25,11 @@ class HashMap : public BaseCollection
      * CONSTRUCTORS
      */
     HashMap();
-    explicit HashMap(const size_type initialSize);
+    explicit HashMap(size_type size);
     // HashMap(iterator &&begin, iterator &&end);
     HashMap(const std::initializer_list<std::pair<K, V>> list);
-    HashMap(HashMap<K, V> &&map) = default;
-    explicit HashMap(const HashMap<K, V> &map) = default;
+    HashMap(HashMap<K, V, Hash> &&map) = default;
+    HashMap(const HashMap<K, V, Hash> &map) = default;
 
     virtual ~HashMap() = default;
 
@@ -74,7 +74,10 @@ class HashMap : public BaseCollection
     local_iterator end(size_type bucket);
 
     size_type getBucketCount() const;
-	virtual size_type getSize() const override;
+    virtual size_type getSize() const override;
+
+	void setMaxLoadFactor(float maxLoadFactor) const;
+	float getMaxLoadFactor() const;
 
   private:
     /*
@@ -94,12 +97,12 @@ class HashMap : public BaseCollection
 
     std::pair<iterator, bool> insert(List<List<value_type>> &buckets, const K &key, const V &value);
 
-    const float loadFactorThreshold = 1.0f;
+    const float maxLoadFactor = 1.0f;
     const float sizeFactor = 1.5f;
 
-	const Hash hasher;
+    const Hash hasher;
 
-	List<List<value_type>> buckets;
+    List<List<value_type>> buckets;
 };
 
 #include <hashmap/HashMapImpl.hpp>

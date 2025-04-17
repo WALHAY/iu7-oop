@@ -9,7 +9,7 @@ List<T>::List()
 
 template <typename T>
 List<T>::List(size_type size)
-    requires TrivialContstructor<T>
+    requires DefaultConstructible<T>
 {
     resize(size);
 }
@@ -22,21 +22,21 @@ List<T>::List(size_type size, const value_type &instance)
 }
 
 template <typename T>
-auto List<T>::insertHead(const T &value) -> iterator
+auto List<T>::pushFront(const T &value) -> iterator
 {
     head = std::make_shared<ListNode<T>>(value, head);
     return iterator(head);
 }
 
 template <typename T>
-void List<T>::removeHead()
+void List<T>::popFront()
 {
     if (head != nullptr)
         head = head->next;
 }
 
 template <typename T>
-void List<T>::removeTail()
+void List<T>::popBack()
 {
     auto node = head;
     while (node != nullptr && node->next != nullptr && node->next->next != nullptr)
@@ -68,7 +68,7 @@ void List<T>::eraseNode(std::shared_ptr<ListNode<T>> remove) {
 }
 
 template <typename T>
-auto List<T>::insertTail(const T &value) -> iterator
+auto List<T>::pushBack(const T &value) -> iterator
 {
     auto node = std::make_shared<ListNode<T>>(value, nullptr);
 
@@ -136,19 +136,19 @@ auto List<T>::operator[](size_type index) const -> const_reference
 }
 
 template <typename T>
-auto List<T>::getHead() -> reference
+auto List<T>::getFront() -> reference
 {
     return head->value;
 }
 
 template <typename T>
-auto List<T>::getHead() const -> const_reference
+auto List<T>::getFront() const -> const_reference
 {
-    return getHead();
+    return getFront();
 }
 
 template <typename T>
-auto List<T>::getTail() -> reference
+auto List<T>::getBack() -> reference
 {
     auto node = head;
     while (node != nullptr && node->next != nullptr)
@@ -158,18 +158,18 @@ auto List<T>::getTail() -> reference
 }
 
 template <typename T>
-auto List<T>::getTail() const -> const_reference
+auto List<T>::getBack() const -> const_reference
 {
-    return getTail();
+    return getBack();
 }
 
 template <typename T>
 void List<T>::resize(size_type size)
-    requires TrivialContstructor<T>
+    requires DefaultConstructible<T>
 {
     head = nullptr;
     for (int i = 0; i < size; ++i)
-        insertHead(T());
+        pushFront(T());
 }
 
 template <typename T>
@@ -178,7 +178,7 @@ void List<T>::resize(size_type size, const value_type &instance)
 {
     head = nullptr;
     for (int i = 0; i < size; ++i)
-        insertHead(T(instance));
+        pushFront(T(instance));
 }
 
 template <typename T>

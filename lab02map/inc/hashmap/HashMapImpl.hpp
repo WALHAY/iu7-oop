@@ -8,9 +8,9 @@ HashMap<K, V, Hash>::HashMap() : HashMap(8)
 }
 
 template <HashAndEqual K, MoveAndCopy V, HashFunction<K> Hash>
-HashMap<K, V, Hash>::HashMap(const size_t initialSize) : hasher(Hash())
+HashMap<K, V, Hash>::HashMap(size_t size) : hasher(Hash())
 {
-    buckets = List<List<value_type>>(initialSize);
+    buckets = List<List<value_type>>(size);
 }
 
 template <HashAndEqual K, MoveAndCopy V, HashFunction<K> Hash>
@@ -38,7 +38,7 @@ template <HashAndEqual K, MoveAndCopy V, HashFunction<K> Hash>
 auto HashMap<K, V, Hash>::emplace(const K &key, const V &value) -> std::pair<iterator, bool>
 {
     // TODO: implement
-    if (countLoadFactor() > loadFactorThreshold)
+    if (countLoadFactor() > maxLoadFactor)
         rebuild();
 
     return insert(buckets, key, value);
@@ -193,7 +193,7 @@ std::pair<typename HashMap<K, V, Hash>::iterator, bool> HashMap<K, V, Hash>::ins
     size_type index = getBucket(key);
     auto &bucket = buckets[index];
 
-    ListIterator<value_type> res = bucket.insertHead(std::make_pair(key, value));
+    ListIterator<value_type> res = bucket.pushFront(std::make_pair(key, value));
     HashMapIterator<K, V> iter(buckets.begin() + index, buckets.end(), res);
     return std::make_pair(iter, true);
 }
