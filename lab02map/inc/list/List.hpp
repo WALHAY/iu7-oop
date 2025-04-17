@@ -1,6 +1,7 @@
 #pragma once
 
 #include "list/ListConcepts.hpp"
+#include "list/ListExceptions.hpp"
 #include "list/iterators/ConstListIter.hpp"
 #include <collection/BaseCollection.hpp>
 #include <list/ListNode.hpp>

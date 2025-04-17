@@ -81,7 +81,7 @@ int main()
 	std::cout << "\n\n2-Dim List:" << std::endl;
     List<List<std::string>> doubleList;
     doubleList.pushFront(strList);
-    doubleList.pushFront(strList);
+    doubleList.pushFront(initList);
 
     for (auto &list : doubleList)
     {

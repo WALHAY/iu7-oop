@@ -11,14 +11,13 @@ template <typename T>
 template <Iterator Iter>
 List<T>::List(const Iter &begin, const Iter &end)
 {
-	for(auto it = begin; it != end; ++it)
-		pushBack(*it);
+    for (auto it = begin; it != end; ++it)
+        pushBack(*it);
 }
 
 template <typename T>
-List<T>::List(const std::initializer_list<T>& list) : List(list.begin(), list.end())
+List<T>::List(const std::initializer_list<T> &list) : List(list.begin(), list.end())
 {
-
 }
 
 template <typename T>
@@ -62,23 +61,24 @@ void List<T>::popBack() noexcept
 template <typename T>
 void List<T>::erase(iterator iterator)
 {
-	eraseNode(iterator.getPtr());
+    eraseNode(iterator.getPtr());
 }
 
 template <typename T>
-void List<T>::eraseNode(std::shared_ptr<ListNode<T>> remove) {
-	if(remove == nullptr)
-		return;
+void List<T>::eraseNode(std::shared_ptr<ListNode<T>> remove)
+{
+    if (remove == nullptr)
+        return;
 
-	auto node = head;
-	while(node != nullptr)
-	{
-		if(node->next == remove)
-		{
-			node->next = remove->next;
-		}
-		node = node->next;
-	}
+    auto node = head;
+    while (node != nullptr)
+    {
+        if (node->next == remove)
+        {
+            node->next = remove->next;
+        }
+        node = node->next;
+    }
 }
 
 template <typename T>
@@ -126,7 +126,8 @@ auto List<T>::at(size_type index) -> reference
     while (index-- != 0 && node != nullptr)
         node = node->next;
 
-    // TODO: throw error if invalid element
+    if (node == nullptr && index != 0)
+        throw InvalidIndexAccessException(__FILE_NAME__, typeid(*this).name(), __PRETTY_FUNCTION__, __LINE__);
 
     return node->value;
 }
@@ -198,9 +199,9 @@ void List<T>::resize(size_type size, const value_type &instance)
 template <typename T>
 List<T> &List<T>::operator=(const List<T> &list)
 {
-	head = nullptr;
-	for(auto &it : list)
-		pushBack(it);
+    head = nullptr;
+    for (auto &it : list)
+        pushBack(it);
     return *this;
 }
 
