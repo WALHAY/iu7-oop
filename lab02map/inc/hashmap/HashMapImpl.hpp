@@ -8,7 +8,7 @@ HashMap<K, V, Hash>::HashMap() : HashMap(8)
 }
 
 template <HashAndEqual K, MoveAndCopy V, typename Hash>
-HashMap<K, V, Hash>::HashMap(const size_t initialSize)
+HashMap<K, V, Hash>::HashMap(const size_t initialSize) : hasher(Hash())
 {
     buckets = List<List<value_type>>(initialSize);
 }
@@ -172,7 +172,7 @@ auto HashMap<K, V, Hash>::getBucket(const K &key) const -> size_type
 template <HashAndEqual K, MoveAndCopy V, typename Hash>
 size_t HashMap<K, V, Hash>::getKeyHash(const K &key) const
 {
-	return Hash()(key);
+	return hasher(key);
 }
 
 template <HashAndEqual K, MoveAndCopy V, typename Hash>

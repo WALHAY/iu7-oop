@@ -97,6 +97,8 @@ class HashMap : public BaseCollection
     const float loadFactorThreshold = 1.0f;
     const float sizeFactor = 1.5f;
 
+	const Hash hasher;
+
 	List<List<value_type>> buckets;
 };
 
