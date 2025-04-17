@@ -4,7 +4,7 @@
 #include <type_traits>
 
 template <typename T>
-concept DefaultConstructible = requires { T(); };
+concept DefaultConstructible = std::is_default_constructible_v<T>;
 
 template <typename T>
 concept CopyConstructible = std::is_copy_constructible_v<T>;
