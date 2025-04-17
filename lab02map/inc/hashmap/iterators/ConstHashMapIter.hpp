@@ -3,7 +3,7 @@
 #include "list/List.hpp"
 #include "hashmap/HashMapConcepts.hpp"
 
-template <HashAndEqual K, MoveAndCopy V, typename Hash>
+template <HashAndEqual K, MoveAndCopy V, HashFunction<K> Hash>
 class HashMap;
 
 template <typename K, typename V>
