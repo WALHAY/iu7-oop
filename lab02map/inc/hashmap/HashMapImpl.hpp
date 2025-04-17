@@ -1,6 +1,7 @@
 #pragma once
 
 #include "hashmap/HashMap.hpp"
+#include <iostream>
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
 HashMap<K, V, Hash>::HashMap() : HashMap(8)
@@ -184,6 +185,16 @@ float HashMap<K, V, Hash>::countLoadFactor() const
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
 void HashMap<K, V, Hash>::rebuild()
 {
+	std::cout << "Rebuild" << std::endl;
+	size_type nextSize = getNextPrime(getSize() * sizeFactor);
+
+	List<List<value_type>> nextBuckets(nextSize);
+	for(auto &it : *this)
+	{
+		insert(nextBuckets, it.first, it.second);
+	}
+
+	buckets = nextBuckets;
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>

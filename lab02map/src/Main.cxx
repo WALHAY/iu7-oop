@@ -94,7 +94,7 @@ int main()
 
     std::cout << "\n--- HashMap zone ---" << std::endl;
 
-    HashMap<std::string, int> hashmap;
+    HashMap<std::string, int> hashmap(1);
 
     hashmap.emplace("hello", 1);
     hashmap.emplace("hi", 25);
