@@ -51,7 +51,7 @@ template <typename T>
 ListIterator<T> &ListIterator<T>::operator++()
 {
     validatePtr(__LINE__);
-    nodePtr = nodePtr.lock()->next;
+    nodePtr = nodePtr.lock()->getNext();
     return *this;
 }
 
@@ -68,19 +68,21 @@ ListIterator<T> ListIterator<T>::operator++(int)
 }
 
 template <typename T>
-ListIterator<T> ListIterator<T>::operator+(size_type offset) const {
-	ListIterator<T> offsetIter(*this);
-	while(offset-- > 0)
-		++offsetIter;
-	return offsetIter;
+ListIterator<T> ListIterator<T>::operator+(size_type offset) const
+{
+    ListIterator<T> offsetIter(*this);
+    while (offset-- > 0)
+        ++offsetIter;
+    return offsetIter;
 }
 
 template <typename T>
-ListIterator<T> &ListIterator<T>::operator+=(size_type offset) {
-	
-	while(offset-- > 0)
-		++(*this);
-	return *this;
+ListIterator<T> &ListIterator<T>::operator+=(size_type offset)
+{
+
+    while (offset-- > 0)
+        ++(*this);
+    return *this;
 }
 
 template <typename T>
@@ -113,6 +115,18 @@ void ListIterator<T>::validatePtr(int line) const
 {
     if (!isValid())
         throw InvalidIterator(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
+}
+
+template <typename T>
+std::shared_ptr<ListNode<T>> ListIterator<T>::getPtr()
+{
+	return nodePtr.lock();
+}
+
+template <typename T>
+const std::shared_ptr<ListNode<T>> ListIterator<T>::getPtr() const
+{
+	return nodePtr.lock();
 }
 
 static_assert(std::forward_iterator<ListIterator<int>>);

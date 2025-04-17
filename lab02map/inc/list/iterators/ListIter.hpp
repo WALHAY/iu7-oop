@@ -13,15 +13,10 @@ class ListNode;
 template <typename T>
 class ListIterator
 {
-	template <typename K, typename V>
-	friend class HashMapIterator;
-
   public:
     using value_type = T;
     using pointer = T *;
-    using const_pointer = const T *;
     using reference = T &;
-    using const_reference = const T &;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using iterator = ListIterator<T>;
@@ -48,6 +43,9 @@ class ListIterator
     bool isValid() const;
 
     operator bool() const;
+
+	std::shared_ptr<ListNode<T>> getPtr();
+	const std::shared_ptr<ListNode<T>> getPtr() const;
 
   private:
     void validatePtr(int line) const;

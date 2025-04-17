@@ -1,5 +1,6 @@
 #pragma once
 
+#include "list/ListConcepts.hpp"
 #include <collection/BaseCollection.hpp>
 #include <list/ListNode.hpp>
 #include <list/iterators/ListIter.hpp>
@@ -21,7 +22,8 @@ class List
     using difference_type = std::ptrdiff_t;
 
     List();
-	List(size_type size);
+	List(size_type size) requires TrivialContstructor<T>;
+	List(size_type size, const value_type &) requires CopyConstructible<T>;
 
     iterator insertHead(const T &value);
     iterator insertTail(const T &value);
@@ -39,7 +41,8 @@ class List
 
     bool isEmpty() const;
 
-	void resize(size_type size);
+	void resize(size_type size) requires TrivialContstructor<T>;
+	void resize(size_type size, const value_type& instance) requires CopyConstructible<T>;
 	size_type getSize() const;
 
     reference at(size_type index);

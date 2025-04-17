@@ -9,8 +9,13 @@ List<T>::List() {
 }
 
 template <typename T>
-List<T>::List(size_type size) {
+List<T>::List(size_type size) requires TrivialContstructor<T> {
 	resize(size);
+}
+
+template <typename T>
+List<T>::List(size_type size, const value_type& instance) requires CopyConstructible<T> {
+	resize(size, instance);
 }
 
 template <typename T>
@@ -124,11 +129,19 @@ auto List<T>::getTail() const -> const_reference {
 }
 
 template <typename T>
-void List<T>::resize(size_type size)
+void List<T>::resize(size_type size) requires TrivialContstructor<T>
 {
 	head = nullptr;
 	for(int i = 0; i < size; ++i)
 		insertHead(T());
+}
+
+template <typename T>
+void List<T>::resize(size_type size, const value_type& instance) requires CopyConstructible<T>
+{
+	head = nullptr;
+	for(int i = 0; i < size; ++i)
+		insertHead(T(instance));
 }
 
 template <typename T>

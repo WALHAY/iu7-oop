@@ -9,6 +9,12 @@ ListNode<T>::ListNode(const T &value, std::shared_ptr<ListNode<T>> next) : value
 }
 
 template <typename T>
+std::shared_ptr<ListNode<T>> ListNode<T>::getNext() const
+{
+    return next;
+}
+
+template <typename T>
 T ListNode<T>::getValue() const
 {
     return value;

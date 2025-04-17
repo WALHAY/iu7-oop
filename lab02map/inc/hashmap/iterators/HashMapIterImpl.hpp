@@ -32,13 +32,13 @@ HashMapIterator<K, V>::HashMapIterator(buckets_iterator &&current, buckets_itera
 template <typename K, typename V>
 auto HashMapIterator<K, V>::operator->() const -> pointer
 {
-    return &(elementIterator.nodePtr.lock().get()->getValueRef());
+    return &(elementIterator.getPtr()->getValueRef());
 }
 
 template <typename K, typename V>
 auto HashMapIterator<K, V>::operator*() const -> reference
 {
-    return elementIterator.nodePtr.lock().get()->getValueRef();
+    return elementIterator.getPtr()->getValueRef();
 }
 
 template <typename K, typename V>

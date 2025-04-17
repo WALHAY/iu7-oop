@@ -9,9 +9,6 @@ class HashMap;
 template <typename K, typename V>
 class HashMapIterator
 {
-    friend class HashMap<K, V>;
-	friend class ListIterator<std::pair<const K, V>>;
-
   public:
     using iterator_category = std::forward_iterator_tag;
     using size_type = std::size_t;
