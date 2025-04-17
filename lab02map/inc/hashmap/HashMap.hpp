@@ -19,7 +19,6 @@ class HashMap : public BaseCollection
     using iterator = HashMapIterator<K, V>;
     using const_iterator = const HashMapIterator<K, V>;
     using local_iterator = List<value_type>::iterator;
-    using const_local_iterator = const List<value_type>::iterator;
 
     /*
      * CONSTRUCTORS
@@ -65,6 +64,9 @@ class HashMap : public BaseCollection
     iterator begin();
     iterator end();
 
+    local_iterator begin(size_type bucket);
+    local_iterator end(size_type bucket);
+
     size_type getBucketCount() const;
 
   private:
@@ -88,7 +90,6 @@ class HashMap : public BaseCollection
     const float loadFactorThreshold = 1.0f;
     const float sizeFactor = 1.5f;
 
-public:
 	List<List<value_type>> buckets;
 };
 

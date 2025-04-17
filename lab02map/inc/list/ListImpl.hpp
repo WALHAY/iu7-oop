@@ -1,6 +1,8 @@
 #pragma once
 
 #include "List.hpp"
+#include <iostream>
+#include <ostream>
 
 template <typename T>
 List<T>::List() {
@@ -124,11 +126,9 @@ auto List<T>::getTail() const -> const_reference {
 template <typename T>
 void List<T>::resize(size_type size)
 {
+	head = nullptr;
 	for(int i = 0; i < size; ++i)
-	{
-		head = nullptr;
 		insertHead(T());
-	}
 }
 
 template <typename T>

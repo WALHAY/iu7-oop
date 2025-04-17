@@ -9,11 +9,6 @@ HashMapIterator<K, V>::HashMapIterator()
 }
 
 template <typename K, typename V>
-HashMapIterator<K, V>::HashMapIterator(const HashMap<K, V> &map) : HashMapIterator(map.begin(), map.end())
-{
-}
-
-template <typename K, typename V>
 HashMapIterator<K, V>::HashMapIterator(const buckets_iterator &current, const buckets_iterator &end)
     : HashMapIterator(current, end, current != end ? current->begin() : local_iterator(nullptr))
 {
@@ -26,6 +21,12 @@ HashMapIterator<K, V>::HashMapIterator(const buckets_iterator &current, const bu
     this->currentBucket = current;
     this->endBucket = end;
     this->elementIterator = element;
+}
+
+template <typename K, typename V>
+HashMapIterator<K, V>::HashMapIterator(buckets_iterator &&current, buckets_iterator &&end, local_iterator &&element)
+    : HashMapIterator(current, end, element)
+{
 }
 
 template <typename K, typename V>
@@ -54,8 +55,8 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator=(const HashMapIterator<K,
 template <typename K, typename V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
 {
-	++elementIterator;
-	moveNextBucket();
+    ++elementIterator;
+    moveNextBucket();
     return *this;
 }
 
@@ -68,9 +69,25 @@ HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int)
 }
 
 template <typename K, typename V>
+HashMapIterator<K, V> HashMapIterator<K, V>::operator+(size_type offset) const
+{
+	HashMapIterator<K, V> newIter(*this);
+	return newIter + offset;
+}
+
+template <typename K, typename V>
+HashMapIterator<K, V> &HashMapIterator<K, V>::operator+=(size_type offset)
+{
+	while(--offset > 0)
+		++(*this);
+	return *this;
+}
+
+template <typename K, typename V>
 bool HashMapIterator<K, V>::operator==(const HashMapIterator<K, V> &iterator) const
 {
-    return currentBucket == iterator.currentBucket && endBucket == iterator.endBucket && elementIterator == iterator.elementIterator;
+    return currentBucket == iterator.currentBucket && endBucket == iterator.endBucket &&
+           elementIterator == iterator.elementIterator;
 }
 
 template <typename K, typename V>

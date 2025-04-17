@@ -24,9 +24,9 @@ class HashMapIterator
 	using buckets_iterator = List<List<value_type>>::iterator;
 
     HashMapIterator();
-    HashMapIterator(const HashMap<K, V> &map);
     HashMapIterator(const buckets_iterator &current, const buckets_iterator &end);
     HashMapIterator(const buckets_iterator &current, const buckets_iterator &end, const local_iterator &element);
+    HashMapIterator(buckets_iterator &&current, buckets_iterator &&end, local_iterator &&element);
 
 	operator bool () const;
 
@@ -37,6 +37,8 @@ class HashMapIterator
 
     HashMapIterator<K, V> &operator++();
     HashMapIterator<K, V> operator++(int);
+	HashMapIterator<K, V> operator+(size_type offset) const;
+	HashMapIterator<K, V> &operator+=(size_type offset);
 
     bool operator==(const HashMapIterator<K, V> &iterator) const;
     bool operator!=(const HashMapIterator<K, V> &iterator) const;

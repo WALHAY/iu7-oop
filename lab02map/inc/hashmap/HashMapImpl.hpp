@@ -26,7 +26,7 @@ bool HashMap<K, V>::contains(const K &key) const
 {
     size_type bucket = getBucket(key);
 
-	return false;
+    return false;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -54,12 +54,17 @@ auto HashMap<K, V>::emplace(std::pair<K, V> entry) -> std::pair<iterator, bool>
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::find(const K &key) -> iterator
 {
-    return find(key);
+    size_type index = getBucket(key);
+
+    auto it = std::find_if(begin(index), end(index), [&key](const value_type &value) { return value.first == key; });
+
+    return iterator(buckets.begin() + index, buckets.end(), it);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::find(const K &key) const -> const_iterator
 {
+    return find(key);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -77,6 +82,11 @@ void HashMap<K, V>::clear()
 template <HashAndEqual K, MoveAndCopy V>
 V &HashMap<K, V>::at(const K &key)
 {
+    auto it = find(key);
+    if (it == end())
+        throw OutOfRangeException(__FILE_NAME__, typeid(*this).name(), __PRETTY_FUNCTION__, __LINE__);
+
+    return it->second;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -100,13 +110,25 @@ V &HashMap<K, V>::operator[](K &&key)
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::begin() -> iterator
 {
-    return iterator(buckets.begin(), buckets.end());
+    return HashMapIterator<K, V>(buckets.begin(), buckets.end());
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::end() -> iterator
 {
-    return iterator(buckets.end(), buckets.end());
+    return HashMapIterator<K, V>(buckets.end(), buckets.end());
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+auto HashMap<K, V>::begin(size_type bucket) -> local_iterator
+{
+    return buckets[bucket].begin();
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+auto HashMap<K, V>::end(size_type bucket) -> local_iterator
+{
+    return buckets[bucket].end();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -138,11 +160,11 @@ std::pair<typename HashMap<K, V>::iterator, bool> HashMap<K, V>::insert(List<Lis
                                                                         const V &value)
 {
     size_type index = getBucket(key);
-	auto &bucket = buckets[index];
+    auto &bucket = buckets[index];
 
-	ListIterator<value_type> res = bucket.insertHead(std::make_pair(key, value));
-	HashMapIterator<K, V> iter(buckets.begin() + index, buckets.end(), res);
-	return std::make_pair(iter, true);
+    ListIterator<value_type> res = bucket.insertHead(std::make_pair(key, value));
+    HashMapIterator<K, V> iter(buckets.begin() + index, buckets.end(), res);
+    return std::make_pair(iter, true);
 }
 
 template <HashAndEqual K, MoveAndCopy V>
