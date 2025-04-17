@@ -12,4 +12,6 @@ class BaseCollection
     bool isEmpty() const;
 
     virtual size_t getSize() const = 0;
+
+	virtual void clear() = 0;
 };

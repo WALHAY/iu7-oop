@@ -83,12 +83,14 @@ int main()
     hashmap.emplace("hi", 25);
     hashmap.emplace("meow", 100);
     hashmap.emplace("cat", 123);
-    std::cout << "Hashmap emplace {\"hello\", 1}" << std::endl;
+	std::cout << "\nHashmap size: " << hashmap.getSize() << std::endl;
 
 	for(auto &it : hashmap)
 	{
 		std::cout << it.first << " " << it.second<<std::endl;
 	}
+
+	std::cout << "Removed: " << hashmap.erase("meow") << std::endl;
 
     std::cout << "hashmap[\"hello\"]: " << hashmap["hello"] << std::endl;
     std::cout << "hashmap.at(\"hi\"): " << hashmap.at("hi") << std::endl;

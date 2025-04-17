@@ -69,13 +69,22 @@ auto HashMap<K, V>::find(const K &key) const -> const_iterator
 template <HashAndEqual K, MoveAndCopy V>
 bool HashMap<K, V>::erase(const K &key)
 {
-    // TODO: implement
-    return true;
+    size_type index = getBucket(key);
+
+    auto it = std::find_if(begin(index), end(index), [&key](const value_type &value) { return value.first == key; });
+	if(it == end(index))
+		return false;
+
+	buckets[index].erase(it);
+
+	return true;
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 void HashMap<K, V>::clear()
 {
+    for (auto &bucket : buckets)
+        bucket.clear();
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -109,25 +118,37 @@ V &HashMap<K, V>::operator[](K &&key)
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::begin() -> iterator
 {
-    return HashMapIterator<K, V>(buckets.begin(), buckets.end());
+    return iterator(buckets.begin(), buckets.end());
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::end() -> iterator
 {
-    return HashMapIterator<K, V>(buckets.end(), buckets.end());
+    return iterator(buckets.end(), buckets.end());
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::begin() const -> const_iterator
 {
-    return ConstHashMapIterator<K, V>(buckets.begin(), buckets.end());
+    return const_iterator(buckets.begin(), buckets.end());
 }
 
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::end() const -> const_iterator
 {
-    return ConstHashMapIterator<K, V>(buckets.end(), buckets.end());
+    return const_iterator(buckets.end(), buckets.end());
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+auto HashMap<K, V>::cbegin() const -> const_iterator
+{
+    return const_iterator(buckets.begin(), buckets.end());
+}
+
+template <HashAndEqual K, MoveAndCopy V>
+auto HashMap<K, V>::cend() const -> const_iterator
+{
+    return const_iterator(buckets.end(), buckets.end());
 }
 
 template <HashAndEqual K, MoveAndCopy V>
@@ -204,8 +225,8 @@ auto HashMap<K, V>::getBucketCount() const -> size_type
 template <HashAndEqual K, MoveAndCopy V>
 auto HashMap<K, V>::getSize() const -> size_type
 {
-	size_type size = 0;
-	for(auto &bucket : buckets)
-		size += bucket.getSize();
-	return size;
+    size_type size = 0;
+    for (auto &bucket : buckets)
+        size += bucket.getSize();
+    return size;
 }

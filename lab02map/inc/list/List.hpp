@@ -32,7 +32,9 @@ class List : public BaseCollection
     void removeHead();
     void removeTail();
 
-    iterator erase(const_iterator pos);
+    void erase(iterator pos);
+
+	virtual void clear() override;
 
     reference getHead();
     const_reference getHead() const;
@@ -55,8 +57,12 @@ class List : public BaseCollection
     iterator end();
 	const_iterator begin() const;
 	const_iterator end() const;
+	const_iterator cbegin() const;
+	const_iterator cend() const;
 
   protected:
+	void eraseNode(std::shared_ptr<ListNode<T>> node);
+
     std::shared_ptr<ListNode<T>> head;
 };
 

@@ -48,7 +48,7 @@ class HashMap : public BaseCollection
     bool erase(const K &key);
     iterator erase(iterator pos);
 
-    void clear();
+    virtual void clear() override;
 
     /*
      * KEY ACCESS
@@ -67,6 +67,8 @@ class HashMap : public BaseCollection
 
     const_iterator begin() const;
     const_iterator end() const;
+    const_iterator cbegin() const;
+    const_iterator cend() const;
 
     local_iterator begin(size_type bucket);
     local_iterator end(size_type bucket);
