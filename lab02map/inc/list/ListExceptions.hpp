@@ -12,3 +12,13 @@ class InvalidIndexAccessException : public BaseException
     {
     }
 };
+
+class NodeAllocationException : public BaseException
+{
+  public:
+    NodeAllocationException(const std::string &filename, const std::string &classname, const std::string &method,
+                                int line)
+        : BaseException(filename, classname, method, line, "Failed to allocate memory for list node")
+    {
+    }
+};

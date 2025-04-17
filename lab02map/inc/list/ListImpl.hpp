@@ -1,6 +1,7 @@
 #pragma once
 
 #include "List.hpp"
+#include <list/ListExceptions.hpp>
 
 template <typename T>
 List<T>::List()
@@ -8,7 +9,7 @@ List<T>::List()
 }
 
 template <typename T>
-template <Iterator Iter>
+template <ConvertibleIterator<T> Iter>
 List<T>::List(const Iter &begin, const Iter &end)
 {
     for (auto it = begin; it != end; ++it)
@@ -84,7 +85,16 @@ void List<T>::eraseNode(std::shared_ptr<ListNode<T>> remove)
 template <typename T>
 auto List<T>::pushBack(const T &value) -> iterator
 {
-    auto node = std::make_shared<ListNode<T>>(value, nullptr);
+	std::shared_ptr<ListNode<T>> node = nullptr;
+    try
+    {
+        node = std::make_shared<ListNode<T>>(value, nullptr);
+    }
+    catch (std::bad_alloc e)
+    {
+		throw NodeAllocationException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
+		return end();
+    }
 
     auto tail = head;
     if (tail == nullptr)

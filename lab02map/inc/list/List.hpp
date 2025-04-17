@@ -1,7 +1,6 @@
 #pragma once
 
 #include "list/ListConcepts.hpp"
-#include "list/ListExceptions.hpp"
 #include "list/iterators/ConstListIter.hpp"
 #include <collection/BaseCollection.hpp>
 #include <list/ListNode.hpp>
@@ -29,10 +28,10 @@ class List : public BaseCollection
     List(List<T> &&list) noexcept = default;
     explicit List(size_type size)
         requires DefaultConstructible<T>;
-    List(size_type size, const value_type &)
+    List(size_type size, const value_type &instance)
         requires CopyConstructible<T>;
 
-    template <Iterator Iter>
+    template <ConvertibleIterator<T> Iter>
     List(const Iter &begin, const Iter &end);
 
     iterator pushFront(const T &value);
