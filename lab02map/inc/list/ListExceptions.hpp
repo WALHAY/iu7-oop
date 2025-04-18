@@ -6,8 +6,7 @@
 class InvalidIndexAccessException : public BaseException
 {
   public:
-    InvalidIndexAccessException(const std::string &filename, const std::string &classname, const std::string &method,
-                                int line)
+    InvalidIndexAccessException(const char *filename, const char *classname, const char *method, int line)
         : BaseException(filename, classname, method, line, "List invalid index access")
     {
     }
@@ -16,8 +15,7 @@ class InvalidIndexAccessException : public BaseException
 class NodeAllocationException : public BaseException
 {
   public:
-    NodeAllocationException(const std::string &filename, const std::string &classname, const std::string &method,
-                                int line)
+    NodeAllocationException(const char *filename, const char *classname, const char *method, int line)
         : BaseException(filename, classname, method, line, "Failed to allocate memory for list node")
     {
     }
@@ -26,8 +24,7 @@ class NodeAllocationException : public BaseException
 class EmptyListException : public BaseException
 {
   public:
-    EmptyListException(const std::string &filename, const std::string &classname, const std::string &method,
-                                int line)
+    EmptyListException(const char *filename, const char *classname, const char *method, int line)
         : BaseException(filename, classname, method, line, "Trying to get value in empty list")
     {
     }

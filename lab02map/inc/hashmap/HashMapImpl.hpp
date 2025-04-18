@@ -186,8 +186,8 @@ template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFuncti
 bool HashMap<K, V, Hash, KeyEqual>::contains(const K &key) const
 {
     size_type bucket = getBucket(key);
-    return std::any_of(begin(index), end(index),
-                       [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
+    return std::find_if(begin(index), end(index),
+                       [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); }) != end(index);
 }
 
 #pragma endregion lookup

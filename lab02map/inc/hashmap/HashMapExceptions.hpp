@@ -6,7 +6,7 @@
 class InvalidKeyException : public BaseException
 {
   public:
-    InvalidKeyException(const std::string &filename, const std::string &classname, const std::string &method, int line)
+    InvalidKeyException(const char *filename, const char *classname, const char *method, int line)
         : BaseException(filename, classname, method, line, "Invalid key access")
     {
     }
@@ -15,7 +15,7 @@ class InvalidKeyException : public BaseException
 class InvalidIterator : public BaseException
 {
   public:
-    InvalidIterator(const std::string &filename, const std::string &classname, const std::string &method, int line)
+    InvalidIterator(const char *filename, const char *classname, const char *method, int line)
         : BaseException(filename, classname, method, line, "Invalid iterator")
     {
     }
