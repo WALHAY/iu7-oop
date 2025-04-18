@@ -53,8 +53,11 @@ class HashMap : public BaseCollection
 #pragma region modifiers
     virtual void clear() override;
 
-    std::pair<iterator, bool> emplace(const K &key, const V &value);
-    std::pair<iterator, bool> emplace(value_type entry);
+	void insert_or_assign(const K& key, const V& value);
+	void insert_or_assign(value_type&& value);
+
+    std::pair<iterator, bool> insert(const K &key, const V &value);
+    std::pair<iterator, bool> insert(value_type&& value);
 
     bool erase(const K &key);
     iterator erase(iterator pos);
@@ -107,13 +110,12 @@ class HashMap : public BaseCollection
   private:
     float countLoadFactor() const;
 
-    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, value_type &entry);
+    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, value_type &&entry);
 
     bool isPrime(size_type value) const;
     size_type getNextPrime(size_type size) const;
 
     float maxLoadFactor = 1.0f;
-    const float sizeFactor = 1.5f;
 
     const Hash hashFunction;
 	const KeyEqual keyEqualFunction;

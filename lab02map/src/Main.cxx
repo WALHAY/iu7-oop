@@ -95,10 +95,10 @@ int main()
 
     HashMap<std::string, int> hashmap;
 
-    hashmap.emplace("hello", 1);
-    hashmap.emplace("hi", 25);
-    hashmap.emplace("meow", 100);
-    hashmap.emplace("cat", 123);
+    hashmap.insert("hello", 1);
+    hashmap.insert("hi", 25);
+    hashmap.insert("meow", 100);
+    hashmap.insert("cat", 123);
     std::cout << "\nHashmap size: " << hashmap.getSize() << std::endl;
 
     for (auto &it : hashmap)
@@ -115,7 +115,7 @@ int main()
     size_t buckets = bucketCheck.getBucketCount();
     for (int i = 0; i < 100; ++i)
     {
-        bucketCheck.emplace(std::format("Check{}", i), i);
+        bucketCheck.insert(std::format("Check{}", i), i);
         if (buckets != bucketCheck.getBucketCount())
         {
             buckets = bucketCheck.getBucketCount();

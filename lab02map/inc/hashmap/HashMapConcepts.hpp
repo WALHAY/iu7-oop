@@ -12,7 +12,7 @@ concept HashFunction = std::is_invocable_v<T, K> && requires(T a, K b) {
 };
 
 template <typename T, typename K>
-concept EqualFunction = std::is_invocable_v<T, K, K> && requires(T a, K b, K c) {
+concept EqualFunction = std::is_invocable_v<T, K, K> && requires(T a, const K& b, const K& c) {
 	{ a(b, c) } -> std::same_as<bool>;
 };
 

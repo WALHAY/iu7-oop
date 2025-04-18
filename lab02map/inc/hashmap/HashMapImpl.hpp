@@ -26,14 +26,15 @@ template <ConvertibleIterator<typename HashMap<K, V, Hash, KeyEqual>::value_type
 HashMap<K, V, Hash, KeyEqual>::HashMap(Iter &&begin, Iter &&end) : HashMap()
 {
     for (Iter it = begin; it != end; ++it)
-        emplace(*it);
+        insert(std::forward<value_type>(*it));
 }
 
 #pragma endregion constructors
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-HashMap<K, V, Hash, KeyEqual> &HashMap<K, V, Hash, KeyEqual>::operator=(const hashmap &map) {
-	buckets = List<List<value_type>>(map->buckets);
+HashMap<K, V, Hash, KeyEqual> &HashMap<K, V, Hash, KeyEqual>::operator=(const hashmap &map)
+{
+    buckets = List<List<value_type>>(map->buckets);
 }
 
 #pragma region iterators
@@ -86,18 +87,34 @@ void HashMap<K, V, Hash, KeyEqual>::clear()
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-auto HashMap<K, V, Hash, KeyEqual>::emplace(const K &key, const V &value) -> std::pair<iterator, bool>
+void HashMap<K, V, Hash, KeyEqual>::insert_or_assign(const K &key, const V &value)
 {
-    return emplace(std::make_pair(key, value));
+    auto result = insert(key, value);
+    if (!result.second)
+        result.first->value = value;
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-auto HashMap<K, V, Hash, KeyEqual>::emplace(value_type entry) -> std::pair<iterator, bool>
+void HashMap<K, V, Hash, KeyEqual>::insert_or_assign(value_type &&value)
+{
+    auto result = insert(std::forward<value_type>(value));
+    if (!result.second)
+        result.first->value = value;
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
+auto HashMap<K, V, Hash, KeyEqual>::insert(const K &key, const V &value) -> std::pair<iterator, bool>
+{
+    return insert(std::make_pair(key, value));
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
+auto HashMap<K, V, Hash, KeyEqual>::insert(value_type &&entry) -> std::pair<iterator, bool>
 {
     if (countLoadFactor() > maxLoadFactor)
-        rehash(getBucketCount() + 1);
+        rehash(getBucketCount());
 
-    return insert(buckets, entry);
+    return insert(buckets, std::forward<value_type>(entry));
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
@@ -105,7 +122,7 @@ bool HashMap<K, V, Hash, KeyEqual>::erase(const K &key)
 {
     size_type index = getBucket(key);
 
-    auto it = std::find_if(begin(index), end(index), [&key](const value_type &value) { return value.first == key; });
+    auto it = std::find_if(begin(index), end(index), [&key,this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
     if (it == end(index))
         return false;
 
@@ -151,7 +168,7 @@ auto HashMap<K, V, Hash, KeyEqual>::find(const K &key) -> iterator
 {
     size_type index = getBucket(key);
 
-    auto it = std::find_if(begin(index), end(index), [&key](const value_type &value) { return value.first == key; });
+    auto it = std::find_if(begin(index), end(index), [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
 
     return iterator(buckets.begin() + index, buckets.end(), it);
 }
@@ -241,33 +258,34 @@ auto HashMap<K, V, Hash, KeyEqual>::getBucket(const K &key) const -> size_type
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 void HashMap<K, V, Hash, KeyEqual>::setMaxLoadFactor(float maxLoadFactor)
 {
-	this->maxLoadFactor = maxLoadFactor;
+    this->maxLoadFactor = maxLoadFactor;
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 float HashMap<K, V, Hash, KeyEqual>::getMaxLoadFactor() const
 {
-	return maxLoadFactor;
+    return maxLoadFactor;
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-void HashMap<K, V, Hash, KeyEqual>::rehash(size_type count) {
-	size_type nextSize = getNextPrime(std::max(static_cast<size_type>(getSize() / getMaxLoadFactor()), count));
-
-	List<List<value_type>> newBuckets(nextSize);
-
-	for(auto it = begin(); it != end(); ++it)
-	{
-		insert(newBuckets, *it);
-	}
-
-	buckets = newBuckets;
-}
-
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-void HashMap<K, V, Hash, KeyEqual>::reserve(size_type count) 
+void HashMap<K, V, Hash, KeyEqual>::rehash(size_type count)
 {
-	rehash(std::ceil(count / getMaxLoadFactor()));
+    size_type nextSize = getNextPrime(std::max(static_cast<size_type>(getSize() / getMaxLoadFactor()), count));
+
+    List<List<value_type>> newBuckets(nextSize);
+
+    for (auto it = begin(); it != end(); ++it)
+    {
+        insert(newBuckets, std::forward<value_type>(*it));
+    }
+
+    buckets = newBuckets;
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
+void HashMap<K, V, Hash, KeyEqual>::reserve(size_type count)
+{
+    rehash(std::ceil(count / getMaxLoadFactor()));
 }
 
 #pragma endregion hash policy
@@ -304,14 +322,14 @@ float HashMap<K, V, Hash, KeyEqual>::countLoadFactor() const
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-auto HashMap<K, V, Hash, KeyEqual>::insert(List<List<value_type>> &buckets, value_type &entry)
+auto HashMap<K, V, Hash, KeyEqual>::insert(List<List<value_type>> &buckets, value_type &&entry)
     -> std::pair<iterator, bool>
 {
     size_t hash = hashFunction(entry.first);
     size_type index = hash % buckets.getSize();
     auto &bucket = buckets[index];
 
-    ListIterator<value_type> res = bucket.pushFront(entry);
+    ListIterator<value_type> res = bucket.pushFront(std::forward<value_type>(entry));
     return std::make_pair(iterator(buckets.begin() + index, buckets.end(), res), true);
 }
 
@@ -331,4 +349,3 @@ bool HashMap<K, V, Hash, KeyEqual>::isPrime(size_type value) const
             return false;
     return true;
 }
-
