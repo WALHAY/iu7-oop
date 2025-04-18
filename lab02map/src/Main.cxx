@@ -61,24 +61,23 @@ int main()
     std::cout << "Head: " << strList.getFront() << std::endl;
     std::cout << "Tail: " << strList.getBack() << std::endl;
 
-	List<std::string> copyList(strList);
-	std::cout << "\nCopied list: ";
-	for(auto &it : copyList)
-		std::cout << it << " ";
+    List<std::string> copyList(strList);
+    std::cout << "\nCopied list: ";
+    for (auto &it : copyList)
+        std::cout << it << " ";
 
-	List<std::string> copyList2;
-	copyList2 = copyList;
-	std::cout << "\nCopied list 2: ";
-	for(auto &it : copyList2)
-		std::cout << it << " ";
+    List<std::string> copyList2;
+    copyList2 = copyList;
+    std::cout << "\nCopied list 2: ";
+    for (auto &it : copyList2)
+        std::cout << it << " ";
 
-	List<std::string> initList = {"This", "initialized", "by", "list"};
-	std::cout << "\nList initializer: ";
-	for(auto &it : initList)
-		std::cout << it << " ";
+    List<std::string> initList = {"This", "initialized", "by", "list"};
+    std::cout << "\nList initializer: ";
+    for (auto &it : initList)
+        std::cout << it << " ";
 
-
-	std::cout << "\n\n2-Dim List:" << std::endl;
+    std::cout << "\n\n2-Dim List:" << std::endl;
     List<List<std::string>> doubleList;
     doubleList.pushFront(strList);
     doubleList.pushFront(initList);
@@ -89,7 +88,7 @@ int main()
         {
             std::cout << str << " ";
         }
-		std::cout << "\n";
+        std::cout << "\n";
     }
 
     std::cout << "\n--- HashMap zone ---" << std::endl;
@@ -100,33 +99,38 @@ int main()
     hashmap.emplace("hi", 25);
     hashmap.emplace("meow", 100);
     hashmap.emplace("cat", 123);
-	std::cout << "\nHashmap size: " << hashmap.getSize() << std::endl;
+    std::cout << "\nHashmap size: " << hashmap.getSize() << std::endl;
 
-	for(auto &it : hashmap)
-	{
-		std::cout << it.first << " : " << it.second<<std::endl;
-	}
+    for (auto &it : hashmap)
+    {
+        std::cout << it.first << " : " << it.second << std::endl;
+    }
 
-	std::cout << "Removed: " << hashmap.erase("meow") << std::endl;
+    std::cout << "Removed: " << hashmap.erase("meow") << std::endl;
 
     std::cout << "hashmap[\"hello\"]: " << hashmap["hello"] << std::endl;
     std::cout << "hashmap.at(\"hi\"): " << hashmap.at("hi") << std::endl;
 
-	HashMap<std::string, int> bucketCheck;
-	size_t buckets = bucketCheck.getBucketCount();
-	for(int i = 0; i < 100; ++i)
-	{
-		bucketCheck.emplace(std::format("Check{}", i), i);
-		if(buckets != bucketCheck.getBucketCount()) {
-			buckets = bucketCheck.getBucketCount();
-			std::cout << "New bucket count: " << buckets << std::endl;
-		}
-	}
+    HashMap<std::string, int> bucketCheck;
+    size_t buckets = bucketCheck.getBucketCount();
+    for (int i = 0; i < 100; ++i)
+    {
+        bucketCheck.emplace(std::format("Check{}", i), i);
+        if (buckets != bucketCheck.getBucketCount())
+        {
+            buckets = bucketCheck.getBucketCount();
+            std::cout << "New bucket count: " << buckets << std::endl;
+        }
+    }
 
-	for(auto &it : bucketCheck)
-	{
-		std::cout << it.first << " : " << it.second<<std::endl;
-	}
+    List<std::pair<int, int>> pairList = {{1, 1}, {2, 3}, {5, 10}};
+
+    HashMap<int, int> pairMap(pairList.begin(), pairList.end());
+
+    for (auto it = hashmap.cbegin(); it != hashmap.cend(); ++it)
+    {
+        std::cout << it->first << " " << it->second << std::endl;
+    }
 
     return 0;
 }

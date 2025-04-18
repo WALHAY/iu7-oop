@@ -1,8 +1,6 @@
 #pragma once
 
 #include "hashmap/HashMap.hpp"
-#include <iostream>
-#include <ostream>
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
 HashMap<K, V, Hash>::HashMap() : HashMap(8)
@@ -16,10 +14,16 @@ HashMap<K, V, Hash>::HashMap(size_t size) : hasher(Hash())
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
-HashMap<K, V, Hash>::HashMap(const std::initializer_list<std::pair<K, V>> list) : HashMap(list.size())
+HashMap<K, V, Hash>::HashMap(const std::initializer_list<value_type> &list) : HashMap(list.begin(), list.end())
 {
-    for (auto &pair : list)
-        emplace(pair);
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
+template <ConvertibleIterator<typename HashMap<K, V, Hash>::value_type> Iter>
+HashMap<K, V, Hash>::HashMap(Iter &&begin, Iter &&end) : HashMap()
+{
+	for(Iter it = begin; it != end; ++it)
+		emplace(*it);
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
@@ -111,7 +115,7 @@ V &HashMap<K, V, Hash>::operator[](const K &key)
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
-V &HashMap<K, V, Hash>::operator[](K &&key)
+const V &HashMap<K, V, Hash>::operator[](const K &key) const
 {
     return at(key);
 }
@@ -143,13 +147,13 @@ auto HashMap<K, V, Hash>::end() const -> const_iterator
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
 auto HashMap<K, V, Hash>::cbegin() const -> const_iterator
 {
-    return const_iterator(buckets.begin(), buckets.end());
+    return const_iterator(buckets.cbegin(), buckets.cend());
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
 auto HashMap<K, V, Hash>::cend() const -> const_iterator
 {
-    return const_iterator(buckets.end(), buckets.end());
+    return const_iterator(buckets.cend(), buckets.cend());
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>

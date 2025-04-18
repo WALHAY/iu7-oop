@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include <iterator>
 
 template <typename T>
 concept EqualityComparable = std::equality_comparable<T>;

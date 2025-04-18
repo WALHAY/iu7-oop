@@ -13,14 +13,15 @@ class ConstHashMapIterator : public BaseIterator
     using iterator_category = std::forward_iterator_tag;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using value_type = const std::pair<const K, V>;
-    using pointer = value_type *;
-    using reference = value_type &;
+    using value_type = std::pair<const K, V>;
+    using const_value_type = const value_type;
+    using pointer = const_value_type *;
+    using reference = const_value_type &;
     using local_iterator = List<value_type>::const_iterator;
     using iterator = ConstHashMapIterator<K, V>;
 	using buckets_iterator = List<List<value_type>>::const_iterator;
 
-    ConstHashMapIterator();
+    ConstHashMapIterator() = default;
     ConstHashMapIterator(const buckets_iterator &current, const buckets_iterator &end);
     ConstHashMapIterator(const buckets_iterator &current, const buckets_iterator &end, const local_iterator &element);
 
@@ -41,7 +42,6 @@ class ConstHashMapIterator : public BaseIterator
 
   protected:
 	void moveNextBucket();
-    std::weak_ptr<List<List<value_type>>> bucketsPtr;
 
     local_iterator elementIterator;
 	buckets_iterator currentBucket;

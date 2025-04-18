@@ -20,7 +20,7 @@ class HashMapIterator : public BaseIterator
     using iterator = HashMapIterator<K, V>;
 	using buckets_iterator = List<List<value_type>>::iterator;
 
-    HashMapIterator();
+    HashMapIterator() = default;
     HashMapIterator(const buckets_iterator &current, const buckets_iterator &end);
     HashMapIterator(const buckets_iterator &current, const buckets_iterator &end, const local_iterator &element);
 
@@ -41,7 +41,6 @@ class HashMapIterator : public BaseIterator
 
   protected:
 	void moveNextBucket();
-    std::weak_ptr<List<List<value_type>>> bucketsPtr;
 
     local_iterator elementIterator;
 	buckets_iterator currentBucket;

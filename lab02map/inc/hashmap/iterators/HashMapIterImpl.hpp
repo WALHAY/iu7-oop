@@ -3,14 +3,11 @@
 #include "hashmap/iterators/HashMapIter.hpp"
 
 template <typename K, typename V>
-HashMapIterator<K, V>::HashMapIterator()
-{
-}
-
-template <typename K, typename V>
 HashMapIterator<K, V>::HashMapIterator(const buckets_iterator &current, const buckets_iterator &end)
     : HashMapIterator(current, end, current != end ? current->begin() : local_iterator(nullptr))
 {
+	if(elementIterator == local_iterator(nullptr))
+		moveNextBucket();
 }
 
 template <typename K, typename V>
@@ -37,12 +34,15 @@ auto HashMapIterator<K, V>::operator*() const -> reference
 template <typename K, typename V>
 HashMapIterator<K, V>::operator bool() const
 {
-    return elementIterator;
+    return elementIterator && currentBucket;
 }
 
 template <typename K, typename V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator=(const HashMapIterator<K, V> &other)
 {
+	this->elementIterator = other.elementIterator;
+	this->currentBucket = other.currentBucket;
+	this->endBucket = other.endBucket;
 }
 
 template <typename K, typename V>

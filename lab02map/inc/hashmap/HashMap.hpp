@@ -26,10 +26,12 @@ class HashMap : public BaseCollection
      */
     HashMap();
     explicit HashMap(size_type size);
-    // HashMap(iterator &&begin, iterator &&end);
-    HashMap(const std::initializer_list<std::pair<K, V>> list);
+    HashMap(const std::initializer_list<value_type> &list);
     HashMap(HashMap<K, V, Hash> &&map) = default;
     HashMap(const HashMap<K, V, Hash> &map) = default;
+
+    template <ConvertibleIterator<value_type> Iter>
+    HashMap(Iter &&begin, Iter &&end);
 
     virtual ~HashMap() = default;
 
@@ -57,14 +59,13 @@ class HashMap : public BaseCollection
     const V &at(const K &key) const;
 
     V &operator[](const K &key);
-    V &operator[](K &&key);
+    const V &operator[](const K &key) const;
 
     /*
      * ITERATORS
      */
     iterator begin();
     iterator end();
-
     const_iterator begin() const;
     const_iterator end() const;
     const_iterator cbegin() const;
@@ -76,8 +77,8 @@ class HashMap : public BaseCollection
     size_type getBucketCount() const;
     virtual size_type getSize() const override;
 
-	void setMaxLoadFactor(float maxLoadFactor) const;
-	float getMaxLoadFactor() const;
+    void setMaxLoadFactor(float maxLoadFactor) const;
+    float getMaxLoadFactor() const;
 
   private:
     /*
@@ -95,7 +96,7 @@ class HashMap : public BaseCollection
     size_t getKeyHash(const K &key) const;
     size_type getBucket(const K &key) const;
 
-    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, value_type& entry);
+    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, value_type &entry);
 
     const float maxLoadFactor = 1.0f;
     const float sizeFactor = 1.5f;

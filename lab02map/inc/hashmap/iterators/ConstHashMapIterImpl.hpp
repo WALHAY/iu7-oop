@@ -3,23 +3,28 @@
 #include "hashmap/iterators/ConstHashMapIter.hpp"
 
 template <typename K, typename V>
-ConstHashMapIterator<K, V>::ConstHashMapIterator()
-{
-}
-
-template <typename K, typename V>
 ConstHashMapIterator<K, V>::ConstHashMapIterator(const buckets_iterator &current, const buckets_iterator &end)
     : ConstHashMapIterator(current, end, current != end ? current->begin() : local_iterator(nullptr))
 {
+	if(elementIterator == local_iterator(nullptr))
+		moveNextBucket();
 }
 
 template <typename K, typename V>
 ConstHashMapIterator<K, V>::ConstHashMapIterator(const buckets_iterator &current, const buckets_iterator &end,
-                                       const local_iterator &element)
+                                                 const local_iterator &element)
 {
     this->currentBucket = current;
     this->endBucket = end;
     this->elementIterator = element;
+}
+
+template <typename K, typename V>
+ConstHashMapIterator<K, V> &ConstHashMapIterator<K, V>::operator=(const ConstHashMapIterator<K, V> &other)
+{
+	this->elementIterator = other.elementIterator;
+	this->currentBucket = other.currentBucket;
+	this->endBucket = other.endBucket;
 }
 
 template <typename K, typename V>
@@ -41,14 +46,10 @@ ConstHashMapIterator<K, V>::operator bool() const
 }
 
 template <typename K, typename V>
-ConstHashMapIterator<K, V> &ConstHashMapIterator<K, V>::operator=(const ConstHashMapIterator<K, V> &other)
-{
-}
-
-template <typename K, typename V>
 ConstHashMapIterator<K, V> &ConstHashMapIterator<K, V>::operator++()
 {
-    ++elementIterator;
+    if (elementIterator)
+        ++elementIterator;
     moveNextBucket();
     return *this;
 }
@@ -64,16 +65,16 @@ ConstHashMapIterator<K, V> ConstHashMapIterator<K, V>::operator++(int)
 template <typename K, typename V>
 ConstHashMapIterator<K, V> ConstHashMapIterator<K, V>::operator+(size_type offset) const
 {
-	ConstHashMapIterator<K, V> newIter(*this);
-	return newIter + offset;
+    ConstHashMapIterator<K, V> newIter(*this);
+    return newIter + offset;
 }
 
 template <typename K, typename V>
 ConstHashMapIterator<K, V> &ConstHashMapIterator<K, V>::operator+=(size_type offset)
 {
-	while(--offset > 0)
-		++(*this);
-	return *this;
+    while (--offset > 0)
+        ++(*this);
+    return *this;
 }
 
 template <typename K, typename V>
