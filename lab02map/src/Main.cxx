@@ -107,25 +107,17 @@ int main()
     }
 
     std::cout << "Removed: " << hashmap.erase("meow") << std::endl;
+	hashmap.insert_or_assign("cat", 321);
 
     std::cout << "hashmap[\"hello\"]: " << hashmap["hello"] << std::endl;
     std::cout << "hashmap.at(\"hi\"): " << hashmap.at("hi") << std::endl;
 
     HashMap<std::string, int> bucketCheck;
-    size_t buckets = bucketCheck.getBucketCount();
-    for (int i = 0; i < 100; ++i)
-    {
-        bucketCheck.insert(std::format("Check{}", i), i);
-        if (buckets != bucketCheck.getBucketCount())
-        {
-            buckets = bucketCheck.getBucketCount();
-            std::cout << "New bucket count: " << buckets << std::endl;
-        }
-    }
 
     List<std::pair<int, int>> pairList = {{1, 1}, {2, 3}, {5, 10}};
 
     HashMap<int, int> pairMap(pairList.begin(), pairList.end());
+	pairMap = {{1, 3}, {3, 5}};
 
     for (auto it = hashmap.cbegin(); it != hashmap.cend(); ++it)
     {

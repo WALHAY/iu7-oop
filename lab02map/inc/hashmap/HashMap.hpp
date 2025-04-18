@@ -6,7 +6,8 @@
 #include "hashmap/iterators/HashMapIter.hpp"
 #include "list/iterators/ListIter.hpp"
 
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash = std::hash<K>, EqualFunction<K> KeyEqual = std::equal_to<K>>
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash = std::hash<K>,
+          EqualFunction<K> KeyEqual = std::equal_to<K>>
 class HashMap : public BaseCollection
 {
     friend class HashMapIterator<K, V>;
@@ -17,13 +18,13 @@ class HashMap : public BaseCollection
     using value_type = std::pair<const K, V>;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-	using hasher = Hash;
-	using key_equal = KeyEqual;
+    using hasher = Hash;
+    using key_equal = KeyEqual;
     using iterator = HashMapIterator<K, V>;
     using const_iterator = ConstHashMapIterator<K, V>;
     using local_iterator = List<value_type>::iterator;
     using const_local_iterator = List<value_type>::const_iterator;
-	using hashmap = HashMap<K, V, Hash, KeyEqual>;
+    using hashmap = HashMap<K, V, Hash, KeyEqual>;
 
 #pragma region constructors
     HashMap();
@@ -38,8 +39,9 @@ class HashMap : public BaseCollection
 
     virtual ~HashMap() = default;
 
-	hashmap &operator=(const hashmap &map);
-	hashmap &operator=(hashmap &&map) noexcept = default;
+    hashmap &operator=(const hashmap &map);
+    hashmap &operator=(hashmap &&map) noexcept = default;
+    hashmap &operator=(std::initializer_list<value_type> ilist);
 
 #pragma region iterators
     iterator begin();
@@ -53,11 +55,13 @@ class HashMap : public BaseCollection
 #pragma region modifiers
     virtual void clear() override;
 
-	void insert_or_assign(const K& key, const V& value);
-	void insert_or_assign(value_type&& value);
+    void insert_or_assign(const K &key, const V &value);
+    void insert_or_assign(const value_type &value);
 
+    template <ConvertibleIterator<value_type> Iter>
+    void insert(Iter &&begin, Iter &&end);
     std::pair<iterator, bool> insert(const K &key, const V &value);
-    std::pair<iterator, bool> insert(value_type&& value);
+    std::pair<iterator, bool> insert(const value_type &value);
 
     bool erase(const K &key);
     iterator erase(iterator pos);
@@ -87,7 +91,7 @@ class HashMap : public BaseCollection
 
     size_type getBucketCount() const;
 
-	List<value_type>::size_type getBucketSize(size_type bucket) const;
+    List<value_type>::size_type getBucketSize(size_type bucket) const;
 
     size_type getBucket(const K &key) const;
 #pragma endregion bucket interface
@@ -96,13 +100,13 @@ class HashMap : public BaseCollection
     void setMaxLoadFactor(float maxLoadFactor);
     float getMaxLoadFactor() const;
 
-	void rehash(size_type count);
-	void reserve(size_type count);
+    void rehash(size_type count);
+    void reserve(size_type count);
 #pragma endregion hash policy
 
 #pragma region observers
-	key_equal getKeyEqual() const;
-	hasher getHashFunction() const;
+    key_equal getKeyEqual() const;
+    hasher getHashFunction() const;
 
     virtual size_type getSize() const override;
 #pragma endregion observers
@@ -110,7 +114,7 @@ class HashMap : public BaseCollection
   private:
     float countLoadFactor() const;
 
-    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, value_type &&entry);
+    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, const value_type &entry);
 
     bool isPrime(size_type value) const;
     size_type getNextPrime(size_type size) const;
@@ -118,7 +122,7 @@ class HashMap : public BaseCollection
     float maxLoadFactor = 1.0f;
 
     const Hash hashFunction;
-	const KeyEqual keyEqualFunction;
+    const KeyEqual keyEqualFunction;
 
     List<List<value_type>> buckets;
 };

@@ -10,14 +10,14 @@ List<T>::List()
 
 template <typename T>
 template <ConvertibleIterator<T> Iter>
-List<T>::List(const Iter &begin, const Iter &end)
+List<T>::List(Iter &&begin, Iter &&end)
 {
     for (auto it = begin; it != end; ++it)
         pushBack(*it);
 }
 
 template <typename T>
-List<T>::List(const std::initializer_list<T> &list) : List(list.begin(), list.end())
+List<T>::List(std::initializer_list<T> list) : List(list.begin(), list.end())
 {
 }
 

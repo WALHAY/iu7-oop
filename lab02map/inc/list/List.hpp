@@ -23,7 +23,7 @@ class List : public BaseCollection
     using difference_type = std::ptrdiff_t;
 
     List();
-    List(const std::initializer_list<T> &list);
+    List(std::initializer_list<T> list);
     List(const List<T> &list) = default;
     List(List<T> &&list) noexcept = default;
     explicit List(size_type size)
@@ -32,7 +32,7 @@ class List : public BaseCollection
         requires CopyConstructible<T>;
 
     template <ConvertibleIterator<T> Iter>
-    List(const Iter &begin, const Iter &end);
+    List(Iter &&begin, Iter &&end);
 
     iterator pushFront(const T &value);
     iterator pushBack(const T &value);

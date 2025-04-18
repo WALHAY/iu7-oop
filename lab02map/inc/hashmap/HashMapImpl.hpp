@@ -34,7 +34,17 @@ HashMap<K, V, Hash, KeyEqual>::HashMap(Iter &&begin, Iter &&end) : HashMap()
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 HashMap<K, V, Hash, KeyEqual> &HashMap<K, V, Hash, KeyEqual>::operator=(const hashmap &map)
 {
-    buckets = List<List<value_type>>(map->buckets);
+    buckets = List<List<value_type>>(map.buckets);
+    return *this;
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
+HashMap<K, V, Hash, KeyEqual> &HashMap<K, V, Hash, KeyEqual>::operator=(std::initializer_list<value_type> ilist)
+{
+    clear();
+    for (auto &it : ilist)
+        insert(it);
+    return *this;
 }
 
 #pragma region iterators
@@ -91,15 +101,15 @@ void HashMap<K, V, Hash, KeyEqual>::insert_or_assign(const K &key, const V &valu
 {
     auto result = insert(key, value);
     if (!result.second)
-        result.first->value = value;
+        result.first->second = value;
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-void HashMap<K, V, Hash, KeyEqual>::insert_or_assign(value_type &&value)
+void HashMap<K, V, Hash, KeyEqual>::insert_or_assign(const value_type &value)
 {
-    auto result = insert(std::forward<value_type>(value));
+    auto result = insert(value);
     if (!result.second)
-        result.first->value = value;
+        result.first->second = value;
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
@@ -109,12 +119,12 @@ auto HashMap<K, V, Hash, KeyEqual>::insert(const K &key, const V &value) -> std:
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-auto HashMap<K, V, Hash, KeyEqual>::insert(value_type &&entry) -> std::pair<iterator, bool>
+auto HashMap<K, V, Hash, KeyEqual>::insert(const value_type &entry) -> std::pair<iterator, bool>
 {
     if (countLoadFactor() > maxLoadFactor)
         rehash(getBucketCount());
 
-    return insert(buckets, std::forward<value_type>(entry));
+    return insert(buckets, entry);
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
@@ -122,7 +132,8 @@ bool HashMap<K, V, Hash, KeyEqual>::erase(const K &key)
 {
     size_type index = getBucket(key);
 
-    auto it = std::find_if(begin(index), end(index), [&key,this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
+    auto it = std::find_if(begin(index), end(index),
+                           [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
     if (it == end(index))
         return false;
 
@@ -168,7 +179,8 @@ auto HashMap<K, V, Hash, KeyEqual>::find(const K &key) -> iterator
 {
     size_type index = getBucket(key);
 
-    auto it = std::find_if(begin(index), end(index), [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
+    auto it = std::find_if(begin(index), end(index),
+                           [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
 
     return iterator(buckets.begin() + index, buckets.end(), it);
 }
@@ -274,9 +286,9 @@ void HashMap<K, V, Hash, KeyEqual>::rehash(size_type count)
 
     List<List<value_type>> newBuckets(nextSize);
 
-    for (auto it = begin(); it != end(); ++it)
+	for(auto &it : *this)
     {
-        insert(newBuckets, std::forward<value_type>(*it));
+        insert(newBuckets, it);
     }
 
     buckets = newBuckets;
@@ -322,14 +334,18 @@ float HashMap<K, V, Hash, KeyEqual>::countLoadFactor() const
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-auto HashMap<K, V, Hash, KeyEqual>::insert(List<List<value_type>> &buckets, value_type &&entry)
+auto HashMap<K, V, Hash, KeyEqual>::insert(List<List<value_type>> &buckets, const value_type &entry)
     -> std::pair<iterator, bool>
 {
     size_t hash = hashFunction(entry.first);
     size_type index = hash % buckets.getSize();
     auto &bucket = buckets[index];
 
-    ListIterator<value_type> res = bucket.pushFront(std::forward<value_type>(entry));
+	auto coll = find_if(bucket.begin(), bucket.end(), [&entry, this](const value_type& value){return this->keyEqualFunction(value.first, entry.first);});
+	if(coll != bucket.end())
+		return std::make_pair(iterator(buckets.begin() + index, buckets.end(), coll), false);
+
+    auto res = bucket.pushFront(entry);
     return std::make_pair(iterator(buckets.begin() + index, buckets.end(), res), true);
 }
 
