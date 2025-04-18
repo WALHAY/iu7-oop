@@ -48,7 +48,8 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator=(const HashMapIterator<K,
 template <typename K, typename V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
 {
-    ++elementIterator;
+	if(elementIterator)
+    	++elementIterator;
     moveNextBucket();
     return *this;
 }
@@ -64,16 +65,16 @@ HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int)
 template <typename K, typename V>
 HashMapIterator<K, V> HashMapIterator<K, V>::operator+(size_type offset) const
 {
-	HashMapIterator<K, V> newIter(*this);
-	return newIter + offset;
+    HashMapIterator<K, V> newIter(*this);
+    return newIter + offset;
 }
 
 template <typename K, typename V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator+=(size_type offset)
 {
-	while(--offset > 0)
-		++(*this);
-	return *this;
+    while (--offset > 0)
+        ++(*this);
+    return *this;
 }
 
 template <typename K, typename V>

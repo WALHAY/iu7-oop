@@ -94,7 +94,7 @@ int main()
 
     std::cout << "\n--- HashMap zone ---" << std::endl;
 
-    HashMap<std::string, int> hashmap(1);
+    HashMap<std::string, int> hashmap;
 
     hashmap.emplace("hello", 1);
     hashmap.emplace("hi", 25);
@@ -111,6 +111,22 @@ int main()
 
     std::cout << "hashmap[\"hello\"]: " << hashmap["hello"] << std::endl;
     std::cout << "hashmap.at(\"hi\"): " << hashmap.at("hi") << std::endl;
+
+	HashMap<std::string, int> bucketCheck;
+	size_t buckets = bucketCheck.getBucketCount();
+	for(int i = 0; i < 100; ++i)
+	{
+		bucketCheck.emplace(std::format("Check{}", i), i);
+		if(buckets != bucketCheck.getBucketCount()) {
+			buckets = bucketCheck.getBucketCount();
+			std::cout << "New bucket count: " << buckets << std::endl;
+		}
+	}
+
+	for(auto &it : bucketCheck)
+	{
+		std::cout << it.first << " : " << it.second<<std::endl;
+	}
 
     return 0;
 }

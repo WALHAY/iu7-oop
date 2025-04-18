@@ -37,7 +37,7 @@ class HashMap : public BaseCollection
      * DEFAULT OPERATIONS
      */
     std::pair<iterator, bool> emplace(const K &key, const V &value);
-    std::pair<iterator, bool> emplace(std::pair<K, V> entry);
+    std::pair<iterator, bool> emplace(value_type entry);
 
     iterator find(const K &key);
     const_iterator find(const K &key) const;
@@ -95,7 +95,7 @@ class HashMap : public BaseCollection
     size_t getKeyHash(const K &key) const;
     size_type getBucket(const K &key) const;
 
-    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, const K &key, const V &value);
+    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, value_type& entry);
 
     const float maxLoadFactor = 1.0f;
     const float sizeFactor = 1.5f;

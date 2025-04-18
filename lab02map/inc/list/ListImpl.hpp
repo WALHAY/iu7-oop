@@ -38,7 +38,13 @@ List<T>::List(size_type size, const value_type &instance)
 template <typename T>
 auto List<T>::pushFront(const T &value) -> iterator
 {
-    head = std::make_shared<ListNode<T>>(value, head);
+    try
+    {
+        head = std::make_shared<ListNode<T>>(value, head);
+    } catch(std::bad_alloc e)
+	{
+		throw NodeAllocationException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
+	}
     return iterator(head);
 }
 
@@ -85,15 +91,15 @@ void List<T>::eraseNode(std::shared_ptr<ListNode<T>> remove)
 template <typename T>
 auto List<T>::pushBack(const T &value) -> iterator
 {
-	std::shared_ptr<ListNode<T>> node = nullptr;
+    std::shared_ptr<ListNode<T>> node = nullptr;
     try
     {
         node = std::make_shared<ListNode<T>>(value, nullptr);
     }
     catch (std::bad_alloc e)
     {
-		throw NodeAllocationException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
-		return end();
+        throw NodeAllocationException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
+        return end();
     }
 
     auto tail = head;

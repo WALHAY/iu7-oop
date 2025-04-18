@@ -2,6 +2,7 @@
 
 #include "hashmap/HashMap.hpp"
 #include <iostream>
+#include <ostream>
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
 HashMap<K, V, Hash>::HashMap() : HashMap(8)
@@ -38,17 +39,16 @@ bool HashMap<K, V, Hash>::contains(K &&key) const
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
 auto HashMap<K, V, Hash>::emplace(const K &key, const V &value) -> std::pair<iterator, bool>
 {
-    // TODO: implement
-    if (countLoadFactor() > maxLoadFactor)
-        rebuild();
-
-    return insert(buckets, key, value);
+    return emplace(std::make_pair(key, value));
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
-auto HashMap<K, V, Hash>::emplace(std::pair<K, V> entry) -> std::pair<iterator, bool>
+auto HashMap<K, V, Hash>::emplace(value_type entry) -> std::pair<iterator, bool>
 {
-    return emplace(entry.first, entry.second);
+    if (countLoadFactor() > maxLoadFactor)
+        rebuild();
+
+    return insert(buckets, entry);
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
@@ -73,12 +73,12 @@ bool HashMap<K, V, Hash>::erase(const K &key)
     size_type index = getBucket(key);
 
     auto it = std::find_if(begin(index), end(index), [&key](const value_type &value) { return value.first == key; });
-	if(it == end(index))
-		return false;
+    if (it == end(index))
+        return false;
 
-	buckets[index].erase(it);
+    buckets[index].erase(it);
 
-	return true;
+    return true;
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
@@ -173,7 +173,7 @@ auto HashMap<K, V, Hash>::getBucket(const K &key) const -> size_type
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
 size_t HashMap<K, V, Hash>::getKeyHash(const K &key) const
 {
-	return hasher(key);
+    return hasher(key);
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
@@ -185,28 +185,29 @@ float HashMap<K, V, Hash>::countLoadFactor() const
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
 void HashMap<K, V, Hash>::rebuild()
 {
-	std::cout << "Rebuild" << std::endl;
-	size_type nextSize = getNextPrime(getSize() * sizeFactor);
+    size_type nextSize = getNextPrime(static_cast<size_type>(getSize() * sizeFactor));
 
-	List<List<value_type>> nextBuckets(nextSize);
-	for(auto &it : *this)
-	{
-		insert(nextBuckets, it.first, it.second);
-	}
+    List<List<value_type>> nextBuckets(nextSize);
+    for (auto i = buckets.begin(); i != buckets.end(); ++i)
+    {
+        for (auto j = i->begin(); j != i->end(); ++j)
+        {
+            insert(nextBuckets, *j);
+        }
+    }
 
-	buckets = nextBuckets;
+    buckets = nextBuckets;
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>
-std::pair<typename HashMap<K, V, Hash>::iterator, bool> HashMap<K, V, Hash>::insert(List<List<value_type>> &buckets, const K &key,
-                                                                        const V &value)
+auto HashMap<K, V, Hash>::insert(List<List<value_type>> &buckets, value_type &entry) -> std::pair<iterator, bool>
 {
-    size_type index = getBucket(key);
+    size_t hash = getKeyHash(entry.first);
+    size_type index = hash % buckets.getSize();
     auto &bucket = buckets[index];
 
-    ListIterator<value_type> res = bucket.pushFront(std::make_pair(key, value));
-    HashMapIterator<K, V> iter(buckets.begin() + index, buckets.end(), res);
-    return std::make_pair(iter, true);
+    ListIterator<value_type> res = bucket.pushFront(entry);
+    return std::make_pair(iterator(buckets.begin() + index, buckets.end(), res), true);
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash>

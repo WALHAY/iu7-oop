@@ -23,13 +23,13 @@ ConstHashMapIterator<K, V>::ConstHashMapIterator(const buckets_iterator &current
 }
 
 template <typename K, typename V>
-auto ConstHashMapIterator<K, V>::operator->() const -> const_pointer
+auto ConstHashMapIterator<K, V>::operator->() const -> pointer
 {
     return &(elementIterator.getPtr()->getValueRef());
 }
 
 template <typename K, typename V>
-auto ConstHashMapIterator<K, V>::operator*() const -> const_reference
+auto ConstHashMapIterator<K, V>::operator*() const -> reference
 {
     return elementIterator.getPtr()->getValueRef();
 }
