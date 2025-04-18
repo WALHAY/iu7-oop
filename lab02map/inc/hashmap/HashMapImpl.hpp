@@ -26,7 +26,7 @@ template <ConvertibleIterator<typename HashMap<K, V, Hash, KeyEqual>::value_type
 HashMap<K, V, Hash, KeyEqual>::HashMap(Iter &&begin, Iter &&end) : HashMap()
 {
     for (Iter it = begin; it != end; ++it)
-        insert(std::forward<value_type>(*it));
+        insert(*it);
 }
 
 #pragma endregion constructors
@@ -35,15 +35,6 @@ template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFuncti
 HashMap<K, V, Hash, KeyEqual> &HashMap<K, V, Hash, KeyEqual>::operator=(const hashmap &map)
 {
     buckets = List<List<value_type>>(map.buckets);
-    return *this;
-}
-
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-HashMap<K, V, Hash, KeyEqual> &HashMap<K, V, Hash, KeyEqual>::operator=(std::initializer_list<value_type> ilist)
-{
-    clear();
-    for (auto &it : ilist)
-        insert(it);
     return *this;
 }
 

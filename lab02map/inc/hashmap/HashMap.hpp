@@ -41,7 +41,6 @@ class HashMap : public BaseCollection
 
     hashmap &operator=(const hashmap &map);
     hashmap &operator=(hashmap &&map) noexcept = default;
-    hashmap &operator=(std::initializer_list<value_type> ilist);
 
 #pragma region iterators
     iterator begin();
