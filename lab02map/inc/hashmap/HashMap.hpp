@@ -6,7 +6,7 @@
 #include "hashmap/iterators/HashMapIter.hpp"
 #include "list/iterators/ListIter.hpp"
 
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash = std::hash<K>>
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash = std::hash<K>, EqualFunction<K> KeyEqual = std::equal_to<K>>
 class HashMap : public BaseCollection
 {
     friend class HashMapIterator<K, V>;
@@ -17,18 +17,21 @@ class HashMap : public BaseCollection
     using value_type = std::pair<const K, V>;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
+	using hasher = Hash;
+	using key_equal = KeyEqual;
     using iterator = HashMapIterator<K, V>;
     using const_iterator = ConstHashMapIterator<K, V>;
     using local_iterator = List<value_type>::iterator;
+	using hashmap = HashMap<K, V, Hash, KeyEqual>;
 
     /*
      * CONSTRUCTORS
      */
     HashMap();
     explicit HashMap(size_type size);
-    HashMap(const std::initializer_list<value_type> &list);
-    HashMap(HashMap<K, V, Hash> &&map) = default;
-    HashMap(const HashMap<K, V, Hash> &map) = default;
+    HashMap(std::initializer_list<value_type> list);
+    HashMap(hashmap &&map) = default;
+    HashMap(const hashmap &map) = default;
 
     template <ConvertibleIterator<value_type> Iter>
     HashMap(Iter &&begin, Iter &&end);
@@ -80,6 +83,12 @@ class HashMap : public BaseCollection
     void setMaxLoadFactor(float maxLoadFactor) const;
     float getMaxLoadFactor() const;
 
+	/*
+	 * OBSERVERS
+	 */
+	key_equal getKeyEqual() const;
+	hasher getHashFunction() const;
+
   private:
     /*
      * REBUILD
@@ -101,7 +110,8 @@ class HashMap : public BaseCollection
     const float maxLoadFactor = 1.0f;
     const float sizeFactor = 1.5f;
 
-    const Hash hasher;
+    const Hash hashFunction;
+	const KeyEqual keyEqualFunction;
 
     List<List<value_type>> buckets;
 };

@@ -8,7 +8,12 @@ concept EqualityComparable = std::equality_comparable<T>;
 
 template <typename T, typename K>
 concept HashFunction = std::is_invocable_v<T, K> && requires(T a, K b) {
-    { T()(b) } -> std::convertible_to<std::size_t>;
+    { a(b) } -> std::convertible_to<std::size_t>;
+};
+
+template <typename T, typename K>
+concept EqualFunction = std::is_invocable_v<T, K, K> && requires(T a, K b, K c) {
+	{ a(b, c) } -> std::same_as<bool>;
 };
 
 template <typename T>
