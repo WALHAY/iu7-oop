@@ -2,134 +2,73 @@
 #include <iostream>
 #include <list/List.hpp>
 
+template<typename T>
+void printList(const List<T>& list)
+{
+	std::cout << "list: ";
+	for(auto &it : list)
+		std::cout << it << " ";
+	std::cout << "" << std::endl;
+}
+
+void checkList() {
+	List<int> list;
+	printList(list);
+	std::cout << "pushBack(10)\n";
+	list.pushBack(10);
+	printList(list);
+	std::cout << "pushFront(5)\n";
+	list.pushFront(5);
+	printList(list);
+	std::cout << "front: " << list.getFront() << std::endl;
+	std::cout << "back: " << list.getBack() << std::endl;
+	std::cout << "size: " << list.getSize() << std::endl;
+
+	std::cout << "popFront()\n";
+	list.popFront();
+	printList(list);
+
+	std::cout << "popBack()\n";
+	list.popBack();
+	printList(list);
+
+	std::cout << "resize(3)\n";
+	list.resize(3);
+	printList(list);
+
+	std::cout << "resize(10, 7)\n";
+	list.resize(10, 7);
+	printList(list);
+
+	std::cout << "list := {1, 2, 3, 4, 5}\n";
+	list = {1, 2, 3, 4, 5};
+	printList(list);
+
+	std::cout << "it = std::find(begin, end, 3)\n";
+	auto it = std:: find(list.begin(), list.end(), 3);
+	std::cout << "found: " << it << std::endl;
+
+	std::cout << "erase(it)\n";
+	list.erase(it);
+	printList(list);
+
+	std::cout << "list[3] = " << list[3] << std::endl;
+	std::cout << "list.at(2) = " << list.at(2) << std::endl;
+
+	std::cout << "clear()\n";
+	list.clear();
+	printList(list);
+
+	std::cout << "list = List<>(5, 5)\n";
+	list = List<int>(5, 5);
+	printList(list);
+
+	std::cout << "list = List<>(5)\n";
+	list = List<int>(5);
+	printList(list);
+}
+
 int main()
 {
-    std::cout << "\n--- Linked list zone ---" << std::endl;
-    List<std::string> strList;
-    std::cout << "Is empty: " << strList.isEmpty() << std::endl;
-    std::cout << "List insert head \"hello\"" << std::endl;
-    strList.pushFront("hello");
-    std::cout << "list.[0]: " << strList[0] << std::endl;
-    std::cout << "list.at(0): " << strList.at(0) << std::endl;
-
-    std::cout << "\nInsert head: cat & meow" << std::endl;
-    strList.pushFront("cat");
-    strList.pushFront("meow");
-
-    std::cout << "List size: " << strList.getSize() << std::endl;
-    std::cout << "Is empty: " << strList.isEmpty() << std::endl;
-    std::cout << "List: ";
-    for (auto &it : strList)
-        std::cout << it << " ";
-    std::cout << "\nHead: " << strList.getFront() << std::endl;
-    std::cout << "Tail: " << strList.getBack() << std::endl;
-
-    std::cout << "\nInsert tail: dog & brr" << std::endl;
-    strList.pushBack("dog");
-    strList.pushBack("brr");
-
-    std::cout << "List size: " << strList.getSize() << std::endl;
-    std::cout << "Is empty: " << strList.isEmpty() << std::endl;
-    std::cout << "List: ";
-    for (auto &it : strList)
-        std::cout << it << " ";
-    std::cout << "\nHead: " << strList.getFront() << std::endl;
-    std::cout << "Tail: " << strList.getBack() << std::endl;
-    std::cout << "\n";
-
-    std::cout << "List: ";
-    for (auto &it : strList)
-        std::cout << it << " ";
-    std::cout << "\nRemove head" << std::endl;
-    strList.popFront();
-    std::cout << "List: ";
-    for (auto &it : strList)
-        std::cout << it << " ";
-    std::cout << "\nList size: " << strList.getSize() << std::endl;
-    std::cout << "Head: " << strList.getFront() << std::endl;
-    std::cout << "Tail: " << strList.getBack() << "\n\n";
-
-    std::cout << "List: ";
-    for (auto &it : strList)
-        std::cout << it << " ";
-    std::cout << "\nRemove tail" << std::endl;
-    strList.popBack();
-    std::cout << "List: ";
-    for (auto &it : strList)
-        std::cout << it << " ";
-    std::cout << "\nList size: " << strList.getSize() << std::endl;
-    std::cout << "Head: " << strList.getFront() << std::endl;
-    std::cout << "Tail: " << strList.getBack() << std::endl;
-
-    List<std::string> copyList(strList);
-    std::cout << "\nCopied list: ";
-    for (auto &it : copyList)
-        std::cout << it << " ";
-
-    List<std::string> copyList2;
-    copyList2 = copyList;
-    std::cout << "\nCopied list 2: ";
-    for (auto &it : copyList2)
-        std::cout << it << " ";
-
-    List<std::string> initList = {"This", "initialized", "by", "list"};
-    std::cout << "\nList initializer: ";
-    for (auto &it : initList)
-        std::cout << it << " ";
-
-    std::cout << "\n\n2-Dim List:" << std::endl;
-    List<List<std::string>> doubleList;
-    doubleList.pushFront(strList);
-    doubleList.pushFront(initList);
-
-    for (auto &list : doubleList)
-    {
-        for (auto &str : list)
-        {
-            std::cout << str << " ";
-        }
-        std::cout << "\n";
-    }
-
-    std::cout << "\n--- HashMap zone ---" << std::endl;
-
-    HashMap<std::string, int> hashmap;
-
-    hashmap.insert("hello", 1);
-    hashmap.insert("hi", 25);
-    hashmap.insert("meow", 100);
-    hashmap.insert("cat", 123);
-    std::cout << "\nHashmap size: " << hashmap.getSize() << std::endl;
-
-    for (auto &it : hashmap)
-    {
-        std::cout << it.first << " : " << it.second << std::endl;
-    }
-
-    std::cout << "Removed: " << hashmap.erase("meow") << std::endl;
-	hashmap.insert_or_assign("cat", 321);
-
-    std::cout << "hashmap[\"hello\"]: " << hashmap["hello"] << std::endl;
-    std::cout << "hashmap.at(\"hi\"): " << hashmap.at("hi") << std::endl;
-
-    HashMap<std::string, int> bucketCheck;
-
-    List<std::pair<int, int>> pairList = {{1, 1}, {2, 3}, {5, 10}};
-
-    HashMap<int, int> pairMap(pairList.begin(), pairList.end());
-	pairMap = {{1, 3}, {3, 5}};
-
-    for (auto it = hashmap.cbegin(); it != hashmap.cend(); ++it)
-    {
-        std::cout << it->first << " " << it->second << std::endl;
-    }
-
-	auto it = hashmap.begin();
-	while(it)
-	{
-		std::cout << it->first << " " << it->second << std::endl;
-		++it;
-	}
-
-    return 0;
+	checkList();
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <exception>
 
 class BaseException : public std::exception
 {

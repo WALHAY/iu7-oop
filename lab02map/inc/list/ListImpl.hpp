@@ -59,6 +59,11 @@ void List<T>::popFront() noexcept
 template <typename T>
 void List<T>::popBack() noexcept
 {
+	if(head->next == nullptr) {
+		head = nullptr;
+		return;
+	}
+
     auto node = head;
     while (node != nullptr && node->next != nullptr && node->next->next != nullptr)
         node = node->next;

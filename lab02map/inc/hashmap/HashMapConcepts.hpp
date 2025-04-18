@@ -1,18 +1,19 @@
 #pragma once
 
 #include <concepts>
-#include <iterator>
 
 template <typename T>
 concept EqualityComparable = std::equality_comparable<T>;
 
 template <typename T, typename K>
-concept HashFunction = std::is_invocable_v<T, K> && requires(T a, K b) {
+concept HashFunction = requires(T a, const K& b) {
+	requires std::is_nothrow_invocable_v<T, const K&>;
     { a(b) } -> std::convertible_to<std::size_t>;
 };
 
 template <typename T, typename K>
-concept EqualFunction = std::is_invocable_v<T, K, K> && requires(T a, const K& b, const K& c) {
+concept EqualFunction = requires (T a, const K &b, const K &c) { 
+	requires std::is_invocable_v<T, const K&, const K&>;
 	{ a(b, c) } -> std::same_as<bool>;
 };
 
