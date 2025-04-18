@@ -37,9 +37,11 @@ class HashMapIterator : public BaseIterator
 	HashMapIterator<K, V> &operator+=(size_type offset);
 
     bool operator==(const HashMapIterator<K, V> &iterator) const;
-    bool operator!=(const HashMapIterator<K, V> &iterator) const;
+
+	bool isValid() const;
 
   protected:
+	void validateIterator(int line) const;
 	void moveNextBucket();
 
     local_iterator elementIterator;

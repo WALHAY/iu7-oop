@@ -22,19 +22,21 @@ HashMapIterator<K, V>::HashMapIterator(const buckets_iterator &current, const bu
 template <typename K, typename V>
 auto HashMapIterator<K, V>::operator->() const -> pointer
 {
+	validateIterator(__LINE__);
     return &(elementIterator.getPtr()->getValueRef());
 }
 
 template <typename K, typename V>
 auto HashMapIterator<K, V>::operator*() const -> reference
 {
+	validateIterator(__LINE__);
     return elementIterator.getPtr()->getValueRef();
 }
 
 template <typename K, typename V>
 HashMapIterator<K, V>::operator bool() const
 {
-    return elementIterator && currentBucket;
+    return isValid();
 }
 
 template <typename K, typename V>
@@ -48,6 +50,7 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator=(const HashMapIterator<K,
 template <typename K, typename V>
 HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
 {
+	validateIterator(__LINE__);
 	if(elementIterator)
     	++elementIterator;
     moveNextBucket();
@@ -57,6 +60,7 @@ HashMapIterator<K, V> &HashMapIterator<K, V>::operator++()
 template <typename K, typename V>
 HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int)
 {
+	validateIterator(__LINE__);
     iterator copy(*this);
     ++(*this);
     return copy;
@@ -65,6 +69,7 @@ HashMapIterator<K, V> HashMapIterator<K, V>::operator++(int)
 template <typename K, typename V>
 HashMapIterator<K, V> HashMapIterator<K, V>::operator+(size_type offset) const
 {
+	validateIterator(__LINE__);
     HashMapIterator<K, V> newIter(*this);
     return newIter + offset;
 }
@@ -85,9 +90,16 @@ bool HashMapIterator<K, V>::operator==(const HashMapIterator<K, V> &iterator) co
 }
 
 template <typename K, typename V>
-bool HashMapIterator<K, V>::operator!=(const HashMapIterator<K, V> &iterator) const
+bool HashMapIterator<K, V>::isValid() const
 {
-    return !(*this == iterator);
+	return currentBucket.isValid() && elementIterator.isValid();
+}
+
+template <typename K, typename V>
+void HashMapIterator<K, V>::validateIterator(int line) const
+{
+    if(!isValid())
+		throw InvalidIterator(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
 }
 
 template <typename K, typename V>

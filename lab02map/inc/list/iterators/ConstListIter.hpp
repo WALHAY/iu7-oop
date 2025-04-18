@@ -39,7 +39,6 @@ class ConstListIterator : public BaseIterator
     ConstListIterator<T> &operator=(const ConstListIterator<T> &other);
 
     bool operator==(const ConstListIterator<T> &other) const;
-    bool operator!=(const ConstListIterator<T> &other) const;
 
     bool isValid() const;
 

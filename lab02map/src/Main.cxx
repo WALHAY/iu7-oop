@@ -124,5 +124,12 @@ int main()
         std::cout << it->first << " " << it->second << std::endl;
     }
 
+	auto it = hashmap.begin();
+	while(it)
+	{
+		std::cout << it->first << " " << it->second << std::endl;
+		++it;
+	}
+
     return 0;
 }

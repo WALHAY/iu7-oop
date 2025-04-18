@@ -1,7 +1,7 @@
 #pragma once
 
-#include "list/List.hpp"
 #include "hashmap/HashMapConcepts.hpp"
+#include "list/List.hpp"
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
 class HashMap;
@@ -19,13 +19,13 @@ class ConstHashMapIterator : public BaseIterator
     using reference = const_value_type &;
     using local_iterator = List<value_type>::const_iterator;
     using iterator = ConstHashMapIterator<K, V>;
-	using buckets_iterator = List<List<value_type>>::const_iterator;
+    using buckets_iterator = List<List<value_type>>::const_iterator;
 
     ConstHashMapIterator() = default;
     ConstHashMapIterator(const buckets_iterator &current, const buckets_iterator &end);
     ConstHashMapIterator(const buckets_iterator &current, const buckets_iterator &end, const local_iterator &element);
 
-	operator bool () const;
+    operator bool() const;
 
     pointer operator->() const;
     reference operator*() const;
@@ -34,18 +34,20 @@ class ConstHashMapIterator : public BaseIterator
 
     ConstHashMapIterator<K, V> &operator++();
     ConstHashMapIterator<K, V> operator++(int);
-	ConstHashMapIterator<K, V> operator+(size_type offset) const;
-	ConstHashMapIterator<K, V> &operator+=(size_type offset);
+    ConstHashMapIterator<K, V> operator+(size_type offset) const;
+    ConstHashMapIterator<K, V> &operator+=(size_type offset);
 
     bool operator==(const ConstHashMapIterator<K, V> &iterator) const;
-    bool operator!=(const ConstHashMapIterator<K, V> &iterator) const;
+
+    bool isValid() const;
 
   protected:
-	void moveNextBucket();
+    void validateIterator(int line) const;
+    void moveNextBucket();
 
     local_iterator elementIterator;
-	buckets_iterator currentBucket;
-	buckets_iterator endBucket;
+    buckets_iterator currentBucket;
+    buckets_iterator endBucket;
 };
 
 #include <hashmap/iterators/ConstHashMapIterImpl.hpp>

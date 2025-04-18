@@ -70,6 +70,7 @@ ConstListIterator<T> ConstListIterator<T>::operator++(int)
 template <typename T>
 ConstListIterator<T> ConstListIterator<T>::operator+(size_type offset) const
 {
+	validatePtr(__LINE__);
     ConstListIterator<T> offsetIter(*this);
     while (offset-- > 0)
         ++offsetIter;
@@ -79,7 +80,7 @@ ConstListIterator<T> ConstListIterator<T>::operator+(size_type offset) const
 template <typename T>
 ConstListIterator<T> &ConstListIterator<T>::operator+=(size_type offset)
 {
-
+	validatePtr(__LINE__);
     while (offset-- > 0)
         ++(*this);
     return *this;
@@ -96,12 +97,6 @@ template <typename T>
 bool ConstListIterator<T>::operator==(const ConstListIterator<T> &other) const
 {
     return other.nodePtr.lock() == nodePtr.lock();
-}
-
-template <typename T>
-bool ConstListIterator<T>::operator!=(const ConstListIterator<T> &other) const
-{
-    return !(*this == other);
 }
 
 template <typename T>
