@@ -25,9 +25,7 @@ class HashMap : public BaseCollection
     using const_local_iterator = List<value_type>::const_iterator;
 	using hashmap = HashMap<K, V, Hash, KeyEqual>;
 
-    /*
-     * CONSTRUCTORS
-     */
+#pragma region constructors
     HashMap();
     explicit HashMap(size_type size);
     HashMap(std::initializer_list<value_type> list);
@@ -36,33 +34,33 @@ class HashMap : public BaseCollection
 
     template <ConvertibleIterator<value_type> Iter>
     HashMap(Iter &&begin, Iter &&end);
+#pragma endregion constructors
 
     virtual ~HashMap() = default;
 
-    /*
-     * MODIFIERS
-     */
-    std::pair<iterator, bool> emplace(const K &key, const V &value);
-    std::pair<iterator, bool> emplace(value_type entry);
+	hashmap &operator=(const hashmap &map);
+	hashmap &operator=(hashmap &&map) noexcept = default;
 
-    bool erase(const K &key);
-    iterator erase(iterator pos);
-
-    virtual void clear() override;
-
-    /*
-     * ITERATORS
-     */
+#pragma region iterators
     iterator begin();
     iterator end();
     const_iterator begin() const;
     const_iterator end() const;
     const_iterator cbegin() const;
     const_iterator cend() const;
+#pragma endregion iterators
 
-	/*
-	 * LOOKUP
-	 */
+#pragma region modifiers
+    virtual void clear() override;
+
+    std::pair<iterator, bool> emplace(const K &key, const V &value);
+    std::pair<iterator, bool> emplace(value_type entry);
+
+    bool erase(const K &key);
+    iterator erase(iterator pos);
+#pragma endregion modifiers
+
+#pragma region lookup
     V &at(const K &key);
     const V &at(const K &key) const;
 
@@ -74,10 +72,9 @@ class HashMap : public BaseCollection
 
     bool contains(const K &key) const;
     bool contains(K &&key) const;
+#pragma endregion lookup
 
-	/*
-	 * BUCKET INTERFACE
-	 */
+#pragma region bucket interface
     local_iterator begin(size_type bucket);
     local_iterator end(size_type bucket);
     const_local_iterator begin(size_type bucket) const;
@@ -90,38 +87,33 @@ class HashMap : public BaseCollection
 	List<value_type>::size_type getBucketSize(size_type bucket) const;
 
     size_type getBucket(const K &key) const;
+#pragma endregion bucket interface
 
-	/*
-	 * HASH POLICY
-	 */
-
-    void setMaxLoadFactor(float maxLoadFactor) const;
+#pragma region hash policy
+    void setMaxLoadFactor(float maxLoadFactor);
     float getMaxLoadFactor() const;
 
 	void rehash(size_type buckets);
 	void reserve(size_type elements);
+#pragma endregion hash policy
 
-	/*
-	 * OBSERVERS
-	 */
+#pragma region observers
 	key_equal getKeyEqual() const;
 	hasher getHashFunction() const;
 
     virtual size_type getSize() const override;
+#pragma endregion observers
 
   private:
-    /*
-     * REBUILD
-     */
     void rebuild();
     float countLoadFactor() const;
+
+    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, value_type &entry);
 
     bool isPrime(size_type value) const;
     size_type getNextPrime(size_type size) const;
 
-    std::pair<iterator, bool> insert(List<List<value_type>> &buckets, value_type &entry);
-
-    const float maxLoadFactor = 1.0f;
+    float maxLoadFactor = 1.0f;
     const float sizeFactor = 1.5f;
 
     const Hash hashFunction;
