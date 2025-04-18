@@ -186,8 +186,8 @@ template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFuncti
 bool HashMap<K, V, Hash, KeyEqual>::contains(const K &key) const
 {
     size_type bucket = getBucket(key);
-
-    return false;
+    return std::any_of(begin(index), end(index),
+                       [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
@@ -227,13 +227,13 @@ auto HashMap<K, V, Hash, KeyEqual>::end(size_type bucket) const -> const_local_i
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 auto HashMap<K, V, Hash, KeyEqual>::cbegin(size_type bucket) const -> const_local_iterator
 {
-    return buckets[bucket].begin();
+    return buckets[bucket].cbegin();
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 auto HashMap<K, V, Hash, KeyEqual>::cend(size_type bucket) const -> const_local_iterator
 {
-    return buckets[bucket].end();
+    return buckets[bucket].cend();
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
@@ -277,7 +277,7 @@ void HashMap<K, V, Hash, KeyEqual>::rehash(size_type count)
 
     List<List<value_type>> newBuckets(nextSize);
 
-	for(auto &it : *this)
+    for (auto &it : *this)
     {
         insert(newBuckets, it);
     }
@@ -332,9 +332,11 @@ auto HashMap<K, V, Hash, KeyEqual>::insert(List<List<value_type>> &buckets, cons
     size_type index = hash % buckets.getSize();
     auto &bucket = buckets[index];
 
-	auto coll = find_if(bucket.begin(), bucket.end(), [&entry, this](const value_type& value){return this->keyEqualFunction(value.first, entry.first);});
-	if(coll != bucket.end())
-		return std::make_pair(iterator(buckets.begin() + index, buckets.end(), coll), false);
+    auto coll = find_if(bucket.begin(), bucket.end(), [&entry, this](const value_type &value) {
+        return this->keyEqualFunction(value.first, entry.first);
+    });
+    if (coll != bucket.end())
+        return std::make_pair(iterator(buckets.begin() + index, buckets.end(), coll), false);
 
     auto res = bucket.pushFront(entry);
     return std::make_pair(iterator(buckets.begin() + index, buckets.end(), res), true);

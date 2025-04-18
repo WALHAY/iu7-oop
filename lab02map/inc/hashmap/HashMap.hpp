@@ -63,7 +63,6 @@ class HashMap : public BaseCollection
     std::pair<iterator, bool> insert(const value_type &value);
 
     bool erase(const K &key);
-    iterator erase(iterator pos);
 #pragma endregion modifiers
 
 #pragma region lookup
