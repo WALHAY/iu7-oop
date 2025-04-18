@@ -1,7 +1,9 @@
 #pragma once
 
 #include "hashmap/HashMap.hpp"
+#include <algorithm>
 #include <cmath>
+#include <iostream>
 
 #pragma region constructors
 
@@ -100,7 +102,7 @@ void HashMap<K, V, Hash, KeyEqual>::insert_or_assign(const value_type &value)
 {
     auto result = insert(value);
     if (!result.second)
-        result.first->second = value;
+        result.first->second = value.second;
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
@@ -183,11 +185,11 @@ auto HashMap<K, V, Hash, KeyEqual>::find(const K &key) const -> const_iterator
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-bool HashMap<K, V, Hash, KeyEqual>::contains(const K &key) const
+bool HashMap<K, V, Hash, KeyEqual>::contains(const K &key)
 {
-    size_type bucket = getBucket(key);
-    return std::find_if(begin(index), end(index),
-                       [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); }) != end(index);
+	size_type index = getBucket(key);
+
+	return std::any_of(begin(index), end(index), [this,&key](const value_type& value){return this->keyEqualFunction(value.first, key);});
 }
 
 #pragma endregion lookup

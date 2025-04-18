@@ -73,8 +73,7 @@ class HashMap : public BaseCollection
     iterator find(const K &key);
     const_iterator find(const K &key) const;
 
-    bool contains(const K &key) const;
-    bool contains(K &&key) const;
+    bool contains(const K &key);
 #pragma endregion lookup
 
 #pragma region bucket interface

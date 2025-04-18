@@ -1,6 +1,7 @@
 #pragma once
 
 #include "List.hpp"
+#include <iostream>
 #include <list/ListExceptions.hpp>
 
 template <typename T>
@@ -59,10 +60,11 @@ void List<T>::popFront() noexcept
 template <typename T>
 void List<T>::popBack() noexcept
 {
-	if(head->next == nullptr) {
-		head = nullptr;
-		return;
-	}
+    if (head->next == nullptr)
+    {
+        head = nullptr;
+        return;
+    }
 
     auto node = head;
     while (node != nullptr && node->next != nullptr && node->next->next != nullptr)
@@ -72,7 +74,7 @@ void List<T>::popBack() noexcept
 }
 
 template <typename T>
-void List<T>::erase(iterator iterator)
+void List<T>::erase(const iterator &iterator)
 {
     eraseNode(iterator.getPtr());
 }
@@ -89,6 +91,7 @@ void List<T>::eraseNode(std::shared_ptr<ListNode<T>> remove)
         if (node->next == remove)
         {
             node->next = remove->next;
+            return;
         }
         node = node->next;
     }
@@ -143,8 +146,8 @@ void List<T>::clear() noexcept
 template <typename T>
 auto List<T>::at(size_type index) -> reference
 {
-	validateGet(__LINE__);
-	validateIndex(__LINE__);
+    validateGet(__LINE__);
+    validateIndex(__LINE__);
 
     auto node = head;
     while (index-- != 0 && node != nullptr)
@@ -174,7 +177,7 @@ auto List<T>::operator[](size_type index) const -> const_reference
 template <typename T>
 auto List<T>::getFront() -> reference
 {
-	validateGet(__LINE__);
+    validateGet(__LINE__);
     return head->value;
 }
 
@@ -187,7 +190,7 @@ auto List<T>::getFront() const -> const_reference
 template <typename T>
 auto List<T>::getBack() -> reference
 {
-	validateGet(__LINE__);
+    validateGet(__LINE__);
     auto node = head;
     while (node != nullptr && node->next != nullptr)
         node = node->next;
@@ -267,13 +270,13 @@ auto List<T>::cend() const -> const_iterator
 template <typename T>
 void List<T>::validateGet(int line) const
 {
-	if(head == nullptr)
-		throw EmptyListException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
+    if (head == nullptr)
+        throw EmptyListException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
 }
 
 template <typename T>
 void List<T>::validateIndex(int line) const
 {
-	if(head == nullptr)
-		throw InvalidIndexAccessException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
+    if (head == nullptr)
+        throw InvalidIndexAccessException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
 }

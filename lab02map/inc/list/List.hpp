@@ -40,7 +40,7 @@ class List : public BaseCollection
     void popFront() noexcept;
     void popBack() noexcept;
 
-    void erase(iterator pos);
+    void erase(const iterator& pos);
 
     virtual void clear() noexcept override;
 
