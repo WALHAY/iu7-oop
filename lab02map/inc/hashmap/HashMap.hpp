@@ -93,8 +93,8 @@ class HashMap : public BaseCollection
     void setMaxLoadFactor(float maxLoadFactor);
     float getMaxLoadFactor() const;
 
-	void rehash(size_type buckets);
-	void reserve(size_type elements);
+	void rehash(size_type count);
+	void reserve(size_type count);
 #pragma endregion hash policy
 
 #pragma region observers
@@ -105,7 +105,6 @@ class HashMap : public BaseCollection
 #pragma endregion observers
 
   private:
-    void rebuild();
     float countLoadFactor() const;
 
     std::pair<iterator, bool> insert(List<List<value_type>> &buckets, value_type &entry);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "hashmap/HashMap.hpp"
+#include <cmath>
 
 #pragma region constructors
 
@@ -94,7 +95,7 @@ template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFuncti
 auto HashMap<K, V, Hash, KeyEqual>::emplace(value_type entry) -> std::pair<iterator, bool>
 {
     if (countLoadFactor() > maxLoadFactor)
-        rebuild();
+        rehash(getBucketCount() + 1);
 
     return insert(buckets, entry);
 }
@@ -249,6 +250,26 @@ float HashMap<K, V, Hash, KeyEqual>::getMaxLoadFactor() const
 	return maxLoadFactor;
 }
 
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
+void HashMap<K, V, Hash, KeyEqual>::rehash(size_type count) {
+	size_type nextSize = getNextPrime(std::max(static_cast<size_type>(getSize() / getMaxLoadFactor()), count));
+
+	List<List<value_type>> newBuckets(nextSize);
+
+	for(auto it = begin(); it != end(); ++it)
+	{
+		insert(newBuckets, *it);
+	}
+
+	buckets = newBuckets;
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
+void HashMap<K, V, Hash, KeyEqual>::reserve(size_type count) 
+{
+	rehash(std::ceil(count / getMaxLoadFactor()));
+}
+
 #pragma endregion hash policy
 
 #pragma region observers
@@ -280,20 +301,6 @@ template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFuncti
 float HashMap<K, V, Hash, KeyEqual>::countLoadFactor() const
 {
     return static_cast<float>(getSize()) / getBucketCount();
-}
-
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-void HashMap<K, V, Hash, KeyEqual>::rebuild()
-{
-    size_type nextSize = getNextPrime(static_cast<size_type>(getSize() * sizeFactor));
-
-    List<List<value_type>> nextBuckets(nextSize);
-    for (auto it = begin(); it != end(); ++it)
-    {
-        insert(nextBuckets, *it);
-    }
-
-    buckets = nextBuckets;
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
