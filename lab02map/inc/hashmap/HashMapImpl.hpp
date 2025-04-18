@@ -156,6 +156,8 @@ auto HashMap<K, V, Hash, KeyFunction>::cend() const -> const_iterator
     return const_iterator(buckets.cend(), buckets.cend());
 }
 
+#pragma region bucket_interface
+
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
 auto HashMap<K, V, Hash, KeyFunction>::begin(size_type bucket) -> local_iterator
 {
@@ -169,6 +171,50 @@ auto HashMap<K, V, Hash, KeyFunction>::end(size_type bucket) -> local_iterator
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
+auto HashMap<K, V, Hash, KeyFunction>::begin(size_type bucket) const -> const_local_iterator
+{
+    return buckets[bucket].begin();
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
+auto HashMap<K, V, Hash, KeyFunction>::end(size_type bucket) const -> const_local_iterator
+{
+    return buckets[bucket].end();
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
+auto HashMap<K, V, Hash, KeyFunction>::cbegin(size_type bucket) const -> const_local_iterator
+{
+    return buckets[bucket].begin();
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
+auto HashMap<K, V, Hash, KeyFunction>::cend(size_type bucket) const -> const_local_iterator
+{
+    return buckets[bucket].end();
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
+auto HashMap<K, V, Hash, KeyFunction>::getBucketCount() const -> size_type
+{
+    return buckets.getSize();
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
+auto HashMap<K, V, Hash, KeyFunction>::getBucketSize(size_type bucket) const -> List<value_type>::size_type
+{
+    return buckets[bucket].getSize();
+}
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
+auto HashMap<K, V, Hash, KeyFunction>::getBucket(const K &key) const -> size_type
+{
+    return hashFunction(key) % getBucketCount();
+}
+
+#pragma endregion bucket_interface
+
+template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
 auto HashMap<K, V, Hash, KeyFunction>::getKeyEqual() const -> key_equal {
 	return keyEqualFunction;
 }
@@ -176,18 +222,6 @@ auto HashMap<K, V, Hash, KeyFunction>::getKeyEqual() const -> key_equal {
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
 auto HashMap<K, V, Hash, KeyFunction>::getHashFunction() const -> hasher {
 	return hashFunction;
-}
-
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
-auto HashMap<K, V, Hash, KeyFunction>::getBucket(const K &key) const -> size_type
-{
-    return getKeyHash(key) % getBucketCount();
-}
-
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
-size_t HashMap<K, V, Hash, KeyFunction>::getKeyHash(const K &key) const
-{
-    return hashFunction(key);
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
@@ -216,7 +250,7 @@ void HashMap<K, V, Hash, KeyFunction>::rebuild()
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
 auto HashMap<K, V, Hash, KeyFunction>::insert(List<List<value_type>> &buckets, value_type &entry) -> std::pair<iterator, bool>
 {
-    size_t hash = getKeyHash(entry.first);
+    size_t hash = hashFunction(entry.first);
     size_type index = hash % buckets.getSize();
     auto &bucket = buckets[index];
 
@@ -239,12 +273,6 @@ bool HashMap<K, V, Hash, KeyFunction>::isPrime(size_type value) const
         if (value % i == 0)
             return false;
     return true;
-}
-
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>
-auto HashMap<K, V, Hash, KeyFunction>::getBucketCount() const -> size_type
-{
-    return buckets.getSize();
 }
 
 template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyFunction>

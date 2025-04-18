@@ -22,6 +22,7 @@ class HashMap : public BaseCollection
     using iterator = HashMapIterator<K, V>;
     using const_iterator = ConstHashMapIterator<K, V>;
     using local_iterator = List<value_type>::iterator;
+    using const_local_iterator = List<value_type>::const_iterator;
 	using hashmap = HashMap<K, V, Hash, KeyEqual>;
 
     /*
@@ -39,30 +40,15 @@ class HashMap : public BaseCollection
     virtual ~HashMap() = default;
 
     /*
-     * DEFAULT OPERATIONS
+     * MODIFIERS
      */
     std::pair<iterator, bool> emplace(const K &key, const V &value);
     std::pair<iterator, bool> emplace(value_type entry);
-
-    iterator find(const K &key);
-    const_iterator find(const K &key) const;
-
-    bool contains(const K &key) const;
-    bool contains(K &&key) const;
 
     bool erase(const K &key);
     iterator erase(iterator pos);
 
     virtual void clear() override;
-
-    /*
-     * KEY ACCESS
-     */
-    V &at(const K &key);
-    const V &at(const K &key) const;
-
-    V &operator[](const K &key);
-    const V &operator[](const K &key) const;
 
     /*
      * ITERATORS
@@ -74,20 +60,54 @@ class HashMap : public BaseCollection
     const_iterator cbegin() const;
     const_iterator cend() const;
 
+	/*
+	 * LOOKUP
+	 */
+    V &at(const K &key);
+    const V &at(const K &key) const;
+
+    V &operator[](const K &key);
+    const V &operator[](const K &key) const;
+
+    iterator find(const K &key);
+    const_iterator find(const K &key) const;
+
+    bool contains(const K &key) const;
+    bool contains(K &&key) const;
+
+	/*
+	 * BUCKET INTERFACE
+	 */
     local_iterator begin(size_type bucket);
     local_iterator end(size_type bucket);
+    const_local_iterator begin(size_type bucket) const;
+    const_local_iterator end(size_type bucket) const;
+    const_local_iterator cbegin(size_type bucket) const;
+    const_local_iterator cend(size_type bucket) const;
 
     size_type getBucketCount() const;
-    virtual size_type getSize() const override;
+
+	List<value_type>::size_type getBucketSize(size_type bucket) const;
+
+    size_type getBucket(const K &key) const;
+
+	/*
+	 * HASH POLICY
+	 */
 
     void setMaxLoadFactor(float maxLoadFactor) const;
     float getMaxLoadFactor() const;
+
+	void rehash(size_type buckets);
+	void reserve(size_type elements);
 
 	/*
 	 * OBSERVERS
 	 */
 	key_equal getKeyEqual() const;
 	hasher getHashFunction() const;
+
+    virtual size_type getSize() const override;
 
   private:
     /*
@@ -98,12 +118,6 @@ class HashMap : public BaseCollection
 
     bool isPrime(size_type value) const;
     size_type getNextPrime(size_type size) const;
-
-    /*
-     * KEYS & HASH
-     */
-    size_t getKeyHash(const K &key) const;
-    size_type getBucket(const K &key) const;
 
     std::pair<iterator, bool> insert(List<List<value_type>> &buckets, value_type &entry);
 
