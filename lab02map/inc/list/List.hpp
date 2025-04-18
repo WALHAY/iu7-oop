@@ -44,11 +44,11 @@ class List : public BaseCollection
 
     virtual void clear() noexcept override;
 
-    reference getFront() noexcept;
-    const_reference getFront() const noexcept;
+    reference getFront();
+    const_reference getFront() const;
 
-    reference getBack() noexcept;
-    const_reference getBack() const noexcept;
+    reference getBack();
+    const_reference getBack() const;
 
     void resize(size_type size)
         requires DefaultConstructible<T>;
@@ -73,6 +73,9 @@ class List : public BaseCollection
     const_iterator cend() const;
 
   protected:
+	void validateGet(int line) const;
+	void validateIndex(int line) const;
+
     void eraseNode(std::shared_ptr<ListNode<T>> node);
 
     std::shared_ptr<ListNode<T>> head;

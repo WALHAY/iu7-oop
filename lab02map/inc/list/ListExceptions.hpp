@@ -22,3 +22,13 @@ class NodeAllocationException : public BaseException
     {
     }
 };
+
+class EmptyListException : public BaseException
+{
+  public:
+    EmptyListException(const std::string &filename, const std::string &classname, const std::string &method,
+                                int line)
+        : BaseException(filename, classname, method, line, "Trying to get value in empty list")
+    {
+    }
+};

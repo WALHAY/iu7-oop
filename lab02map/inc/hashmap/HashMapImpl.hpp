@@ -142,7 +142,7 @@ V &HashMap<K, V, Hash, KeyEqual>::at(const K &key)
 {
     auto it = find(key);
     if (it == end())
-        throw OutOfRangeException(__FILE_NAME__, typeid(*this).name(), __PRETTY_FUNCTION__, __LINE__);
+        throw InvalidKeyException(__FILE_NAME__, typeid(*this).name(), __PRETTY_FUNCTION__, __LINE__);
 
     return it->second;
 }
@@ -188,12 +188,6 @@ bool HashMap<K, V, Hash, KeyEqual>::contains(const K &key) const
     size_type bucket = getBucket(key);
     return std::any_of(begin(index), end(index),
                        [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
-}
-
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-bool HashMap<K, V, Hash, KeyEqual>::contains(K &&key) const
-{
-    return contains(key);
 }
 
 #pragma endregion lookup

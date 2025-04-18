@@ -10,8 +10,6 @@ template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash = std::hash<
           EqualFunction<K> KeyEqual = std::equal_to<K>>
 class HashMap : public BaseCollection
 {
-    friend class HashMapIterator<K, V>;
-
   public:
     using key_type = K;
     using mapped_type = V;

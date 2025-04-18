@@ -41,10 +41,11 @@ auto List<T>::pushFront(const T &value) -> iterator
     try
     {
         head = std::make_shared<ListNode<T>>(value, head);
-    } catch(std::bad_alloc e)
-	{
-		throw NodeAllocationException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
-	}
+    }
+    catch (std::bad_alloc e)
+    {
+        throw NodeAllocationException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
+    }
     return iterator(head);
 }
 
@@ -99,7 +100,6 @@ auto List<T>::pushBack(const T &value) -> iterator
     catch (std::bad_alloc e)
     {
         throw NodeAllocationException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, __LINE__);
-        return end();
     }
 
     auto tail = head;
@@ -138,12 +138,12 @@ void List<T>::clear() noexcept
 template <typename T>
 auto List<T>::at(size_type index) -> reference
 {
+	validateGet(__LINE__);
+	validateIndex(__LINE__);
+
     auto node = head;
     while (index-- != 0 && node != nullptr)
         node = node->next;
-
-    if (node == nullptr && index != 0)
-        throw InvalidIndexAccessException(__FILE_NAME__, typeid(*this).name(), __PRETTY_FUNCTION__, __LINE__);
 
     return node->value;
 }
@@ -167,20 +167,22 @@ auto List<T>::operator[](size_type index) const -> const_reference
 }
 
 template <typename T>
-auto List<T>::getFront() noexcept -> reference
+auto List<T>::getFront() -> reference
 {
+	validateGet(__LINE__);
     return head->value;
 }
 
 template <typename T>
-auto List<T>::getFront() const noexcept -> const_reference
+auto List<T>::getFront() const -> const_reference
 {
     return getFront();
 }
 
 template <typename T>
-auto List<T>::getBack() noexcept -> reference
+auto List<T>::getBack() -> reference
 {
+	validateGet(__LINE__);
     auto node = head;
     while (node != nullptr && node->next != nullptr)
         node = node->next;
@@ -189,7 +191,7 @@ auto List<T>::getBack() noexcept -> reference
 }
 
 template <typename T>
-auto List<T>::getBack() const noexcept -> const_reference
+auto List<T>::getBack() const -> const_reference
 {
     return getBack();
 }
@@ -255,4 +257,18 @@ template <typename T>
 auto List<T>::cend() const -> const_iterator
 {
     return const_iterator(nullptr);
+}
+
+template <typename T>
+void List<T>::validateGet(int line) const
+{
+	if(head == nullptr)
+		throw EmptyListException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
+}
+
+template <typename T>
+void List<T>::validateIndex(int line) const
+{
+	if(head == nullptr)
+		throw InvalidIndexAccessException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
 }

@@ -3,10 +3,10 @@
 #include "collection/BaseException.hpp"
 #include <string>
 
-class OutOfRangeException : public BaseException
+class InvalidKeyException : public BaseException
 {
   public:
-    OutOfRangeException(const std::string &filename, const std::string &classname, const std::string &method, int line)
+    InvalidKeyException(const std::string &filename, const std::string &classname, const std::string &method, int line)
         : BaseException(filename, classname, method, line, "Invalid key access")
     {
     }
