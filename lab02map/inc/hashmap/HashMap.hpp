@@ -29,7 +29,7 @@ class HashMap : public BaseCollection
     explicit HashMap(size_type size);
     HashMap(std::initializer_list<value_type> list);
     HashMap(hashmap &&map) = default;
-    HashMap(const hashmap &map) = default;
+    explicit HashMap(const hashmap &map) = default;
 
     template <ConvertibleIterator<value_type> Iter>
     HashMap(Iter &&begin, Iter &&end);
@@ -55,12 +55,10 @@ class HashMap : public BaseCollection
     void insert_or_assign(const K &key, const V &value);
     void insert_or_assign(const value_type &value);
 
-    template <ConvertibleIterator<value_type> Iter>
-    void insert(Iter &&begin, Iter &&end);
     std::pair<iterator, bool> insert(const K &key, const V &value);
     std::pair<iterator, bool> insert(const value_type &value);
 
-    bool erase(const K &key)noexcept;
+    bool erase(const K &key) noexcept;
 #pragma endregion modifiers
 
 #pragma region lookup
@@ -107,7 +105,7 @@ class HashMap : public BaseCollection
 #pragma endregion observers
 
   private:
-	void validateBucketIndex(size_type index, int line);
+    void validateBucketIndex(size_type index, int line);
     float countLoadFactor() const;
 
     std::pair<iterator, bool> insert(List<List<value_type>> &buckets, const value_type &entry);
@@ -115,12 +113,13 @@ class HashMap : public BaseCollection
     bool isPrime(size_type value) const;
     size_type getNextPrime(size_type size) const;
 
-    float maxLoadFactor = 1.0f;
-
     const Hash hashFunction;
     const KeyEqual keyEqualFunction;
 
     List<List<value_type>> buckets;
+
+    float maxLoadFactor = 1.0f;
+	static constexpr size_type initialSize = 8;
 };
 
 #include <hashmap/HashMapImpl.hpp>

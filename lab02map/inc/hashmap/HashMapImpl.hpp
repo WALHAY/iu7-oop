@@ -3,11 +3,12 @@
 #include "hashmap/HashMap.hpp"
 #include <algorithm>
 #include <cmath>
+#include <numeric>
 
 #pragma region constructors
 
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-HashMap<K, V, Hash, KeyEqual>::HashMap() : HashMap(8)
+HashMap<K, V, Hash, KeyEqual>::HashMap() : HashMap(initialSize)
 {
 }
 
@@ -124,7 +125,7 @@ bool HashMap<K, V, Hash, KeyEqual>::erase(const K &key) noexcept
 {
     size_type index = getBucket(key);
 
-    auto it = std::find_if(begin(index), end(index),
+    auto it = std::ranges::find_if(begin(index), end(index),
                            [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
     if (it == end(index))
         return false;
@@ -171,7 +172,7 @@ auto HashMap<K, V, Hash, KeyEqual>::find(const K &key) -> iterator
 {
     size_type index = getBucket(key);
 
-    auto it = std::find_if(begin(index), end(index),
+    auto it = std::ranges::find_if(begin(index), end(index),
                            [&key, this](const value_type &value) { return this->keyEqualFunction(value.first, key); });
 
     return iterator(buckets.begin() + index, buckets.end(), it);
@@ -188,7 +189,7 @@ bool HashMap<K, V, Hash, KeyEqual>::contains(const K &key)
 {
 	size_type index = getBucket(key);
 
-	return std::any_of(begin(index), end(index), [this,&key](const value_type& value){return this->keyEqualFunction(value.first, key);});
+	return std::ranges::any_of(begin(index), end(index), [this,&key](const value_type& value){return this->keyEqualFunction(value.first, key);});
 }
 
 #pragma endregion lookup
@@ -315,7 +316,7 @@ auto HashMap<K, V, Hash, KeyEqual>::getSize() const -> size_type
     size_type size = 0;
     for (auto &bucket : buckets)
         size += bucket.getSize();
-    return size;
+	return size;
 }
 
 #pragma endregion observers

@@ -22,18 +22,38 @@ class List : public BaseCollection
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
 
+#pragma region constructors
     List();
     List(std::initializer_list<T> list);
     List(const List<T> &list) = default;
     List(List<T> &&list) noexcept = default;
+
     explicit List(size_type size)
         requires DefaultConstructible<T>;
+
     List(size_type size, const value_type &instance)
         requires CopyConstructible<T>;
 
     template <ConvertibleIterator<T> Iter>
     List(Iter &&begin, Iter &&end);
+#pragma endregion constructors
 
+	~List() = default;
+
+    List<T> &operator=(const List<T> &list);
+    List<T> &operator=(List<T> &&list) noexcept = default;
+
+#pragma region iterators
+
+    iterator begin();
+    iterator end();
+    const_iterator begin() const;
+    const_iterator end() const;
+    const_iterator cbegin() const;
+    const_iterator cend() const;
+#pragma endregion iterators
+
+#pragma region modifiers
     iterator pushFront(const T &value);
     iterator pushBack(const T &value);
 
@@ -43,34 +63,29 @@ class List : public BaseCollection
     void erase(const iterator& pos) noexcept;
 
     virtual void clear() noexcept override;
+#pragma endregion modifiers
 
+#pragma region lookup
     reference getFront();
     const_reference getFront() const;
 
     reference getBack();
     const_reference getBack() const;
 
+    reference at(size_type index);
+    const_reference at(size_type index) const;
+    reference operator[](size_type index);
+    const_reference operator[](size_type index) const;
+#pragma endregion lookup
+
+#pragma region size policy
     void resize(size_type size)
         requires DefaultConstructible<T>;
     void resize(size_type size, const value_type &instance)
         requires CopyConstructible<T>;
 
     virtual size_type getSize() const noexcept override;
-
-    reference at(size_type index);
-    const_reference at(size_type index) const;
-    reference operator[](size_type index);
-    const_reference operator[](size_type index) const;
-
-    List<T> &operator=(const List<T> &list);
-    List<T> &operator=(List<T> &&list) noexcept = default;
-
-    iterator begin();
-    iterator end();
-    const_iterator begin() const;
-    const_iterator end() const;
-    const_iterator cbegin() const;
-    const_iterator cend() const;
+#pragma endregion size policy
 
   protected:
 	void validateGet(int line) const;

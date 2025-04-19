@@ -1,7 +1,6 @@
 #pragma once
 
 #include "collection/BaseException.hpp"
-#include <string>
 
 class InvalidKeyException : public BaseException
 {
