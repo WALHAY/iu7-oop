@@ -74,13 +74,14 @@ void List<T>::popBack() noexcept
 }
 
 template <MoveAndCopy T>
-void List<T>::erase(const iterator &iterator)
+void List<T>::erase(const iterator &iterator) noexcept
 {
-    eraseNode(iterator.getPtr());
+	if(iterator)
+    	eraseNode(iterator.getPtr());
 }
 
 template <MoveAndCopy T>
-void List<T>::eraseNode(std::shared_ptr<ListNode<T>> remove)
+void List<T>::eraseNode(std::shared_ptr<ListNode<T>> remove) noexcept
 {
     if (remove == nullptr)
         return;

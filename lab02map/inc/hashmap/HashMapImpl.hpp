@@ -3,7 +3,6 @@
 #include "hashmap/HashMap.hpp"
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 
 #pragma region constructors
 
@@ -83,7 +82,7 @@ auto HashMap<K, V, Hash, KeyEqual>::cend() const -> const_iterator
 #pragma region modifiers
 
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-void HashMap<K, V, Hash, KeyEqual>::clear()
+void HashMap<K, V, Hash, KeyEqual>::clear() noexcept
 {
     for (auto &bucket : buckets)
         bucket.clear();
@@ -121,7 +120,7 @@ auto HashMap<K, V, Hash, KeyEqual>::insert(const value_type &entry) -> std::pair
 }
 
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-bool HashMap<K, V, Hash, KeyEqual>::erase(const K &key)
+bool HashMap<K, V, Hash, KeyEqual>::erase(const K &key) noexcept
 {
     size_type index = getBucket(key);
 
@@ -252,7 +251,7 @@ auto HashMap<K, V, Hash, KeyEqual>::getBucketSize(size_type bucket) const -> Lis
 }
 
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
-auto HashMap<K, V, Hash, KeyEqual>::getBucket(const K &key) const -> size_type
+auto HashMap<K, V, Hash, KeyEqual>::getBucket(const K &key) const noexcept -> size_type
 {
     return hashFunction(key) % getBucketCount();
 }

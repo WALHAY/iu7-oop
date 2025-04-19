@@ -40,7 +40,7 @@ class List : public BaseCollection
     void popFront() noexcept;
     void popBack() noexcept;
 
-    void erase(const iterator& pos);
+    void erase(const iterator& pos) noexcept;
 
     virtual void clear() noexcept override;
 
@@ -76,7 +76,7 @@ class List : public BaseCollection
 	void validateGet(int line) const;
 	void validateIndex(int line) const;
 
-    void eraseNode(std::shared_ptr<ListNode<T>> node);
+    void eraseNode(std::shared_ptr<ListNode<T>> node) noexcept;
 
     std::shared_ptr<ListNode<T>> head;
 };

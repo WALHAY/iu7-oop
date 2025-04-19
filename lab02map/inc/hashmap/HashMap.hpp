@@ -50,7 +50,7 @@ class HashMap : public BaseCollection
 #pragma endregion iterators
 
 #pragma region modifiers
-    virtual void clear() override;
+    virtual void clear() noexcept override;
 
     void insert_or_assign(const K &key, const V &value);
     void insert_or_assign(const value_type &value);
@@ -60,7 +60,7 @@ class HashMap : public BaseCollection
     std::pair<iterator, bool> insert(const K &key, const V &value);
     std::pair<iterator, bool> insert(const value_type &value);
 
-    bool erase(const K &key);
+    bool erase(const K &key)noexcept;
 #pragma endregion modifiers
 
 #pragma region lookup
@@ -88,7 +88,7 @@ class HashMap : public BaseCollection
 
     List<value_type>::size_type getBucketSize(size_type bucket) const;
 
-    size_type getBucket(const K &key) const;
+    size_type getBucket(const K &key) const noexcept;
 #pragma endregion bucket interface
 
 #pragma region hash policy
