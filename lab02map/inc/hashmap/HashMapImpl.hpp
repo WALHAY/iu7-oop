@@ -199,36 +199,42 @@ bool HashMap<K, V, Hash, KeyEqual>::contains(const K &key)
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 auto HashMap<K, V, Hash, KeyEqual>::begin(size_type bucket) -> local_iterator
 {
+	validateBucketIndex(bucket, __LINE__);
     return buckets[bucket].begin();
 }
 
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 auto HashMap<K, V, Hash, KeyEqual>::end(size_type bucket) -> local_iterator
 {
+	validateBucketIndex(bucket, __LINE__);
     return buckets[bucket].end();
 }
 
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 auto HashMap<K, V, Hash, KeyEqual>::begin(size_type bucket) const -> const_local_iterator
 {
+	validateBucketIndex(bucket, __LINE__);
     return buckets[bucket].begin();
 }
 
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 auto HashMap<K, V, Hash, KeyEqual>::end(size_type bucket) const -> const_local_iterator
 {
+	validateBucketIndex(bucket, __LINE__);
     return buckets[bucket].end();
 }
 
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 auto HashMap<K, V, Hash, KeyEqual>::cbegin(size_type bucket) const -> const_local_iterator
 {
+	validateBucketIndex(bucket, __LINE__);
     return buckets[bucket].cbegin();
 }
 
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 auto HashMap<K, V, Hash, KeyEqual>::cend(size_type bucket) const -> const_local_iterator
 {
+	validateBucketIndex(bucket, __LINE__);
     return buckets[bucket].cend();
 }
 
@@ -241,6 +247,7 @@ auto HashMap<K, V, Hash, KeyEqual>::getBucketCount() const -> size_type
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 auto HashMap<K, V, Hash, KeyEqual>::getBucketSize(size_type bucket) const -> List<value_type>::size_type
 {
+	validateBucketIndex(bucket, __LINE__);
     return buckets[bucket].getSize();
 }
 
@@ -313,6 +320,13 @@ auto HashMap<K, V, Hash, KeyEqual>::getSize() const -> size_type
 }
 
 #pragma endregion observers
+
+template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
+void HashMap<K, V, Hash, KeyEqual>::validateBucketIndex(size_type bucket, int line) 
+{
+	if(bucket >= getBucketCount())
+		throw InvalidBucketIndexException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
+}
 
 template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 float HashMap<K, V, Hash, KeyEqual>::countLoadFactor() const

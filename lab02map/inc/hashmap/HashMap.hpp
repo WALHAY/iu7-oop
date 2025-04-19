@@ -107,6 +107,7 @@ class HashMap : public BaseCollection
 #pragma endregion observers
 
   private:
+	void validateBucketIndex(size_type index, int line);
     float countLoadFactor() const;
 
     std::pair<iterator, bool> insert(List<List<value_type>> &buckets, const value_type &entry);
