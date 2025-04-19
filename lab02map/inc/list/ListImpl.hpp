@@ -4,12 +4,12 @@
 #include <iostream>
 #include <list/ListExceptions.hpp>
 
-template <typename T>
+template <MoveAndCopy T>
 List<T>::List()
 {
 }
 
-template <typename T>
+template <MoveAndCopy T>
 template <ConvertibleIterator<T> Iter>
 List<T>::List(Iter &&begin, Iter &&end)
 {
@@ -17,26 +17,26 @@ List<T>::List(Iter &&begin, Iter &&end)
         pushBack(*it);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 List<T>::List(std::initializer_list<T> list) : List(list.begin(), list.end())
 {
 }
 
-template <typename T>
+template <MoveAndCopy T>
 List<T>::List(size_type size)
     requires DefaultConstructible<T>
 {
     resize(size);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 List<T>::List(size_type size, const value_type &instance)
     requires CopyConstructible<T>
 {
     resize(size, instance);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::pushFront(const T &value) -> iterator
 {
     try
@@ -50,14 +50,14 @@ auto List<T>::pushFront(const T &value) -> iterator
     return iterator(head);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 void List<T>::popFront() noexcept
 {
     if (head != nullptr)
         head = head->next;
 }
 
-template <typename T>
+template <MoveAndCopy T>
 void List<T>::popBack() noexcept
 {
     if (head->next == nullptr)
@@ -73,13 +73,13 @@ void List<T>::popBack() noexcept
     node->next = nullptr;
 }
 
-template <typename T>
+template <MoveAndCopy T>
 void List<T>::erase(const iterator &iterator)
 {
     eraseNode(iterator.getPtr());
 }
 
-template <typename T>
+template <MoveAndCopy T>
 void List<T>::eraseNode(std::shared_ptr<ListNode<T>> remove)
 {
     if (remove == nullptr)
@@ -97,7 +97,7 @@ void List<T>::eraseNode(std::shared_ptr<ListNode<T>> remove)
     }
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::pushBack(const T &value) -> iterator
 {
     std::shared_ptr<ListNode<T>> node = nullptr;
@@ -124,7 +124,7 @@ auto List<T>::pushBack(const T &value) -> iterator
     return iterator(node);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::getSize() const noexcept -> size_type
 {
     auto node = head;
@@ -137,13 +137,13 @@ auto List<T>::getSize() const noexcept -> size_type
     return size;
 }
 
-template <typename T>
+template <MoveAndCopy T>
 void List<T>::clear() noexcept
 {
     head = nullptr;
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::at(size_type index) -> reference
 {
     validateGet(__LINE__);
@@ -156,38 +156,38 @@ auto List<T>::at(size_type index) -> reference
     return node->value;
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::at(size_type index) const -> const_reference
 {
     return at(index);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::operator[](size_type index) -> reference
 {
     return at(index);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::operator[](size_type index) const -> const_reference
 {
     return at(index);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::getFront() -> reference
 {
     validateGet(__LINE__);
     return head->value;
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::getFront() const -> const_reference
 {
     return getFront();
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::getBack() -> reference
 {
     validateGet(__LINE__);
@@ -198,13 +198,13 @@ auto List<T>::getBack() -> reference
     return node->value;
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::getBack() const -> const_reference
 {
     return getBack();
 }
 
-template <typename T>
+template <MoveAndCopy T>
 void List<T>::resize(size_type size)
     requires DefaultConstructible<T>
 {
@@ -213,7 +213,7 @@ void List<T>::resize(size_type size)
         pushFront(T());
 }
 
-template <typename T>
+template <MoveAndCopy T>
 void List<T>::resize(size_type size, const value_type &instance)
     requires CopyConstructible<T>
 {
@@ -222,7 +222,7 @@ void List<T>::resize(size_type size, const value_type &instance)
         pushFront(T(instance));
 }
 
-template <typename T>
+template <MoveAndCopy T>
 List<T> &List<T>::operator=(const List<T> &list)
 {
     head = nullptr;
@@ -231,50 +231,50 @@ List<T> &List<T>::operator=(const List<T> &list)
     return *this;
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::begin() -> iterator
 {
     return iterator(head);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::end() -> iterator
 {
     return iterator(nullptr);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::begin() const -> const_iterator
 {
     return const_iterator(head);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::end() const -> const_iterator
 {
     return const_iterator(nullptr);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::cbegin() const -> const_iterator
 {
     return const_iterator(head);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 auto List<T>::cend() const -> const_iterator
 {
     return const_iterator(nullptr);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 void List<T>::validateGet(int line) const
 {
     if (head == nullptr)
         throw EmptyListException(__FILE_NAME__, typeid(*this).name(), __FUNCTION__, line);
 }
 
-template <typename T>
+template <MoveAndCopy T>
 void List<T>::validateIndex(int line) const
 {
     if (head == nullptr)

@@ -6,7 +6,7 @@
 #include "hashmap/iterators/HashMapIter.hpp"
 #include "list/iterators/ListIter.hpp"
 
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash = std::hash<K>,
+template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash = std::hash<K>,
           EqualFunction<K> KeyEqual = std::equal_to<K>>
 class HashMap : public BaseCollection
 {

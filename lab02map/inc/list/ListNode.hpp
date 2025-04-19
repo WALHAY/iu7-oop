@@ -1,11 +1,12 @@
 #pragma once
 
+#include "list/ListConcepts.hpp"
 #include <memory>
 
-template <typename T>
+template <MoveAndCopy T>
 class List;
 
-template <typename T>
+template <MoveAndCopy T>
 class ListNode
 {
     friend class List<T>;

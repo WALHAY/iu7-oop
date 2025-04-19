@@ -6,7 +6,7 @@
 #include <list/ListNode.hpp>
 #include <list/iterators/ListIter.hpp>
 
-template <typename T>
+template <MoveAndCopy T>
 class List : public BaseCollection
 {
   public:

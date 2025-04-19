@@ -80,45 +80,49 @@ void printMap(const HashMap<K, V> &map)
 
 void checkMap()
 {
-	auto hashmap = HashMap<std::string, int>();
-	std::cout << "map = HashMap<>()\n";
+    auto hashmap = HashMap<std::string, int>();
+    std::cout << "map = HashMap<>()\n";
+    printMap(hashmap);
+
+    std::cout << "insert('hi', 123)\n";
+    std::cout << "insert('hello', 10)\n";
+    std::cout << "insert(std::make_pair('cat', 1))\n";
+    hashmap.insert("hi", 123);
+    hashmap.insert("hello", 10);
+    hashmap.insert(std::make_pair("cat", 1));
+    printMap(hashmap);
+
+    std::cout << "insert_or_assign('cat', 999)\n";
+    std::cout << "insert_or_assign(std::make_pair('foo', 101))\n";
+    hashmap.insert_or_assign("cat", 999);
+    hashmap.insert_or_assign(std::make_pair("foo", 101));
+    printMap(hashmap);
+
+    std::cout << "hashmap['cat'] = " << hashmap["cat"] << std::endl;
+    std::cout << "hashmap.at('hi') = " << hashmap.at("hi") << std::endl;
+    auto it = hashmap.find("cat");
+    std::cout << "find('cat') = {" << it->first << ":" << it->second << "}" << std::endl;
+    std::cout << "contains('hello') = " << hashmap.contains("i") << std::endl;
+
+    std::cout << "erase('hi') = " << hashmap.erase("hi") << std::endl;
+    printMap(hashmap);
+
+    std::cout << "getBucketCount() = " << hashmap.getBucketCount() << std::endl;
+    std::cout << "getSize() = " << hashmap.getSize() << std::endl;
+
+    std::cout << "map = {{'a', 1}, {'b', 2}, {'c', 3}}\n";
+    hashmap = {{"a", 1}, {"b", 2}, {"c", 3}};
 	printMap(hashmap);
 
-	std::cout << "insert('hi', 123)\n";
-	std::cout << "insert('hello', 10)\n";
-	std::cout << "insert(std::make_pair('cat', 1))\n";
-	hashmap.insert("hi", 123);
-	hashmap.insert("hello", 10);
-	hashmap.insert(std::make_pair("cat", 1));
-	printMap(hashmap);
-
-	std::cout << "insert_or_assign('cat', 999)\n";
-	std::cout << "insert_or_assign(std::make_pair('foo', 101))\n";
-	hashmap.insert_or_assign("cat", 999);
-	hashmap.insert_or_assign(std::make_pair("foo", 101));
-	printMap(hashmap);
-
-	std::cout << "hashmap['cat'] = " << hashmap["cat"] << std::endl;
-	std::cout << "hashmap.at('hi') = " << hashmap.at("hi") << std::endl;
-	auto it = hashmap.find("cat");
-	std::cout << "find('cat') = {" << it->first << ":" << it->second << "}" << std::endl;
-	std::cout << "contains('hello') = " << hashmap.contains("i") << std::endl;
-
-	std::cout << "erase('hi') = " << hashmap.erase("hello") << std::endl;
-	printMap(hashmap);
-
-	std::cout << "getBucketCount() = " << hashmap.getBucketCount() << std::endl;
-	std::cout << "getSize() = " << hashmap.getSize() << std::endl;
-
-	std::cout << "clear()\n";
-	hashmap.clear();
-	printMap(hashmap);
+    std::cout << "clear()\n";
+    hashmap.clear();
+    printMap(hashmap);
 }
 
 int main()
 {
-	std::cout << "--- CHECK LIST ---\n\n";
-    // checkList();
-	std::cout << "\n--- CHECK MAP ---\n"; 
-	checkMap();
+    std::cout << "--- CHECK LIST ---\n\n";
+    checkList();
+    std::cout << "\n--- CHECK MAP ---\n";
+    checkMap();
 }

@@ -1,14 +1,15 @@
 #pragma once
 
 #include "collection/BaseIterator.hpp"
+#include "list/ListConcepts.hpp"
 #include <cstddef>
 #include <iterator>
 #include <memory>
 
-template <typename T>
+template <MoveAndCopy T>
 class List;
 
-template <typename T>
+template <MoveAndCopy T>
 class ListNode;
 
 template <typename T>

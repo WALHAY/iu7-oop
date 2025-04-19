@@ -3,12 +3,14 @@
 #include "list/List.hpp"
 #include "hashmap/HashMapConcepts.hpp"
 
-template <EqualityComparable K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
+template <MoveAndCopy K, MoveAndCopy V, HashFunction<K> Hash, EqualFunction<K> KeyEqual>
 class HashMap;
 
 template <typename K, typename V>
 class HashMapIterator : public BaseIterator
 {
+	template<typename T>
+	friend class ListIterator;
   public:
     using iterator_category = std::forward_iterator_tag;
     using size_type = std::size_t;
