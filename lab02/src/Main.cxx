@@ -4,8 +4,13 @@
 int main()
 {
 	Matrix mx = { {1, 2}, {3, 4} };
+	Matrix mx2 = { {-9, 8}, {5, 6} };
 
-	for(const auto &it : (mx + 1))
+	auto res = mx + mx2;
+
+	std::cout << "mx[1][1]: " << mx[1][1] << std::endl;
+
+	for(const auto &it : res)
 		std::cout << it << " ";
     return 0;
 }

@@ -5,23 +5,20 @@
 #include <ranges>
 
 template <Storable T>
-Matrix<T>::Matrix(size_t rows, size_t cols)
+Matrix<T>::Matrix(size_t rows, size_t columns) : rows(rows), columns(columns)
 {
+    this->data = std::make_shared<T[]>(rows * columns);
 }
 
 template <Storable T>
-Matrix<T>::Matrix(const Matrix<T> &matrix)
+Matrix<T>::Matrix(const Matrix<T> &matrix) : Matrix(matrix.rows, matrix.columns)
 {
-    this->rows = matrix.rows;
-    this->columns = matrix.columns;
 
-    this->data = std::make_shared<T[]>(rows * columns);
-
-	size_t index = 0;
-	for(auto it = matrix.begin(); it != matrix.end(); ++it)
-	{
-		this->data[index++] = *it;
-	}
+    size_t index = 0;
+    for (auto it = matrix.begin(); it != matrix.end(); ++it)
+    {
+        this->data[index++] = *it;
+    }
 }
 
 template <Storable T>
@@ -68,15 +65,27 @@ auto Matrix<T>::end() const -> const_iterator
     return const_iterator(*this, rows * columns);
 }
 
+template <Storable T>
+auto Matrix<T>::cbegin() const -> const_iterator
+{
+    return const_iterator(*this);
+}
+
+template <Storable T>
+auto Matrix<T>::cend() const -> const_iterator
+{
+    return const_iterator(*this, rows * columns);
+}
+
 #pragma region addition
 template <Storable T>
-template <typename U>
+template <AddableTo<T> U>
 Matrix<decltype(T() + U())> Matrix<T>::operator+(const U &value) const
 {
-    Matrix<decltype(T() + U())> newMatrix(*this);
-    std::ranges::transform(newMatrix, newMatrix.begin(), [&value](const value_type &element) { return element + value; });
-	
-    return newMatrix;
+    Matrix<decltype(T() + U())> result(*this);
+    std::ranges::transform(result, result.begin(), [&value](const value_type &element) { return element + value; });
+
+    return result;
 }
 
 template <Storable T>
@@ -86,9 +95,14 @@ Matrix<decltype(T() + U())> &Matrix<T>::operator+=(const U &value)
 }
 
 template <Storable T>
-template <typename U>
+template <AddableTo<T> U>
 Matrix<decltype(T() + U())> Matrix<T>::operator+(const Matrix<U> &matrix) const
 {
+    Matrix<decltype(T() + U())> result(matrix.rows, matrix.columns);
+
+    std::ranges::transform(std::ranges::views::iota(size_t(0), rows * columns), result.begin(),
+                           [this, &matrix](size_type index) { return this->data[index] + matrix.data[index]; });
+	return result;
 }
 
 template <Storable T>
