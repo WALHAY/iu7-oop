@@ -1,8 +1,9 @@
 #pragma once
 
 #include "base/BaseMatrixIterator.hpp"
+#include "matrix/MatrixConcepts.hpp"
 
-template <typename T>
+template <Storable T>
 class Matrix;
 
 template <typename T>

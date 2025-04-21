@@ -5,7 +5,7 @@ int main()
 {
 	Matrix mx = { {1, 2}, {3, 4} };
 
-	for(auto it = mx.begin(); it != mx.end(); ++it)
-		std::cout << *it << " ";
+	for(const auto &it : (mx + 1))
+		std::cout << it << " ";
     return 0;
 }
