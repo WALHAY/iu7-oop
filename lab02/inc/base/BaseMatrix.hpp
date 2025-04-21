@@ -5,15 +5,17 @@
 class BaseMatrix
 {
   public:
-    BaseMatrix() noexcept;
-    BaseMatrix(const size_t rows, const size_t columns) noexcept;
-
     virtual ~BaseMatrix() = 0;
 
     bool isEmpty() const;
 
-    size_t getRows() const;
-    size_t getColumns() const;
+    size_t getRows() const {
+		return rows;
+	};
+
+    size_t getColumns() const {
+		return columns;
+	};
 
   protected:
     size_t rows;
