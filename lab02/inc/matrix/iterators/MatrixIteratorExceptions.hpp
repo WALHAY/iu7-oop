@@ -4,6 +4,7 @@
 
 class IteratorExpiredException : public BaseException
 {
+  public:
     IteratorExpiredException(const char *filename, const char *method, int line)
         : BaseException(filename, method, line, "Iterator pointer expired!")
     {
@@ -12,6 +13,7 @@ class IteratorExpiredException : public BaseException
 
 class IteratorInvalidIndexException : public BaseException
 {
+  public:
     IteratorInvalidIndexException(const char *filename, const char *method, int line)
         : BaseException(filename, method, line, "Trying to dereference wrong index!")
     {

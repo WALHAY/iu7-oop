@@ -21,6 +21,7 @@ class MatrixIterator : public BaseMatrixIterator
 
     MatrixIterator() = default;
     explicit MatrixIterator(const Matrix<T> &matrix);
+	MatrixIterator(const Matrix<T> &matrix, size_type index);
     MatrixIterator(const MatrixIterator &iterator) noexcept = default;
     MatrixIterator(MatrixIterator &&iterator) noexcept = default;
 

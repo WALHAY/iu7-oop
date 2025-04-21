@@ -24,6 +24,8 @@ class Matrix : public BaseMatrix
     ~Matrix() override = default;
 
 #pragma region iterators
+	iterator begin();
+	iterator end();
 
 #pragma endregion
 

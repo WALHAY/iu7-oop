@@ -1,11 +1,19 @@
 #pragma once
 
 #include <matrix/iterators/MatrixIterator.hpp>
+#include <matrix/iterators/MatrixIteratorExceptions.hpp>
 
 template <typename T>
-MatrixIterator<T>::MatrixIterator(const Matrix<T> &matrix)
+MatrixIterator<T>::MatrixIterator(const Matrix<T> &matrix) : MatrixIterator(matrix, 0)
 {
-    this->matrixSize = matrix->rows * matrix->columns;
+}
+
+template <typename T>
+MatrixIterator<T>::MatrixIterator(const Matrix<T> &matrix, size_type index)
+{
+	this->dataPtr = matrix.data;
+    this->matrixSize = matrix.rows * matrix.columns;
+	this->currentIndex = index;
 }
 
 template <typename T>
@@ -88,7 +96,7 @@ MatrixIterator<T> &MatrixIterator<T>::operator-=(difference_type step)
 template <typename T>
 auto MatrixIterator<T>::operator-(const MatrixIterator<T> &iterator) const -> difference_type
 {
-	return this->currentIndex - iterator->currentIndex;
+	return this->currentIndex - iterator.currentIndex;
 }
 
 template <typename T>
@@ -100,7 +108,7 @@ auto MatrixIterator<T>::operator[](difference_type offset) const -> reference
 template <typename T>
 bool MatrixIterator<T>::operator==(const MatrixIterator<T> & iterator) const noexcept
 {
-	return this->dataPtr.lock() == iterator->dataPtr.lock() && this->currentIndex == iterator->currentIndex;
+	return this->dataPtr.lock() == iterator.dataPtr.lock() && this->currentIndex == iterator.currentIndex;
 }
 
 template <typename T>
@@ -116,7 +124,7 @@ std::strong_ordering MatrixIterator<T>::operator<=>(const MatrixIterator& iterat
 template <typename T>
 void MatrixIterator<T>::validatePointer(int line) const
 {
-    if (dataPtr.expired() || dataPtr == nullptr)
+    if (dataPtr.expired() || dataPtr.lock() == nullptr)
         throw IteratorExpiredException(__FILE_NAME__, __FUNCTION__, line);
 }
 

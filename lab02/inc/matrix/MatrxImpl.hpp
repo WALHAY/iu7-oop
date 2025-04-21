@@ -29,6 +29,16 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
     }
 }
 
+template<typename T>
+auto Matrix<T>::begin() -> iterator {
+	return iterator(*this);
+}
+
+template<typename T>
+auto Matrix<T>::end() -> iterator {
+	return iterator(*this, rows * columns);
+}
+
 #pragma region addition
 template <typename T>
 template <typename U>
