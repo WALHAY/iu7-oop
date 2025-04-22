@@ -8,9 +8,11 @@ int main()
 
 	auto res = mx + mx2;
 
+	mx += mx;
+
 	std::cout << "mx[1][1]: " << mx[1][1] << std::endl;
 
-	for(const auto &it : res)
+	for(const auto &it : mx)
 		std::cout << it << " ";
     return 0;
 }

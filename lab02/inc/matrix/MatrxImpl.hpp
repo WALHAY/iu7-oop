@@ -78,9 +78,10 @@ auto Matrix<T>::cend() const -> const_iterator
 }
 
 #pragma region addition
+
 template <Storable T>
 template <AddableTo<T> U>
-Matrix<decltype(T() + U())> Matrix<T>::operator+(const U &value) const
+Matrix<decltype(T() + U())> Matrix<T>::add(const U &value) const
 {
     Matrix<decltype(T() + U())> result(*this);
     std::ranges::transform(result, result.begin(), [&value](const value_type &element) { return element + value; });
@@ -89,25 +90,46 @@ Matrix<decltype(T() + U())> Matrix<T>::operator+(const U &value) const
 }
 
 template <Storable T>
-template <typename U>
-Matrix<decltype(T() + U())> &Matrix<T>::operator+=(const U &value)
+template <AddableTo<T> U>
+Matrix<decltype(T() + U())> Matrix<T>::operator+(const U &value) const
 {
+	return add(value);
+}
+
+template <Storable T>
+template <AddableConvertible<T> U>
+Matrix<T> &Matrix<T>::operator+=(const U &value)
+{
+    std::ranges::transform(this, begin(), [&value](const value_type &element) { return element + value; });
+
+	return *this;
+}
+
+template <Storable T>
+template <AddableTo<T> U>
+Matrix<decltype(T() + U())> Matrix<T>::add(const Matrix<U> &matrix) const
+{
+    Matrix<decltype(T() + U())> result(matrix.rows, matrix.columns);
+
+    std::ranges::transform(std::ranges::views::iota(size_t(0), rows * columns), result.begin(),
+                           [this, &matrix](size_type index) { return this->data[index] + matrix.data[index]; });
+    return result;
 }
 
 template <Storable T>
 template <AddableTo<T> U>
 Matrix<decltype(T() + U())> Matrix<T>::operator+(const Matrix<U> &matrix) const
 {
-    Matrix<decltype(T() + U())> result(matrix.rows, matrix.columns);
-
-    std::ranges::transform(std::ranges::views::iota(size_t(0), rows * columns), result.begin(),
-                           [this, &matrix](size_type index) { return this->data[index] + matrix.data[index]; });
-	return result;
+	return add(matrix);
 }
 
 template <Storable T>
-template <typename U>
-Matrix<decltype(T() + U())> &Matrix<T>::operator+=(const Matrix<U> &matrix)
+template <AddableConvertible<T> U>
+Matrix<T> &Matrix<T>::operator+=(const Matrix<U> &matrix)
 {
+    std::ranges::transform(std::ranges::views::iota(size_t(0), rows * columns), begin(),
+                           [this, &matrix](size_type index) { return this->data[index] + matrix.data[index]; });
+
+	return *this;
 }
 #pragma endregion

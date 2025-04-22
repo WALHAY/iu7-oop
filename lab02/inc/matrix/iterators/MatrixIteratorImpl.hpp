@@ -135,4 +135,4 @@ void MatrixIterator<T>::validateIndex(size_type index, int line) const
         throw IteratorInvalidIndexException(__FILE_NAME__, __FUNCTION__, line);
 }
 
-static_assert(std::random_access_iterator<MatrixIterator<std::string>>, "MatrixIterator fails random access iterator concept");
+static_assert(std::random_access_iterator<MatrixIterator<int>>, "MatrixIterator fails random access iterator concept");

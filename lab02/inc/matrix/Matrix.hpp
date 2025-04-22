@@ -41,16 +41,22 @@ class Matrix : public BaseMatrix
 
 #pragma region addition
     template <AddableTo<T> U>
+    Matrix<decltype(T() + U())> add(const U &value) const;
+	
+    template <AddableTo<T> U>
     Matrix<decltype(T() + U())> operator+(const U &value) const;
 
-    template <typename U>
-    Matrix<decltype(T() + U())> &operator+=(const U &value);
+    template <AddableConvertible<T> U>
+    Matrix<T> &operator+=(const U &value);
+
+    template <AddableTo<T> U>
+    Matrix<decltype(T() + U())> add(const Matrix<U> &matrix) const;
 
     template <AddableTo<T> U>
     Matrix<decltype(T() + U())> operator+(const Matrix<U> &matrix) const;
 
-    template <typename U>
-    Matrix<decltype(T() + U())> &operator+=(const Matrix<U> &matrix);
+    template <AddableConvertible<T> U>
+    Matrix<T> &operator+=(const Matrix<U> &matrix);
 #pragma endregion
 
 #pragma region subtraction
@@ -104,6 +110,11 @@ class Matrix : public BaseMatrix
         }
 
         T operator[](size_type index)
+        {
+            return dataPtr.lock()[row * matrixColumns + index];
+        }
+
+        const T operator[](size_type index) const
         {
             return dataPtr.lock()[row * matrixColumns + index];
         }
