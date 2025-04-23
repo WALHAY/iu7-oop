@@ -25,6 +25,9 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
           ilist.size(), std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); }))))
 
 {
+	if(std::ranges::any_of(ilist, [this](const auto& l){ return l.size() != this->size.second; }))
+		throw InvalidInitListSizeException(__FILE_NAME__, __FUNCTION__, __LINE__);
+
     std::ranges::copy(ilist | std::views::join, begin());
 }
 
