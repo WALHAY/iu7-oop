@@ -25,17 +25,17 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
           ilist.size(), std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); }))))
 
 {
-	if(std::ranges::any_of(ilist, [this](const auto& l){ return l.size() != this->size.second; }))
-		throw InvalidInitListSizeException(__FILE_NAME__, __FUNCTION__, __LINE__);
+    if (std::ranges::any_of(ilist, [this](const auto &l) { return l.size() != this->size.second; }))
+        throw InvalidInitListSizeException(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     std::ranges::copy(ilist | std::views::join, begin());
 }
 
 template <Storable T>
-template<ConvertibleTo<T> U>
+template <ConvertibleTo<T> U>
 Matrix<T> &Matrix<T>::operator=(const Matrix<U> &matrix)
 {
-	this->size = matrix.getSize();
+    this->size = matrix.getSize();
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
 }
 
@@ -138,26 +138,38 @@ void Matrix<T>::validateAddSubSize(size_type size, int line) const
         throw InvalidAddSubSizeExcepetion(__FILE_NAME__, __FUNCTION__, line);
 }
 
+template <Storable T>
+Matrix<T> Matrix<T>::matrixExclude(size_t row, size_t column) const
+{
+    Matrix<T> result(std::make_pair(getSize().first - 1, getSize().second - 1));
+
+    auto indices = std::views::iota(size_t{0}, getElements()) | std::views::filter([&, row, column](auto value) {
+                       return value % this->getSize().second != column && value / this->getSize().second != row;
+                   });
+    std::ranges::transform(indices, result.begin(), [&](size_t index) { return this->data[index]; });
+    return result;
+}
+
 #pragma region other
 
 template <Storable T>
 auto Matrix<T>::det() const
 {
-    size_t n = size.first;
-    Matrix<double> copy(*this);
+    if (getSize().first == 1)
+        return (double)data[0];
 
-    for (size_t k = 1; k < n - 1; ++k)
+    double value = 0;
+    for (size_t i = 0; i < getSize().first; ++i)
     {
-        for (size_t i = k; i < n; ++i)
-        {
-            for (size_t j = k + 1; j < n; ++j)
-            {
-                copy[i][j] = (copy[i][j] * copy[k][k] - copy[i][k] * copy[k][j]) / copy[k - 1][k - 1];
-            }
-        }
-    }
+        Matrix<T> temp = matrixExclude(0, i);
+		double minor = data[0] * temp.det();
 
-    return copy[size.first][size.first];
+        if (i % 2 == 0)
+            value += minor;
+        else
+            value -= minor;
+    }
+	return value;
 }
 
 // static Matrix<T> identity();

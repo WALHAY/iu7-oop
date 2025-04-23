@@ -97,6 +97,8 @@ class Matrix : public BaseMatrix
   protected:
     void validateAddSubSize(size_type size, int line) const;
 
+	Matrix<T> matrixExclude(size_t row, size_t columns) const;
+
     std::shared_ptr<T[]> data;
 
   private:
