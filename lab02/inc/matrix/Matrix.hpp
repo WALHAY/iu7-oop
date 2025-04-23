@@ -9,7 +9,7 @@
 template <Storable T>
 class Matrix : public BaseMatrix
 {
-	class RowProxy;
+    class RowProxy;
     friend class MatrixIterator<T>;
     friend class ConstMatrixIterator<T>;
 
@@ -19,10 +19,10 @@ class Matrix : public BaseMatrix
     using reference = T &;
     using iterator = MatrixIterator<T>;
     using const_iterator = ConstMatrixIterator<T>;
-    using size_type = std::size_t;
+    using size_type = std::pair<std::size_t, std::size_t>;
 
 #pragma region constructors
-    Matrix(size_t rows, size_t columns);
+    Matrix(size_type size);
     Matrix(std::initializer_list<std::initializer_list<T>> ilist);
     Matrix(const Matrix<T> &matrix);
     Matrix(Matrix<T> &&matrix) noexcept = default;
@@ -42,7 +42,7 @@ class Matrix : public BaseMatrix
 #pragma region addition
     template <AddableTo<T> U>
     Matrix<decltype(T() + U())> add(const U &value) const;
-	
+
     template <AddableTo<T> U>
     Matrix<decltype(T() + U())> operator+(const U &value) const;
 
@@ -59,35 +59,24 @@ class Matrix : public BaseMatrix
     Matrix<T> &operator+=(const Matrix<U> &matrix);
 #pragma endregion
 
-#pragma region subtraction
-    template <typename U>
-    Matrix<decltype(T() - U())> operator-(const U &value) const;
+#pragma region other
+    double det() const;
 
-    template <typename U>
-    Matrix<decltype(T() - U())> &operator-=(const U &value);
-
-    template <typename U>
-    Matrix<decltype(T() - U())> operator-(const Matrix<U> &matrix) const;
-
-    template <typename U>
-    Matrix<decltype(T() - U())> &operator-=(const Matrix<U> &matrix);
+    Matrix<T> transpose() const;
+    Matrix<T> invert() const;
 #pragma endregion
 
 #pragma region lookup
 
-	RowProxy operator[](size_type row) {
-		return RowProxy(data, row, columns);
-	}
+    RowProxy operator[](size_t row)
+    {
+        return RowProxy(data, row, size.second);
+    }
 
-	const RowProxy operator[](size_type row) const {
-		return operator[](row);
-	}
-
-	T &operator()(size_t row, size_t column);
-	const T &operator()(size_t row, size_t column) const;
-
-	T &at(size_t row, size_t column);
-	const T &at(size_t row, size_t column) const;
+    const RowProxy operator[](size_t row) const
+    {
+        return operator[](row);
+    }
 
 #pragma endregion
 
@@ -96,32 +85,38 @@ class Matrix : public BaseMatrix
 #pragma endregion
 
   protected:
-    std::shared_ptr<T[]> data;
+	void validateAddSubSize(size_t size);
 
-    size_t rows;
-    size_t columns;
+    std::shared_ptr<T[]> data;
 
   private:
     class RowProxy
     {
       public:
-        RowProxy(std::shared_ptr<T[]> data, size_type row, size_type matrixColumns) : dataPtr(data), row(row), matrixColumns(matrixColumns)
+        RowProxy(std::shared_ptr<T[]> data, size_t row, size_t matrixColumns)
+            : dataPtr(data), row(row), matrixColumns(matrixColumns)
         {
         }
 
-        T operator[](size_type index)
+        RowProxy(const RowProxy &) = default;
+        RowProxy(RowProxy &&) = default;
+
+        RowProxy &operator=(const RowProxy &) = delete;
+        RowProxy &operator=(RowProxy &&) = delete;
+
+        T operator[](size_t index)
         {
             return dataPtr.lock()[row * matrixColumns + index];
         }
 
-        const T operator[](size_type index) const
+        const T operator[](size_t index) const
         {
-            return dataPtr.lock()[row * matrixColumns + index];
+            return *this[index];
         }
 
       private:
-		size_type matrixColumns;
-        size_type row;
+        size_t matrixColumns;
+        size_t row;
         std::weak_ptr<T[]> dataPtr;
     };
 };

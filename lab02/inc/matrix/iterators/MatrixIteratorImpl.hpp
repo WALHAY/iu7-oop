@@ -12,7 +12,7 @@ template <typename T>
 MatrixIterator<T>::MatrixIterator(const Matrix<T> &matrix, size_type index)
 {
 	this->dataPtr = matrix.data;
-    this->matrixSize = matrix.rows * matrix.columns;
+    this->matrixSize = matrix.getElements();
 	this->currentIndex = index;
 }
 
@@ -31,7 +31,7 @@ auto MatrixIterator<T>::operator->() const -> pointer
     validateIndex(currentIndex, __LINE__);
     validatePointer(__LINE__);
 
-    return this->dataPtr.lock() + currentIndex;
+    return this->dataPtr.lock().get() + currentIndex;
 }
 
 template <typename T>
