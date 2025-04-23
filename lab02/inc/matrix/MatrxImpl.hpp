@@ -16,30 +16,17 @@ Matrix<T>::Matrix(const Matrix<T> &matrix) : Matrix(matrix.size)
 {
 
     size_t index = 0;
-    for (auto it = matrix.begin(); it != matrix.end(); ++it)
-    {
-        this->data[index++] = *it;
-    }
+    std::ranges::copy(matrix.begin(), begin());
 }
 
 template <Storable T>
 Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
+    : Matrix(std::make_pair(
+                 ilist.size(),
+                 std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); }))))
+
 {
-    this->size = std::make_pair(
-        ilist.size(), std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); })));
-
-    this->data = std::make_shared<T[]>(getElements());
-
-    size_t y = 0;
-    for (auto &list : ilist)
-    {
-        size_t x = 0;
-        for (auto &value : list)
-        {
-            this->data[y * this->size.second + x++] = value;
-        }
-        y++;
-    }
+	std::ranges::copy(ilist | std::views::join, begin());
 }
 
 template <Storable T>
