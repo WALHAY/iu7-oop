@@ -26,6 +26,12 @@ Matrix<T>::Matrix(const Matrix<T> &matrix) : Matrix(matrix.getSize())
 }
 
 template <Storable T>
+template <ConvertibleTo<T> U>
+Matrix<T>::Matrix(std::initializer_list<std::initializer_list<U>> ilist) : Matrix(ilist)
+{
+}
+
+template <Storable T>
 Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
     : Matrix(std::make_pair(
           ilist.size(), std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); }))))
@@ -41,8 +47,7 @@ template <Storable T>
 template <ConvertibleTo<T> U>
 Matrix<T> &Matrix<T>::operator=(const Matrix<U> &matrix)
 {
-    this->size = matrix.getSize();
-    std::ranges::copy(matrix.begin(), matrix.end(), begin());
+    operator=(matrix);
 }
 
 template <Storable T>
@@ -159,6 +164,7 @@ template <Storable T>
 Matrix<T>::RowProxy Matrix<T>::operator[](size_t row)
 {
     validateRow(row, __LINE__);
+
     return RowProxy(data, row, size.second);
 }
 
@@ -167,6 +173,33 @@ const Matrix<T>::RowProxy Matrix<T>::operator[](size_t row) const
 {
     validateRow(row, __LINE__);
     return operator[](row);
+}
+
+template <Storable T>
+auto Matrix<T>::operator()(size_t row, size_t column) -> reference
+{
+	return at(row, column);
+}
+
+template <Storable T>
+auto Matrix<T>::operator()(size_t row, size_t column) const -> const_reference
+{
+	return at(row, column);
+}
+
+template <Storable T>
+auto Matrix<T>::at(size_t row, size_t column) -> reference
+{
+	validateRow(row, __LINE__);
+	validateColumn(column, __LINE__);
+
+	return data[row * size.second + column];
+}
+
+template <Storable T>
+auto Matrix<T>::at(size_t row, size_t column) const -> const_reference
+{
+	return at(row, column);
 }
 
 #pragma endregion

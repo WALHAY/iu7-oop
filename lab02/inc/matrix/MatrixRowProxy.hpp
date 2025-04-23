@@ -1,6 +1,7 @@
 #pragma once
 
 #include <matrix/Matrix.hpp>
+#include <matrix/MatrixExceptions.hpp>
 
 template <Storable T>
 Matrix<T>::RowProxy::RowProxy(std::shared_ptr<T[]> data, size_t row, size_t matrixColumns)

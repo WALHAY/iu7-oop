@@ -18,32 +18,36 @@ class Matrix : public BaseMatrix
     using pointer = T *;
     using reference = T &;
     using iterator = MatrixIterator<T>;
+    using const_pointer = const T *;
+    using const_reference = const T &;
     using const_iterator = ConstMatrixIterator<T>;
     using size_type = std::pair<std::size_t, std::size_t>;
 
 #pragma region constructors
     Matrix(size_type size);
 
+    template <ConvertibleTo<T> U>
+    Matrix(std::initializer_list<std::initializer_list<U>> ilist);
     Matrix(std::initializer_list<std::initializer_list<T>> ilist);
 
-	template<ConvertibleTo<T> U>
+    template <ConvertibleTo<T> U>
     Matrix(const Matrix<U> &matrix);
     Matrix(const Matrix<T> &matrix);
 
-	template<ConvertibleTo<T> U>
-	Matrix(Matrix<U> &&matrix);
-	Matrix(Matrix<T> &&matrix) noexcept = default;
+    template <ConvertibleTo<T> U>
+    Matrix(Matrix<U> &&matrix);
+    Matrix(Matrix<T> &&matrix) noexcept = default;
 #pragma endregion
 
     ~Matrix() override = default;
 
-	template<ConvertibleTo<T> U>
-	Matrix<T> &operator=(const Matrix<U> &matrix);
-	Matrix<T> &operator=(const Matrix<T> &matrix);
+    template <ConvertibleTo<T> U>
+    Matrix<T> &operator=(const Matrix<U> &matrix);
+    Matrix<T> &operator=(const Matrix<T> &matrix);
 
-	template<ConvertibleTo<T> U>
-	Matrix<T> &operator=(Matrix<U> &&matrix);
-	Matrix<T> &operator=(Matrix<T> &&matrix) noexcept = default;
+    template <ConvertibleTo<T> U>
+    Matrix<T> &operator=(Matrix<U> &&matrix);
+    Matrix<T> &operator=(Matrix<T> &&matrix) noexcept = default;
 
 #pragma region iterators
     iterator begin();
@@ -89,6 +93,12 @@ class Matrix : public BaseMatrix
     RowProxy operator[](size_t row);
     const RowProxy operator[](size_t row) const;
 
+    reference operator()(size_t row, size_t column);
+    const_reference operator()(size_t row, size_t column) const;
+
+    reference at(size_t row, size_t column);
+    const_reference at(size_t row, size_t column) const;
+
 #pragma endregion
 
 #pragma region misc
@@ -97,11 +107,11 @@ class Matrix : public BaseMatrix
 
   protected:
     void validateAddSubSize(size_type size, int line) const;
-	void validateRow(size_t row, int line) const;
-	void validateColumn(size_t column, int line) const;
-	void validateDeterminantSize(int line) const;
+    void validateRow(size_t row, int line) const;
+    void validateColumn(size_t column, int line) const;
+    void validateDeterminantSize(int line) const;
 
-	Matrix<T> matrixExclude(size_t row, size_t columns) const;
+    Matrix<T> matrixExclude(size_t row, size_t columns) const;
 
     std::shared_ptr<T[]> data;
 
@@ -127,5 +137,5 @@ class Matrix : public BaseMatrix
     };
 };
 
-#include <matrix/MatrxImpl.hpp>
 #include <matrix/MatrixRowProxy.hpp>
+#include <matrix/MatrxImpl.hpp>
