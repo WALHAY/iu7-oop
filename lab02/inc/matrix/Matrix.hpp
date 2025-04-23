@@ -111,8 +111,6 @@ class Matrix : public BaseMatrix
     void validateColumn(size_t column, int line) const;
     void validateDeterminantSize(int line) const;
 
-    Matrix<T> matrixExclude(size_t row, size_t columns) const;
-
     std::shared_ptr<T[]> data;
 
   private:

@@ -178,28 +178,28 @@ const Matrix<T>::RowProxy Matrix<T>::operator[](size_t row) const
 template <Storable T>
 auto Matrix<T>::operator()(size_t row, size_t column) -> reference
 {
-	return at(row, column);
+    return at(row, column);
 }
 
 template <Storable T>
 auto Matrix<T>::operator()(size_t row, size_t column) const -> const_reference
 {
-	return at(row, column);
+    return at(row, column);
 }
 
 template <Storable T>
 auto Matrix<T>::at(size_t row, size_t column) -> reference
 {
-	validateRow(row, __LINE__);
-	validateColumn(column, __LINE__);
+    validateRow(row, __LINE__);
+    validateColumn(column, __LINE__);
 
-	return data[row * size.second + column];
+    return data[row * size.second + column];
 }
 
 template <Storable T>
 auto Matrix<T>::at(size_t row, size_t column) const -> const_reference
 {
-	return at(row, column);
+    return at(row, column);
 }
 
 #pragma endregion
@@ -211,21 +211,25 @@ auto Matrix<T>::det() const
 {
     validateDeterminantSize(__LINE__);
 
-    if (getSize().first == 1)
-        return (double)data[0];
+    Matrix<T> temp(*this);
+	size_t n = size.first;
 
-    double value = 0;
-    for (size_t i = 0; i < getSize().first; ++i)
+    for (size_t k = 0; k < n - 1; ++k)
     {
-        Matrix<T> temp = matrixExclude(0, i);
-        double minor = data[0] * temp.det();
-
-        if (i % 2 == 0)
-            value += minor;
-        else
-            value -= minor;
+        for (size_t i = k + 1; i < n; ++i)
+        {
+            for (size_t j = k + 1; j < n; ++j)
+            {
+                temp(i, j) = (temp(k, k) * temp(i, j) - temp(i, k) * temp(k, j));
+                if (k > 0)
+                {
+                    temp(i, j) /= temp(k - 1, k - 1);
+                }
+            }
+        }
     }
-    return value;
+
+    return temp(size.first - 1, size.second - 1);
 }
 
 // static Matrix<T> identity();
@@ -261,16 +265,4 @@ void Matrix<T>::validateDeterminantSize(int line) const
 {
     if (getSize().first != getSize().second)
         throw DeterminantSizeException(__FILE_NAME__, __FUNCTION__, line);
-}
-
-template <Storable T>
-Matrix<T> Matrix<T>::matrixExclude(size_t row, size_t column) const
-{
-    Matrix<T> result(std::make_pair(getSize().first - 1, getSize().second - 1));
-
-    auto indices = std::views::iota(size_t{0}, getElements()) | std::views::filter([&, row, column](auto value) {
-                       return value % this->getSize().second != column && value / this->getSize().second != row;
-                   });
-    std::ranges::transform(indices, result.begin(), [&](size_t index) { return this->data[index]; });
-    return result;
 }
