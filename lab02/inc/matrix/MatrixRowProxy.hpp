@@ -4,17 +4,17 @@
 #include <matrix/MatrixExceptions.hpp>
 
 template <Storable T>
-Matrix<T>::RowProxy::RowProxy(std::shared_ptr<T[]> data, size_t row, size_t matrixColumns)
-    : dataPtr(data), row(row), matrixColumns(matrixColumns)
+Matrix<T>::RowProxy::RowProxy(const Matrix<T> &matrix, size_t row)
+    : matrix(matrix), row(row)
 {
 }
 
 template <Storable T>
 T &Matrix<T>::RowProxy::operator[](size_t index)
 {
-    if (index < 0 || index >= matrixColumns)
+    if (index < 0 || index >= matrix.columns)
         throw InvalidColumnException(__FILE_NAME__, __FUNCTION__, __LINE__);
-    return dataPtr.lock()[row * matrixColumns + index];
+    return matrix.data[row * matrix.columns + index];
 }
 
 template <Storable T>

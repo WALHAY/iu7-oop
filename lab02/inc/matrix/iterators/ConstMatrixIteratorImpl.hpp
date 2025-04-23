@@ -12,7 +12,7 @@ template <typename T>
 ConstMatrixIterator<T>::ConstMatrixIterator(const Matrix<T> &matrix, size_type index)
 {
 	this->dataPtr = matrix.data;
-    this->matrixSize = matrix.getElements();
+    this->matrixSize = matrix.getSize();
 	this->currentIndex = index;
 }
 

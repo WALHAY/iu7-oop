@@ -3,19 +3,26 @@
 
 int main()
 {
-    Matrix im = {{5, 2}, {3, 7}};
-	Matrix dm = {
-		{-0.5, 0.5},
-		{0.5, -0.5}
-	};
+    Matrix im = {{5, 2, 1}, {3, 1, 6}};
+    Matrix dm = {{-0.5, 0.5}, {0.5, -0.5}};
 
-	im += dm;
+    // im += dm;
+	//
+	
+	auto transposed = im.transpose();
 
-    std::cout << "mx[1][1]: " << im[1][1] << std::endl;
+    for (size_t i = 0; i < transposed.getRows(); ++i)
+    {
+        for (size_t j = 0; j < transposed.getColumns(); ++j)
+        {
+			 std::cout << transposed[i][j] << " ";
+        }
+		std::cout << "\n";
+    }
 
-	std:: cout << "det: " << im.det() << std::endl;
+    // std::cout << "det: " << im.det() << std::endl;
 
-    for (const auto &it : im)
-        std::cout << it << " ";
+    // for (const auto &it : im)
+    //     std::cout << it << " ";
     return 0;
 }

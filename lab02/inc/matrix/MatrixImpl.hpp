@@ -6,38 +6,47 @@
 #include <ranges>
 
 template <Storable T>
-Matrix<T>::Matrix(size_type size)
+Matrix<T>::Matrix(size_t rows, size_t columns)
 {
-    this->size = size;
-    this->data = std::make_shared<T[]>(getElements());
+    this->rows = rows;
+    this->columns = columns;
+
+    this->data = std::make_shared<T[]>(getSize());
 }
 
 template <Storable T>
 template <ConvertibleTo<T> U>
-Matrix<T>::Matrix(const Matrix<U> &matrix) : Matrix(matrix.getSize())
+Matrix<T>::Matrix(const Matrix<U> &matrix) : Matrix(matrix.getRows(), matrix.getColumns())
 {
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
 }
 
 template <Storable T>
-Matrix<T>::Matrix(const Matrix<T> &matrix) : Matrix(matrix.getSize())
+Matrix<T>::Matrix(const Matrix<T> &matrix) : Matrix(matrix.getRows(), matrix.getColumns())
 {
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
 }
 
 template <Storable T>
 template <ConvertibleTo<T> U>
-Matrix<T>::Matrix(std::initializer_list<std::initializer_list<U>> ilist) : Matrix(ilist)
+Matrix<T>::Matrix(std::initializer_list<std::initializer_list<U>> ilist)
+    : Matrix(ilist.size(),
+             std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); })))
+
 {
+    if (std::ranges::any_of(ilist, [this](const auto &l) { return l.size() != this->columns; }))
+        throw InvalidInitListSizeException(__FILE_NAME__, __FUNCTION__, __LINE__);
+
+    std::ranges::copy(ilist | std::views::join, begin());
 }
 
 template <Storable T>
 Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
-    : Matrix(std::make_pair(
-          ilist.size(), std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); }))))
+    : Matrix(ilist.size(),
+             std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); })))
 
 {
-    if (std::ranges::any_of(ilist, [this](const auto &l) { return l.size() != this->size.second; }))
+    if (std::ranges::any_of(ilist, [this](const auto &l) { return l.size() != this->columns; }))
         throw InvalidInitListSizeException(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     std::ranges::copy(ilist | std::views::join, begin());
@@ -48,21 +57,26 @@ template <ConvertibleTo<T> U>
 Matrix<T> &Matrix<T>::operator=(const Matrix<U> &matrix)
 {
     operator=(matrix);
+    return *this;
 }
 
 template <Storable T>
 Matrix<T> &Matrix<T>::operator=(const Matrix<T> &matrix)
 {
-    this->size = matrix.getSize();
+    this->rows = matrix.rows;
+    this->columns = matrix.columns;
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
+    return *this;
 }
 
 template <Storable T>
 template <ConvertibleTo<T> U>
 Matrix<T> &Matrix<T>::operator=(Matrix<U> &&matrix)
 {
-    this->size = matrix.getSize();
+    this->rows = matrix.rows;
+    this->columns = matrix.columns;
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
+    return *this;
 }
 
 template <Storable T>
@@ -74,7 +88,7 @@ auto Matrix<T>::begin() -> iterator
 template <Storable T>
 auto Matrix<T>::end() -> iterator
 {
-    return iterator(*this, getElements());
+    return iterator(*this, getSize());
 }
 
 template <Storable T>
@@ -86,7 +100,7 @@ auto Matrix<T>::begin() const -> const_iterator
 template <Storable T>
 auto Matrix<T>::end() const -> const_iterator
 {
-    return const_iterator(*this, getElements());
+    return const_iterator(*this, getSize());
 }
 
 template <Storable T>
@@ -98,7 +112,7 @@ auto Matrix<T>::cbegin() const -> const_iterator
 template <Storable T>
 auto Matrix<T>::cend() const -> const_iterator
 {
-    return const_iterator(*this, getElements());
+    return const_iterator(*this, getSize());
 }
 
 #pragma region addition
@@ -157,6 +171,66 @@ Matrix<T> &Matrix<T>::operator+=(const Matrix<U> &matrix)
 }
 #pragma endregion
 
+#pragma region other
+
+template <Storable T>
+auto Matrix<T>::det() const
+{
+    validateDeterminantSize(__LINE__);
+
+    Matrix<T> temp(*this);
+    size_t n = rows;
+
+    for (size_t k = 0; k < n - 1; ++k)
+    {
+        for (size_t i = k + 1; i < n; ++i)
+        {
+            for (size_t j = k + 1; j < n; ++j)
+            {
+                temp(i, j) = (temp(k, k) * temp(i, j) - temp(i, k) * temp(k, j));
+                if (k > 0)
+                {
+                    temp(i, j) /= temp(k - 1, k - 1);
+                }
+            }
+        }
+    }
+
+    return temp(rows - 1, columns - 1);
+}
+
+// template <Storable T>
+// Matrix<T> &Matrix<T>::transposed()
+// {
+// 	auto mx = *this | std::views::chunk(columns);
+//
+// 	std::views::iota(size_t{0}, columns) | std::views::transform([&, mx](size_t index){
+// 		return mx | std::views::join | std::views::drop(index) | std::views::stride(this->columns);
+// 	});
+//
+// 	this->size = std::make_pair(columns, rows);
+// 	return *this;
+// }
+
+template <Storable T>
+Matrix<T> Matrix<T>::transpose() const
+{
+    Matrix<T> copy(*this);
+
+    // auto mx = copy | std::views::chunk(columns);
+    //
+    // std::views::iota(size_t{0}, columns) | std::views::transform([&, mx](size_t index){
+    // 	return mx | std::views::join | std::views::drop(index) | std::views::stride(this->columns);
+    // });
+
+	size_t temp = rows;
+    this->rows = columns;
+    this->columns = rows;
+    return copy;
+}
+
+#pragma endregion
+
 #pragma region lookup
 
 template <Storable T>
@@ -165,13 +239,12 @@ Matrix<T>::RowProxy Matrix<T>::operator[](size_t row)
 {
     validateRow(row, __LINE__);
 
-    return RowProxy(data, row, size.second);
+    return RowProxy(*this, row);
 }
 
 template <Storable T>
 const Matrix<T>::RowProxy Matrix<T>::operator[](size_t row) const
 {
-    validateRow(row, __LINE__);
     return operator[](row);
 }
 
@@ -193,7 +266,7 @@ auto Matrix<T>::at(size_t row, size_t column) -> reference
     validateRow(row, __LINE__);
     validateColumn(column, __LINE__);
 
-    return data[row * size.second + column];
+    return data[row * columns + column];
 }
 
 template <Storable T>
@@ -204,65 +277,30 @@ auto Matrix<T>::at(size_t row, size_t column) const -> const_reference
 
 #pragma endregion
 
-#pragma region other
-
 template <Storable T>
-auto Matrix<T>::det() const
+void Matrix<T>::validateAddSubSize(size_t rows, size_t columns, int line) const
 {
-    validateDeterminantSize(__LINE__);
-
-    Matrix<T> temp(*this);
-	size_t n = size.first;
-
-    for (size_t k = 0; k < n - 1; ++k)
-    {
-        for (size_t i = k + 1; i < n; ++i)
-        {
-            for (size_t j = k + 1; j < n; ++j)
-            {
-                temp(i, j) = (temp(k, k) * temp(i, j) - temp(i, k) * temp(k, j));
-                if (k > 0)
-                {
-                    temp(i, j) /= temp(k - 1, k - 1);
-                }
-            }
-        }
-    }
-
-    return temp(size.first - 1, size.second - 1);
-}
-
-// static Matrix<T> identity();
-// static Matrix<T> zero();
-//
-// Matrix<T> transpose() const;
-// Matrix<T> invert() const;
-#pragma endregion
-
-template <Storable T>
-void Matrix<T>::validateAddSubSize(size_type size, int line) const
-{
-    if (size.first != this->size.first || size.second != this->size.second)
+    if (rows != this->rows || columns != this->columns)
         throw InvalidAddSubSizeExcepetion(__FILE_NAME__, __FUNCTION__, line);
 }
 
 template <Storable T>
 void Matrix<T>::validateRow(size_t row, int line) const
 {
-    if (row < 0 || row >= size.first)
+    if (row < 0 || row >= rows)
         throw InvalidRowException(__FILE_NAME__, __FUNCTION__, line);
 }
 
 template <Storable T>
 void Matrix<T>::validateColumn(size_t column, int line) const
 {
-    if (column < 0 || column >= size.second)
+    if (column < 0 || column >= columns)
         throw InvalidColumnException(__FILE_NAME__, __FUNCTION__, line);
 }
 
 template <Storable T>
 void Matrix<T>::validateDeterminantSize(int line) const
 {
-    if (getSize().first != getSize().second)
+    if (columns != rows)
         throw DeterminantSizeException(__FILE_NAME__, __FUNCTION__, line);
 }

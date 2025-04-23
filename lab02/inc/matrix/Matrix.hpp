@@ -24,7 +24,7 @@ class Matrix : public BaseMatrix
     using size_type = std::pair<std::size_t, std::size_t>;
 
 #pragma region constructors
-    Matrix(size_type size);
+    Matrix(size_t rows, size_t columns);
 
     template <ConvertibleTo<T> U>
     Matrix(std::initializer_list<std::initializer_list<U>> ilist);
@@ -78,13 +78,15 @@ class Matrix : public BaseMatrix
     Matrix<T> &operator+=(const Matrix<U> &matrix);
 #pragma endregion
 
-#pragma region other
+#pragma region misc
     auto det() const;
 
     static Matrix<T> identity();
     static Matrix<T> zero();
 
     Matrix<T> transpose() const;
+    // Matrix<T> &transposed();
+
     Matrix<T> invert() const;
 #pragma endregion
 
@@ -101,12 +103,8 @@ class Matrix : public BaseMatrix
 
 #pragma endregion
 
-#pragma region misc
-    // ...
-#pragma endregion
-
   protected:
-    void validateAddSubSize(size_type size, int line) const;
+    void validateAddSubSize(size_t rows, size_t columns, int line) const;
     void validateRow(size_t row, int line) const;
     void validateColumn(size_t column, int line) const;
     void validateDeterminantSize(int line) const;
@@ -117,10 +115,10 @@ class Matrix : public BaseMatrix
     class RowProxy
     {
       public:
-        RowProxy(std::shared_ptr<T[]> data, size_t row, size_t matrixColumns);
+        RowProxy(const Matrix<T> &matrix, size_t row);
 
-        RowProxy(const RowProxy &) = default;
-        RowProxy(RowProxy &&) = default;
+        RowProxy(const RowProxy &) = delete;
+        RowProxy(RowProxy &&) = delete;
 
         RowProxy &operator=(const RowProxy &) = delete;
         RowProxy &operator=(RowProxy &&) = delete;
@@ -129,11 +127,10 @@ class Matrix : public BaseMatrix
         const T &operator[](size_t index) const;
 
       private:
-        size_t matrixColumns;
-        size_t row;
-        std::weak_ptr<T[]> dataPtr;
+        const Matrix<T> &matrix;
+        const size_t row;
     };
 };
 
+#include <matrix/MatrixImpl.hpp>
 #include <matrix/MatrixRowProxy.hpp>
-#include <matrix/MatrxImpl.hpp>
