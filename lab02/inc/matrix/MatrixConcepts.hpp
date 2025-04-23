@@ -6,6 +6,9 @@ template <typename T>
 concept Storable = std::semiregular<T>;
 
 template <typename T, typename K>
+concept ConvertibleTo = std::convertible_to<T, K>;
+
+template <typename T, typename K>
 concept AddableTo = requires(T a, K b) {
     { a + b };
 };

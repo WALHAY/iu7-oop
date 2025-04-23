@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <matrix/Matrix.hpp>
+#include <matrix/MatrixExceptions.hpp>
 #include <ranges>
 
 template <Storable T>
@@ -12,21 +13,27 @@ Matrix<T>::Matrix(size_type size)
 }
 
 template <Storable T>
-Matrix<T>::Matrix(const Matrix<T> &matrix) : Matrix(matrix.size)
+template <ConvertibleTo<T> U>
+Matrix<T>::Matrix(const Matrix<U> &matrix) : Matrix(matrix.getSize())
 {
-
-    size_t index = 0;
-    std::ranges::copy(matrix.begin(), begin());
+    std::ranges::copy(matrix.begin(), matrix.end(), begin());
 }
 
 template <Storable T>
 Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
     : Matrix(std::make_pair(
-                 ilist.size(),
-                 std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); }))))
+          ilist.size(), std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); }))))
 
 {
-	std::ranges::copy(ilist | std::views::join, begin());
+    std::ranges::copy(ilist | std::views::join, begin());
+}
+
+template <Storable T>
+template<ConvertibleTo<T> U>
+Matrix<T> &Matrix<T>::operator=(const Matrix<U> &matrix)
+{
+	this->size = matrix.getSize();
+    std::ranges::copy(matrix.begin(), matrix.end(), begin());
 }
 
 template <Storable T>
@@ -97,6 +104,7 @@ template <Storable T>
 template <AddableTo<T> U>
 Matrix<decltype(T() + U())> Matrix<T>::add(const Matrix<U> &matrix) const
 {
+    validateAddSubSize(matrix.getSize(), __LINE__);
     Matrix<decltype(std::declval<T>() + std::declval<U>())> result(getSize());
 
     std::ranges::transform(*this, matrix, result.begin(), [](const auto &t, const auto &u) { return t + u; });
@@ -118,4 +126,40 @@ Matrix<T> &Matrix<T>::operator+=(const Matrix<U> &matrix)
 
     return *this;
 }
+#pragma endregion
+
+template <Storable T>
+void Matrix<T>::validateAddSubSize(size_type size, int line) const
+{
+    if (size.first != this->size.first || size.second != this->size.second)
+        throw InvalidAddSubSizeExcepetion(__FILE_NAME__, __FUNCTION__, line);
+}
+
+#pragma region other
+
+template <Storable T>
+auto Matrix<T>::det() const
+{
+    size_t n = size.first;
+    Matrix<double> copy(*this);
+
+    for (size_t k = 1; k < n - 1; ++k)
+    {
+        for (size_t i = k; i < n; ++i)
+        {
+            for (size_t j = k + 1; j < n; ++j)
+            {
+                copy[i][j] = (copy[i][j] * copy[k][k] - copy[i][k] * copy[k][j]) / copy[k - 1][k - 1];
+            }
+        }
+    }
+
+    return copy[size.first][size.first];
+}
+
+// static Matrix<T> identity();
+// static Matrix<T> zero();
+//
+// Matrix<T> transpose() const;
+// Matrix<T> invert() const;
 #pragma endregion

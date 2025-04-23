@@ -24,11 +24,18 @@ class Matrix : public BaseMatrix
 #pragma region constructors
     Matrix(size_type size);
     Matrix(std::initializer_list<std::initializer_list<T>> ilist);
-    Matrix(const Matrix<T> &matrix);
+
+	template<ConvertibleTo<T> U>
+    Matrix(const Matrix<U> &matrix);
+
     Matrix(Matrix<T> &&matrix) noexcept = default;
 #pragma endregion
 
     ~Matrix() override = default;
+
+	template<ConvertibleTo<T> U>
+	Matrix<T> &operator=(const Matrix<U> &matrix);
+	Matrix<T> &operator=(Matrix<T> &&matrix) noexcept = default;
 
 #pragma region iterators
     iterator begin();
@@ -60,7 +67,10 @@ class Matrix : public BaseMatrix
 #pragma endregion
 
 #pragma region other
-    double det() const;
+    auto det() const;
+
+    static Matrix<T> identity();
+    static Matrix<T> zero();
 
     Matrix<T> transpose() const;
     Matrix<T> invert() const;
@@ -85,7 +95,7 @@ class Matrix : public BaseMatrix
 #pragma endregion
 
   protected:
-	void validateAddSubSize(size_t size);
+    void validateAddSubSize(size_type size, int line) const;
 
     std::shared_ptr<T[]> data;
 
@@ -104,12 +114,12 @@ class Matrix : public BaseMatrix
         RowProxy &operator=(const RowProxy &) = delete;
         RowProxy &operator=(RowProxy &&) = delete;
 
-        T operator[](size_t index)
+        T &operator[](size_t index)
         {
             return dataPtr.lock()[row * matrixColumns + index];
         }
 
-        const T operator[](size_t index) const
+        const T &operator[](size_t index) const
         {
             return *this[index];
         }
