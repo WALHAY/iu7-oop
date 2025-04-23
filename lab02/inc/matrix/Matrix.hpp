@@ -78,15 +78,8 @@ class Matrix : public BaseMatrix
 
 #pragma region lookup
 
-    RowProxy operator[](size_t row)
-    {
-        return RowProxy(data, row, size.second);
-    }
-
-    const RowProxy operator[](size_t row) const
-    {
-        return operator[](row);
-    }
+    RowProxy operator[](size_t row);
+    const RowProxy operator[](size_t row) const;
 
 #pragma endregion
 
@@ -96,6 +89,9 @@ class Matrix : public BaseMatrix
 
   protected:
     void validateAddSubSize(size_type size, int line) const;
+	void validateRow(size_t row, int line) const;
+	void validateColumn(size_t column, int line) const;
+	void validateDeterminantSize(int line) const;
 
 	Matrix<T> matrixExclude(size_t row, size_t columns) const;
 
@@ -105,10 +101,7 @@ class Matrix : public BaseMatrix
     class RowProxy
     {
       public:
-        RowProxy(std::shared_ptr<T[]> data, size_t row, size_t matrixColumns)
-            : dataPtr(data), row(row), matrixColumns(matrixColumns)
-        {
-        }
+        RowProxy(std::shared_ptr<T[]> data, size_t row, size_t matrixColumns);
 
         RowProxy(const RowProxy &) = default;
         RowProxy(RowProxy &&) = default;
@@ -116,15 +109,8 @@ class Matrix : public BaseMatrix
         RowProxy &operator=(const RowProxy &) = delete;
         RowProxy &operator=(RowProxy &&) = delete;
 
-        T &operator[](size_t index)
-        {
-            return dataPtr.lock()[row * matrixColumns + index];
-        }
-
-        const T &operator[](size_t index) const
-        {
-            return *this[index];
-        }
+        T &operator[](size_t index);
+        const T &operator[](size_t index) const;
 
       private:
         size_t matrixColumns;
@@ -134,3 +120,4 @@ class Matrix : public BaseMatrix
 };
 
 #include <matrix/MatrxImpl.hpp>
+#include <matrix/MatrixRowProxy.hpp>

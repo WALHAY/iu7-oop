@@ -131,11 +131,82 @@ Matrix<T> &Matrix<T>::operator+=(const Matrix<U> &matrix)
 }
 #pragma endregion
 
+#pragma region lookup
+
+template <Storable T>
+
+Matrix<T>::RowProxy Matrix<T>::operator[](size_t row)
+{
+	validateRow(row, __LINE__);
+    return RowProxy(data, row, size.second);
+}
+
+template <Storable T>
+const Matrix<T>::RowProxy Matrix<T>::operator[](size_t row) const
+{
+	validateRow(row, __LINE__);
+    return operator[](row);
+}
+
+#pragma endregion
+
+#pragma region other
+
+template <Storable T>
+auto Matrix<T>::det() const
+{
+	validateDeterminantSize(__LINE__);
+
+    if (getSize().first == 1)
+        return (double)data[0];
+
+    double value = 0;
+    for (size_t i = 0; i < getSize().first; ++i)
+    {
+        Matrix<T> temp = matrixExclude(0, i);
+        double minor = data[0] * temp.det();
+
+        if (i % 2 == 0)
+            value += minor;
+        else
+            value -= minor;
+    }
+    return value;
+}
+
+// static Matrix<T> identity();
+// static Matrix<T> zero();
+//
+// Matrix<T> transpose() const;
+// Matrix<T> invert() const;
+#pragma endregion
+
 template <Storable T>
 void Matrix<T>::validateAddSubSize(size_type size, int line) const
 {
     if (size.first != this->size.first || size.second != this->size.second)
         throw InvalidAddSubSizeExcepetion(__FILE_NAME__, __FUNCTION__, line);
+}
+
+template <Storable T>
+void Matrix<T>::validateRow(size_t row, int line) const
+{
+    if (row < 0 || row >= size.first)
+        throw InvalidRowException(__FILE_NAME__, __FUNCTION__, line);
+}
+
+template <Storable T>
+void Matrix<T>::validateColumn(size_t column, int line) const
+{
+    if (column < 0 || column >= size.second)
+        throw InvalidColumnException(__FILE_NAME__, __FUNCTION__, line);
+}
+
+template <Storable T>
+void Matrix<T>::validateDeterminantSize(int line) const
+{
+	if(getSize().first != getSize().second)
+		throw DeterminantSizeException(__FILE_NAME__, __FUNCTION__, line);
 }
 
 template <Storable T>
@@ -149,32 +220,3 @@ Matrix<T> Matrix<T>::matrixExclude(size_t row, size_t column) const
     std::ranges::transform(indices, result.begin(), [&](size_t index) { return this->data[index]; });
     return result;
 }
-
-#pragma region other
-
-template <Storable T>
-auto Matrix<T>::det() const
-{
-    if (getSize().first == 1)
-        return (double)data[0];
-
-    double value = 0;
-    for (size_t i = 0; i < getSize().first; ++i)
-    {
-        Matrix<T> temp = matrixExclude(0, i);
-		double minor = data[0] * temp.det();
-
-        if (i % 2 == 0)
-            value += minor;
-        else
-            value -= minor;
-    }
-	return value;
-}
-
-// static Matrix<T> identity();
-// static Matrix<T> zero();
-//
-// Matrix<T> transpose() const;
-// Matrix<T> invert() const;
-#pragma endregion
