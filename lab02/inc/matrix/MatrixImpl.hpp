@@ -217,15 +217,11 @@ Matrix<T> Matrix<T>::transpose() const
 {
     Matrix<T> copy(*this);
 
-    // auto mx = copy | std::views::chunk(columns);
-    //
-    // std::views::iota(size_t{0}, columns) | std::views::transform([&, mx](size_t index){
-    // 	return mx | std::views::join | std::views::drop(index) | std::views::stride(this->columns);
-    // });
+    std::ranges::transform(std::views::iota(size_t{0}, getSize()), copy.begin(), [&](const auto &index) { return data[(index % rows) * columns + index / rows]; });
 
-	size_t temp = rows;
-    this->rows = columns;
-    this->columns = rows;
+    size_t temp = rows;
+    copy.rows = columns;
+    copy.columns = temp;
     return copy;
 }
 
