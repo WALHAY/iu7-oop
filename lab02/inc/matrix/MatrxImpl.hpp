@@ -20,6 +20,12 @@ Matrix<T>::Matrix(const Matrix<U> &matrix) : Matrix(matrix.getSize())
 }
 
 template <Storable T>
+Matrix<T>::Matrix(const Matrix<T> &matrix) : Matrix(matrix.getSize())
+{
+    std::ranges::copy(matrix.begin(), matrix.end(), begin());
+}
+
+template <Storable T>
 Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
     : Matrix(std::make_pair(
           ilist.size(), std::ranges::max(ilist | std::views::transform([](const auto &list) { return list.size(); }))))
@@ -34,6 +40,21 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
 template <Storable T>
 template <ConvertibleTo<T> U>
 Matrix<T> &Matrix<T>::operator=(const Matrix<U> &matrix)
+{
+    this->size = matrix.getSize();
+    std::ranges::copy(matrix.begin(), matrix.end(), begin());
+}
+
+template <Storable T>
+Matrix<T> &Matrix<T>::operator=(const Matrix<T> &matrix)
+{
+    this->size = matrix.getSize();
+    std::ranges::copy(matrix.begin(), matrix.end(), begin());
+}
+
+template <Storable T>
+template <ConvertibleTo<T> U>
+Matrix<T> &Matrix<T>::operator=(Matrix<U> &&matrix)
 {
     this->size = matrix.getSize();
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
@@ -79,7 +100,7 @@ auto Matrix<T>::cend() const -> const_iterator
 
 template <Storable T>
 template <AddableTo<T> U>
-Matrix<decltype(T() + U())> Matrix<T>::add(const U &value) const
+decltype(auto) Matrix<T>::add(const U &value) const
 {
     Matrix<decltype(std::declval<T>() + std::declval<U>())> result(*this);
     std::ranges::transform(result, result.begin(), [&value](const auto &element) { return element + value; });
@@ -89,7 +110,7 @@ Matrix<decltype(T() + U())> Matrix<T>::add(const U &value) const
 
 template <Storable T>
 template <AddableTo<T> U>
-Matrix<decltype(T() + U())> Matrix<T>::operator+(const U &value) const
+decltype(auto) Matrix<T>::operator+(const U &value) const
 {
     return add(value);
 }
@@ -105,7 +126,7 @@ Matrix<T> &Matrix<T>::operator+=(const U &value)
 
 template <Storable T>
 template <AddableTo<T> U>
-Matrix<decltype(T() + U())> Matrix<T>::add(const Matrix<U> &matrix) const
+decltype(auto) Matrix<T>::add(const Matrix<U> &matrix) const
 {
     validateAddSubSize(matrix.getSize(), __LINE__);
     Matrix<decltype(std::declval<T>() + std::declval<U>())> result(getSize());
@@ -116,7 +137,7 @@ Matrix<decltype(T() + U())> Matrix<T>::add(const Matrix<U> &matrix) const
 
 template <Storable T>
 template <AddableTo<T> U>
-Matrix<decltype(T() + U())> Matrix<T>::operator+(const Matrix<U> &matrix) const
+decltype(auto) Matrix<T>::operator+(const Matrix<U> &matrix) const
 {
     return add(matrix);
 }
@@ -137,14 +158,14 @@ template <Storable T>
 
 Matrix<T>::RowProxy Matrix<T>::operator[](size_t row)
 {
-	validateRow(row, __LINE__);
+    validateRow(row, __LINE__);
     return RowProxy(data, row, size.second);
 }
 
 template <Storable T>
 const Matrix<T>::RowProxy Matrix<T>::operator[](size_t row) const
 {
-	validateRow(row, __LINE__);
+    validateRow(row, __LINE__);
     return operator[](row);
 }
 
@@ -155,7 +176,7 @@ const Matrix<T>::RowProxy Matrix<T>::operator[](size_t row) const
 template <Storable T>
 auto Matrix<T>::det() const
 {
-	validateDeterminantSize(__LINE__);
+    validateDeterminantSize(__LINE__);
 
     if (getSize().first == 1)
         return (double)data[0];
@@ -205,8 +226,8 @@ void Matrix<T>::validateColumn(size_t column, int line) const
 template <Storable T>
 void Matrix<T>::validateDeterminantSize(int line) const
 {
-	if(getSize().first != getSize().second)
-		throw DeterminantSizeException(__FILE_NAME__, __FUNCTION__, line);
+    if (getSize().first != getSize().second)
+        throw DeterminantSizeException(__FILE_NAME__, __FUNCTION__, line);
 }
 
 template <Storable T>

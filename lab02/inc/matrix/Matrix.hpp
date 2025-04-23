@@ -23,18 +23,26 @@ class Matrix : public BaseMatrix
 
 #pragma region constructors
     Matrix(size_type size);
+
     Matrix(std::initializer_list<std::initializer_list<T>> ilist);
 
 	template<ConvertibleTo<T> U>
     Matrix(const Matrix<U> &matrix);
+    Matrix(const Matrix<T> &matrix);
 
-    Matrix(Matrix<T> &&matrix) noexcept = default;
+	template<ConvertibleTo<T> U>
+	Matrix(Matrix<U> &&matrix);
+	Matrix(Matrix<T> &&matrix) noexcept = default;
 #pragma endregion
 
     ~Matrix() override = default;
 
 	template<ConvertibleTo<T> U>
 	Matrix<T> &operator=(const Matrix<U> &matrix);
+	Matrix<T> &operator=(const Matrix<T> &matrix);
+
+	template<ConvertibleTo<T> U>
+	Matrix<T> &operator=(Matrix<U> &&matrix);
 	Matrix<T> &operator=(Matrix<T> &&matrix) noexcept = default;
 
 #pragma region iterators
@@ -48,19 +56,19 @@ class Matrix : public BaseMatrix
 
 #pragma region addition
     template <AddableTo<T> U>
-    Matrix<decltype(T() + U())> add(const U &value) const;
+    decltype(auto) add(const U &value) const;
 
     template <AddableTo<T> U>
-    Matrix<decltype(T() + U())> operator+(const U &value) const;
+    decltype(auto) operator+(const U &value) const;
 
     template <AddableConvertible<T> U>
     Matrix<T> &operator+=(const U &value);
 
     template <AddableTo<T> U>
-    Matrix<decltype(T() + U())> add(const Matrix<U> &matrix) const;
+    decltype(auto) add(const Matrix<U> &matrix) const;
 
     template <AddableTo<T> U>
-    Matrix<decltype(T() + U())> operator+(const Matrix<U> &matrix) const;
+    decltype(auto) operator+(const Matrix<U> &matrix) const;
 
     template <AddableConvertible<T> U>
     Matrix<T> &operator+=(const Matrix<U> &matrix);
