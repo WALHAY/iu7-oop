@@ -85,7 +85,7 @@ class Matrix : public BaseMatrix
     static Matrix<T> zero();
 
     Matrix<T> transpose() const;
-    // Matrix<T> &transposed();
+    Matrix<T> &transposed();
 
     Matrix<T> invert() const;
 #pragma endregion

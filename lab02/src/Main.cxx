@@ -7,7 +7,6 @@ int main()
     Matrix dm = {{-0.5, 0.5}, {0.5, -0.5}};
 
     // im += dm;
-	//
     for (size_t i = 0; i < im.getRows(); ++i)
     {
         for (size_t j = 0; j < im.getColumns(); ++j)
@@ -30,7 +29,7 @@ int main()
 
     // std::cout << "det: " << im.det() << std::endl;
 
-    // for (const auto &it : im)
-    //     std::cout << it << " ";
+    for (const auto &it : im)
+        std::cout << it << " ";
     return 0;
 }

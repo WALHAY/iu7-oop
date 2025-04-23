@@ -189,9 +189,7 @@ auto Matrix<T>::det() const
             {
                 temp(i, j) = (temp(k, k) * temp(i, j) - temp(i, k) * temp(k, j));
                 if (k > 0)
-                {
                     temp(i, j) /= temp(k - 1, k - 1);
-                }
             }
         }
     }
@@ -199,30 +197,27 @@ auto Matrix<T>::det() const
     return temp(rows - 1, columns - 1);
 }
 
-// template <Storable T>
-// Matrix<T> &Matrix<T>::transposed()
-// {
-// 	auto mx = *this | std::views::chunk(columns);
-//
-// 	std::views::iota(size_t{0}, columns) | std::views::transform([&, mx](size_t index){
-// 		return mx | std::views::join | std::views::drop(index) | std::views::stride(this->columns);
-// 	});
-//
-// 	this->size = std::make_pair(columns, rows);
-// 	return *this;
-// }
+template <Storable T>
+Matrix<T> &Matrix<T>::transposed()
+{
+	auto mx = transpose();
+	data.swap(mx.data);
+
+    return *this;
+}
 
 template <Storable T>
 Matrix<T> Matrix<T>::transpose() const
 {
-    Matrix<T> copy(*this);
+    Matrix<T> transposed(columns, rows);
 
-    std::ranges::transform(std::views::iota(size_t{0}, getSize()), copy.begin(), [&](const auto &index) { return data[(index % rows) * columns + index / rows]; });
+    std::ranges::transform(std::views::iota(size_t{0}, getSize()), transposed.begin(), [&, transposed](auto index) {
+        size_t i = index / rows;
+        size_t j = index % rows;
+        return this->data[j * columns + i];
+    });
 
-    size_t temp = rows;
-    copy.rows = columns;
-    copy.columns = temp;
-    return copy;
+    return transposed;
 }
 
 #pragma endregion
