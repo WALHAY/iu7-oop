@@ -92,32 +92,6 @@ class Matrix : public BaseMatrix
     Matrix<T> &operator+=(const Matrix<U> &matrix);
 #pragma endregion
 
-#pragma region subtraction
-    template <AddableTo<T> U>
-    decltype(auto) sub(const U &value) const;
-
-    template <SubtractableTo<T> U>
-    decltype(auto) sub(const Matrix<U> &matrix) const;
-
-    template <SubtractableAssignable<T> U>
-    Matrix<T> &subAssign(const U &value);
-
-    template <SubtractableAssignable<T> U>
-    Matrix<T> &subAssign(const Matrix<U> &matrix);
-
-    template <SubtractableTo<T> U>
-    decltype(auto) operator-(const U &value) const;
-
-    template <SubtractableTo<T> U>
-    decltype(auto) operator-(const Matrix<U> &matrix) const;
-
-    template <SubtractableAssignable<T> U>
-    Matrix<T> &operator-=(const U &value);
-
-    template <SubtractableAssignable<T> U>
-    Matrix<T> &operator-=(const Matrix<U> &matrix);
-#pragma endregion
-
 #pragma region misc
     auto det() const
         requires DeterminantComputable<T>;
