@@ -24,6 +24,7 @@ class Matrix : public BaseMatrix
     using size_type = std::pair<std::size_t, std::size_t>;
 
 #pragma region constructors
+    explicit Matrix(size_t size);
     Matrix(size_t rows, size_t columns);
 
     template <ConvertibleTo<T> U>
@@ -62,25 +63,25 @@ class Matrix : public BaseMatrix
     template <AddableTo<T> U>
     decltype(auto) add(const U &value) const;
 
-    template <AddableConvertible<T> U>
+    template <AddableAssignable<T> U>
     Matrix<T> &addAssign(const U &value);
 
     template <AddableTo<T> U>
     decltype(auto) operator+(const U &value) const;
 
-    template <AddableConvertible<T> U>
+    template <AddableAssignable<T> U>
     Matrix<T> &operator+=(const U &value);
 
     template <AddableTo<T> U>
     decltype(auto) add(const Matrix<U> &matrix) const;
 
-    template <AddableConvertible<T> U>
+    template <AddableAssignable<T> U>
     Matrix<T> &addAssign(const Matrix<U> &matrix);
 
     template <AddableTo<T> U>
     decltype(auto) operator+(const Matrix<U> &matrix) const;
 
-    template <AddableConvertible<T> U>
+    template <AddableAssignable<T> U>
     Matrix<T> &operator+=(const Matrix<U> &matrix);
 #pragma endregion
 
@@ -88,15 +89,18 @@ class Matrix : public BaseMatrix
     auto det() const
         requires DeterminantComputable<T>;
 
-    static Matrix<T> identity()
-        requires HasIdentityElement<T>;
-    static Matrix<T> zero()
+    static Matrix<T> identity(size_t size)
+        requires HasIdentityElement<T> && HasZeroElement<T>;
+    static Matrix<T> zero(size_t rows, size_t columns)
         requires HasZeroElement<T>;
 
     Matrix<T> transpose() const;
     Matrix<T> &transposed();
 
-    Matrix<T> invert() const;
+    Matrix<T> invert() const
+        requires InvertComputable<T>;
+    Matrix<T> &inverted()
+        requires InvertComputable<T>;
 #pragma endregion
 
 #pragma region lookup

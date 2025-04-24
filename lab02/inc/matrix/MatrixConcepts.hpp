@@ -14,7 +14,7 @@ concept AddableTo = requires(T a, K b) {
 };
 
 template <typename T, typename K>
-concept AddableConvertible = requires(T a, K b) {
+concept AddableAssignable = requires(T a, K b) {
     { a + b } -> std::convertible_to<T>;
 };
 
@@ -33,6 +33,11 @@ concept DeterminantComputable = requires(T a, T b) {
     { a - b } -> std::convertible_to<double>;
     { a + b } -> std::convertible_to<double>;
     { a / b } -> std::convertible_to<double>;
+};
+
+template <typename T>
+concept InvertComputable = requires  {
+	{ true };
 };
 
 template <typename T>

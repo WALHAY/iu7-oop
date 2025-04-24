@@ -6,6 +6,11 @@
 #include <ranges>
 
 template <Storable T>
+Matrix<T>::Matrix(size_t size) : Matrix(size, size)
+{
+}
+
+template <Storable T>
 Matrix<T>::Matrix(size_t rows, size_t columns)
 {
     this->rows = rows;
@@ -128,7 +133,7 @@ decltype(auto) Matrix<T>::add(const U &value) const
 }
 
 template <Storable T>
-template <AddableConvertible<T> U>
+template <AddableAssignable<T> U>
 Matrix<T> &Matrix<T>::addAssign(const U &value)
 {
     std::ranges::transform(*this, begin(), [&value](const auto &element) { return element + value; });
@@ -144,7 +149,7 @@ decltype(auto) Matrix<T>::operator+(const U &value) const
 }
 
 template <Storable T>
-template <AddableConvertible<T> U>
+template <AddableAssignable<T> U>
 Matrix<T> &Matrix<T>::operator+=(const U &value)
 {
     return addAssign(value);
@@ -162,7 +167,7 @@ decltype(auto) Matrix<T>::add(const Matrix<U> &matrix) const
 }
 
 template <Storable T>
-template <AddableConvertible<T> U>
+template <AddableAssignable<T> U>
 Matrix<T> &Matrix<T>::addAssign(const Matrix<U> &matrix)
 {
     std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t + u; });
@@ -178,7 +183,7 @@ decltype(auto) Matrix<T>::operator+(const Matrix<U> &matrix) const
 }
 
 template <Storable T>
-template <AddableConvertible<T> U>
+template <AddableAssignable<T> U>
 Matrix<T> &Matrix<T>::operator+=(const Matrix<U> &matrix)
 {
     std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t + u; });
@@ -213,6 +218,27 @@ auto Matrix<T>::det() const
     }
 
     return temp(rows - 1, columns - 1);
+}
+
+template <Storable T>
+Matrix<T> Matrix<T>::identity(size_t size)
+    requires HasIdentityElement<T> && HasZeroElement<T>
+{
+    Matrix<T> identityMatrix(size);
+    std::ranges::transform(std::views::iota(size_t{0}, identityMatrix.getSize()), identityMatrix.begin(),
+                           [&, size](auto index) { return (index % size == index / size) ? T{1} : T{0}; });
+
+    return identityMatrix;
+}
+
+template <Storable T>
+Matrix<T> Matrix<T>::zero(size_t rows, size_t columns)
+    requires HasZeroElement<T>
+{
+    Matrix<T> zeroMatrix(rows, columns);
+    std::ranges::fill(zeroMatrix, T{0});
+
+    return zeroMatrix;
 }
 
 template <Storable T>
