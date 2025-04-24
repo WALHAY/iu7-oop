@@ -62,6 +62,9 @@ class Matrix : public BaseMatrix
     template <AddableTo<T> U>
     decltype(auto) add(const U &value) const;
 
+    template <AddableConvertible<T> U>
+    Matrix<T> &addAssign(const U &value);
+
     template <AddableTo<T> U>
     decltype(auto) operator+(const U &value) const;
 
@@ -71,6 +74,9 @@ class Matrix : public BaseMatrix
     template <AddableTo<T> U>
     decltype(auto) add(const Matrix<U> &matrix) const;
 
+    template <AddableConvertible<T> U>
+    Matrix<T> &addAssign(const Matrix<U> &matrix);
+
     template <AddableTo<T> U>
     decltype(auto) operator+(const Matrix<U> &matrix) const;
 
@@ -79,10 +85,10 @@ class Matrix : public BaseMatrix
 #pragma endregion
 
 #pragma region misc
-    auto det() const;
+    auto det() const requires DeterminantComputable<T>;
 
-    static Matrix<T> identity();
-    static Matrix<T> zero();
+    static Matrix<T> identity() requires HasIdentityElement<T>;
+    static Matrix<T> zero() requires HasZeroElement<T>;
 
     Matrix<T> transpose() const;
     Matrix<T> &transposed();
@@ -104,7 +110,7 @@ class Matrix : public BaseMatrix
 #pragma endregion
 
   protected:
-    void validateAddSubSize(size_t rows, size_t columns, int line) const;
+    void validateEqualSize(size_t rows, size_t columns, int line) const;
     void validateRow(size_t row, int line) const;
     void validateColumn(size_t column, int line) const;
     void validateDeterminantSize(int line) const;
@@ -115,7 +121,7 @@ class Matrix : public BaseMatrix
     class RowProxy
     {
       public:
-        RowProxy(const Matrix<T> &matrix, size_t row);
+        RowProxy(const Matrix<T> &matrix, size_t row) noexcept;
 
         RowProxy(const RowProxy &) = delete;
         RowProxy(RowProxy &&) = delete;

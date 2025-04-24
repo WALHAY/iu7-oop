@@ -2,46 +2,46 @@
 
 #include "base/BaseException.hpp"
 
-class InvalidAddSubSizeExcepetion : public BaseException
+class NotEqualSize : public BaseException
 {
   public:
-    InvalidAddSubSizeExcepetion(const char *filename, const char *method, int line)
+    NotEqualSize(const char *filename, const char *method, int line)
         : BaseException(filename, method, line, "Invalid addition/subtraction matrix size")
     {
     }
 };
 
-class InvalidInitListSizeException : public BaseException
+class InitListWrongSize : public BaseException
 {
   public:
-    InvalidInitListSizeException(const char *filename, const char *method, int line)
+    InitListWrongSize(const char *filename, const char *method, int line)
         : BaseException(filename, method, line, "Invalid initializer list dimension")
     {
     }
 };
 
-class InvalidRowException : public BaseException
+class MatrixRowOutOfBounds : public BaseException
 {
   public:
-    InvalidRowException(const char *filename, const char *method, int line)
+    MatrixRowOutOfBounds(const char *filename, const char *method, int line)
         : BaseException(filename, method, line, "Invalid matrix row")
     {
     }
 };
 
-class InvalidColumnException : public BaseException
+class MatrixColumnOutOfBounds : public BaseException
 {
   public:
-    InvalidColumnException(const char *filename, const char *method, int line)
+    MatrixColumnOutOfBounds(const char *filename, const char *method, int line)
         : BaseException(filename, method, line, "Invalid matrix column")
     {
     }
 };
 
-class DeterminantSizeException : public BaseException
+class NotSquareMatrix : public BaseException
 {
   public:
-    DeterminantSizeException(const char *filename, const char *method, int line)
+    NotSquareMatrix(const char *filename, const char *method, int line)
         : BaseException(filename, method, line, "Matrix is not square")
     {
     }

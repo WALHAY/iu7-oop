@@ -35,7 +35,7 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<U>> ilist)
 
 {
     if (std::ranges::any_of(ilist, [this](const auto &l) { return l.size() != this->columns; }))
-        throw InvalidInitListSizeException(__FILE_NAME__, __FUNCTION__, __LINE__);
+        throw InitListWrongSize(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     std::ranges::copy(ilist | std::views::join, begin());
 }
@@ -47,7 +47,7 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
 
 {
     if (std::ranges::any_of(ilist, [this](const auto &l) { return l.size() != this->columns; }))
-        throw InvalidInitListSizeException(__FILE_NAME__, __FUNCTION__, __LINE__);
+        throw InitListWrongSize(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     std::ranges::copy(ilist | std::views::join, begin());
 }
@@ -128,6 +128,15 @@ decltype(auto) Matrix<T>::add(const U &value) const
 }
 
 template <Storable T>
+template <AddableConvertible<T> U>
+Matrix<T> &Matrix<T>::addAssign(const U &value)
+{
+    std::ranges::transform(*this, begin(), [&value](const auto &element) { return element + value; });
+
+    return *this;
+}
+
+template <Storable T>
 template <AddableTo<T> U>
 decltype(auto) Matrix<T>::operator+(const U &value) const
 {
@@ -138,20 +147,27 @@ template <Storable T>
 template <AddableConvertible<T> U>
 Matrix<T> &Matrix<T>::operator+=(const U &value)
 {
-    std::ranges::transform(*this, begin(), [&value](const auto &element) { return element + value; });
-
-    return *this;
+	return addAssign(value);
 }
 
 template <Storable T>
 template <AddableTo<T> U>
 decltype(auto) Matrix<T>::add(const Matrix<U> &matrix) const
 {
-    validateAddSubSize(matrix.getSize(), __LINE__);
+    validateEqualSize(matrix.getSize(), __LINE__);
     Matrix<decltype(std::declval<T>() + std::declval<U>())> result(getSize());
 
     std::ranges::transform(*this, matrix, result.begin(), [](const auto &t, const auto &u) { return t + u; });
     return result;
+}
+
+template <Storable T>
+template <AddableConvertible<T> U>
+Matrix<T> &Matrix<T>::addAssign(const Matrix<U> &matrix)
+{
+    std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t + u; });
+
+    return *this;
 }
 
 template <Storable T>
@@ -169,12 +185,13 @@ Matrix<T> &Matrix<T>::operator+=(const Matrix<U> &matrix)
 
     return *this;
 }
+
 #pragma endregion
 
 #pragma region other
 
 template <Storable T>
-auto Matrix<T>::det() const
+auto Matrix<T>::det() const requires DeterminantComputable<T>
 {
     validateDeterminantSize(__LINE__);
 
@@ -200,10 +217,7 @@ auto Matrix<T>::det() const
 template <Storable T>
 Matrix<T> &Matrix<T>::transposed()
 {
-	auto mx = transpose();
-	data.swap(mx.data);
-
-    return *this;
+    return *this = transpose();
 }
 
 template <Storable T>
@@ -269,29 +283,29 @@ auto Matrix<T>::at(size_t row, size_t column) const -> const_reference
 #pragma endregion
 
 template <Storable T>
-void Matrix<T>::validateAddSubSize(size_t rows, size_t columns, int line) const
+void Matrix<T>::validateEqualSize(size_t rows, size_t columns, int line) const
 {
     if (rows != this->rows || columns != this->columns)
-        throw InvalidAddSubSizeExcepetion(__FILE_NAME__, __FUNCTION__, line);
+        throw NotEqualSize(__FILE_NAME__, __FUNCTION__, line);
 }
 
 template <Storable T>
 void Matrix<T>::validateRow(size_t row, int line) const
 {
     if (row < 0 || row >= rows)
-        throw InvalidRowException(__FILE_NAME__, __FUNCTION__, line);
+        throw MatrixRowOutOfBounds(__FILE_NAME__, __FUNCTION__, line);
 }
 
 template <Storable T>
 void Matrix<T>::validateColumn(size_t column, int line) const
 {
     if (column < 0 || column >= columns)
-        throw InvalidColumnException(__FILE_NAME__, __FUNCTION__, line);
+        throw MatrixColumnOutOfBounds(__FILE_NAME__, __FUNCTION__, line);
 }
 
 template <Storable T>
 void Matrix<T>::validateDeterminantSize(int line) const
 {
     if (columns != rows)
-        throw DeterminantSizeException(__FILE_NAME__, __FUNCTION__, line);
+        throw NotSquareMatrix(__FILE_NAME__, __FUNCTION__, line);
 }
