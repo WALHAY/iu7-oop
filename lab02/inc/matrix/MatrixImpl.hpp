@@ -147,7 +147,7 @@ template <Storable T>
 template <AddableConvertible<T> U>
 Matrix<T> &Matrix<T>::operator+=(const U &value)
 {
-	return addAssign(value);
+    return addAssign(value);
 }
 
 template <Storable T>
@@ -191,7 +191,8 @@ Matrix<T> &Matrix<T>::operator+=(const Matrix<U> &matrix)
 #pragma region other
 
 template <Storable T>
-auto Matrix<T>::det() const requires DeterminantComputable<T>
+auto Matrix<T>::det() const
+    requires DeterminantComputable<T>
 {
     validateDeterminantSize(__LINE__);
 

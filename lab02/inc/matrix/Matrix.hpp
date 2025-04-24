@@ -85,10 +85,13 @@ class Matrix : public BaseMatrix
 #pragma endregion
 
 #pragma region misc
-    auto det() const requires DeterminantComputable<T>;
+    auto det() const
+        requires DeterminantComputable<T>;
 
-    static Matrix<T> identity() requires HasIdentityElement<T>;
-    static Matrix<T> zero() requires HasZeroElement<T>;
+    static Matrix<T> identity()
+        requires HasIdentityElement<T>;
+    static Matrix<T> zero()
+        requires HasZeroElement<T>;
 
     Matrix<T> transpose() const;
     Matrix<T> &transposed();

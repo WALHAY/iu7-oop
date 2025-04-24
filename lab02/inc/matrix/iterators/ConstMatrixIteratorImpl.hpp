@@ -11,9 +11,9 @@ ConstMatrixIterator<T>::ConstMatrixIterator(const Matrix<T> &matrix) : ConstMatr
 template <typename T>
 ConstMatrixIterator<T>::ConstMatrixIterator(const Matrix<T> &matrix, size_type index)
 {
-	this->dataPtr = matrix.data;
+    this->dataPtr = matrix.data;
     this->matrixSize = matrix.getSize();
-	this->currentIndex = index;
+    this->currentIndex = index;
 }
 
 template <typename T>
@@ -37,84 +37,85 @@ auto ConstMatrixIterator<T>::operator->() const -> pointer
 template <typename T>
 ConstMatrixIterator<T> &ConstMatrixIterator<T>::operator++()
 {
-	++currentIndex;
-	return *this;
+    ++currentIndex;
+    return *this;
 }
 
 template <typename T>
 ConstMatrixIterator<T> ConstMatrixIterator<T>::operator++(int) // postfix
 {
-	ConstMatrixIterator<T> copy(*this);
-	++currentIndex;
-	return copy;
+    ConstMatrixIterator<T> copy(*this);
+    ++currentIndex;
+    return copy;
 }
 template <typename T>
 ConstMatrixIterator<T> ConstMatrixIterator<T>::operator+(difference_type step) const
 {
-	ConstMatrixIterator<T> newIter(*this);
-	newIter->currentIndex += step;
-	return newIter;
+    ConstMatrixIterator<T> newIter(*this);
+    newIter->currentIndex += step;
+    return newIter;
 }
 
 template <typename T>
 ConstMatrixIterator<T> &ConstMatrixIterator<T>::operator+=(difference_type step)
 {
-	currentIndex += step;
-	return *this;
+    currentIndex += step;
+    return *this;
 }
 
 template <typename T>
 ConstMatrixIterator<T> &ConstMatrixIterator<T>::operator--()
 {
-	--currentIndex;
-	return *this;
+    --currentIndex;
+    return *this;
 }
 
 template <typename T>
 ConstMatrixIterator<T> ConstMatrixIterator<T>::operator--(int)
 {
-	ConstMatrixIterator<T> copy(*this);
-	--currentIndex;
-	return copy;
+    ConstMatrixIterator<T> copy(*this);
+    --currentIndex;
+    return copy;
 }
 
 template <typename T>
 ConstMatrixIterator<T> ConstMatrixIterator<T>::operator-(difference_type step) const
 {
-	ConstMatrixIterator<T> newIter(*this);
-	newIter->currentIndex -= step;
-	return newIter;
+    ConstMatrixIterator<T> newIter(*this);
+    newIter->currentIndex -= step;
+    return newIter;
 }
 
 template <typename T>
 ConstMatrixIterator<T> &ConstMatrixIterator<T>::operator-=(difference_type step)
 {
-	currentIndex -= step;
-	return *this;
+    currentIndex -= step;
+    return *this;
 }
 
 template <typename T>
 auto ConstMatrixIterator<T>::operator-(const ConstMatrixIterator<T> &iterator) const -> difference_type
 {
-	return this->currentIndex - iterator.currentIndex;
+    return this->currentIndex - iterator.currentIndex;
 }
 
 template <typename T>
 auto ConstMatrixIterator<T>::operator[](difference_type offset) const -> reference
 {
-	return *(*this + offset);
+    return *(*this + offset);
 }
 
 template <typename T>
-bool ConstMatrixIterator<T>::operator==(const ConstMatrixIterator<T> & iterator) const noexcept
+bool ConstMatrixIterator<T>::operator==(const ConstMatrixIterator<T> &iterator) const noexcept
 {
-	return this->dataPtr.lock() == iterator.dataPtr.lock() && this->currentIndex == iterator.currentIndex;
+    return this->dataPtr.lock() == iterator.dataPtr.lock() && this->currentIndex == iterator.currentIndex;
 }
 
 template <typename T>
-std::strong_ordering ConstMatrixIterator<T>::operator<=>(const ConstMatrixIterator& iterator) const noexcept
+std::strong_ordering ConstMatrixIterator<T>::operator<=>(const ConstMatrixIterator &iterator) const noexcept
 {
-    if (auto cmp = dataPtr.lock() <=> iterator.dataPtr.lock(); cmp != 0) {
+    if (auto cmp = dataPtr.lock() <=> iterator.dataPtr.lock(); cmp != 0)
+    {
         return cmp;
     }
 
@@ -135,4 +136,5 @@ void ConstMatrixIterator<T>::validateIndex(size_type index, int line) const
         throw IteratorInvalidIndexException(__FILE_NAME__, __FUNCTION__, line);
 }
 
-static_assert(std::random_access_iterator<ConstMatrixIterator<int>>, "ConstMatrixIterator fails random access iterator concept");
+static_assert(std::random_access_iterator<ConstMatrixIterator<int>>,
+              "ConstMatrixIterator fails random access iterator concept");

@@ -22,7 +22,7 @@ class ConstMatrixIterator : public BaseMatrixIterator
 
     ConstMatrixIterator() = default;
     explicit ConstMatrixIterator(const Matrix<T> &matrix);
-	ConstMatrixIterator(const Matrix<T> &matrix, size_type index);
+    ConstMatrixIterator(const Matrix<T> &matrix, size_type index);
     ConstMatrixIterator(const ConstMatrixIterator &iterator) noexcept = default;
     ConstMatrixIterator(ConstMatrixIterator &&iterator) noexcept = default;
 
@@ -37,9 +37,10 @@ class ConstMatrixIterator : public BaseMatrixIterator
     ConstMatrixIterator<T> operator+(difference_type) const;
     ConstMatrixIterator<T> &operator+=(difference_type);
 
-	friend ConstMatrixIterator<T> operator+(difference_type offset, const ConstMatrixIterator<T> &iterator) {
-		return iterator + offset;
-	}
+    friend ConstMatrixIterator<T> operator+(difference_type offset, const ConstMatrixIterator<T> &iterator)
+    {
+        return iterator + offset;
+    }
 
     ConstMatrixIterator<T> &operator--();
     ConstMatrixIterator<T> operator--(int);
@@ -52,7 +53,7 @@ class ConstMatrixIterator : public BaseMatrixIterator
 
     bool operator==(const ConstMatrixIterator<T> &iterator) const noexcept;
 
-	std::strong_ordering operator<=>(const ConstMatrixIterator<T> &iterator) const noexcept;
+    std::strong_ordering operator<=>(const ConstMatrixIterator<T> &iterator) const noexcept;
 
   protected:
     void validateIndex(size_type index, int line) const;

@@ -11,9 +11,9 @@ MatrixIterator<T>::MatrixIterator(const Matrix<T> &matrix) : MatrixIterator(matr
 template <typename T>
 MatrixIterator<T>::MatrixIterator(const Matrix<T> &matrix, size_type index)
 {
-	this->dataPtr = matrix.data;
+    this->dataPtr = matrix.data;
     this->matrixSize = matrix.getSize();
-	this->currentIndex = index;
+    this->currentIndex = index;
 }
 
 template <typename T>
@@ -37,84 +37,85 @@ auto MatrixIterator<T>::operator->() const -> pointer
 template <typename T>
 MatrixIterator<T> &MatrixIterator<T>::operator++()
 {
-	++currentIndex;
-	return *this;
+    ++currentIndex;
+    return *this;
 }
 
 template <typename T>
 MatrixIterator<T> MatrixIterator<T>::operator++(int) // postfix
 {
-	MatrixIterator<T> copy(*this);
-	++currentIndex;
-	return copy;
+    MatrixIterator<T> copy(*this);
+    ++currentIndex;
+    return copy;
 }
 template <typename T>
 MatrixIterator<T> MatrixIterator<T>::operator+(difference_type step) const
 {
-	MatrixIterator<T> newIter(*this);
-	newIter->currentIndex += step;
-	return newIter;
+    MatrixIterator<T> newIter(*this);
+    newIter->currentIndex += step;
+    return newIter;
 }
 
 template <typename T>
 MatrixIterator<T> &MatrixIterator<T>::operator+=(difference_type step)
 {
-	currentIndex += step;
-	return *this;
+    currentIndex += step;
+    return *this;
 }
 
 template <typename T>
 MatrixIterator<T> &MatrixIterator<T>::operator--()
 {
-	--currentIndex;
-	return *this;
+    --currentIndex;
+    return *this;
 }
 
 template <typename T>
 MatrixIterator<T> MatrixIterator<T>::operator--(int)
 {
-	MatrixIterator<T> copy(*this);
-	--currentIndex;
-	return copy;
+    MatrixIterator<T> copy(*this);
+    --currentIndex;
+    return copy;
 }
 
 template <typename T>
 MatrixIterator<T> MatrixIterator<T>::operator-(difference_type step) const
 {
-	MatrixIterator<T> newIter(*this);
-	newIter->currentIndex -= step;
-	return newIter;
+    MatrixIterator<T> newIter(*this);
+    newIter->currentIndex -= step;
+    return newIter;
 }
 
 template <typename T>
 MatrixIterator<T> &MatrixIterator<T>::operator-=(difference_type step)
 {
-	currentIndex -= step;
-	return *this;
+    currentIndex -= step;
+    return *this;
 }
 
 template <typename T>
 auto MatrixIterator<T>::operator-(const MatrixIterator<T> &iterator) const -> difference_type
 {
-	return this->currentIndex - iterator.currentIndex;
+    return this->currentIndex - iterator.currentIndex;
 }
 
 template <typename T>
 auto MatrixIterator<T>::operator[](difference_type offset) const -> reference
 {
-	return *(*this + offset);
+    return *(*this + offset);
 }
 
 template <typename T>
-bool MatrixIterator<T>::operator==(const MatrixIterator<T> & iterator) const noexcept
+bool MatrixIterator<T>::operator==(const MatrixIterator<T> &iterator) const noexcept
 {
-	return this->dataPtr.lock() == iterator.dataPtr.lock() && this->currentIndex == iterator.currentIndex;
+    return this->dataPtr.lock() == iterator.dataPtr.lock() && this->currentIndex == iterator.currentIndex;
 }
 
 template <typename T>
-std::strong_ordering MatrixIterator<T>::operator<=>(const MatrixIterator& iterator) const noexcept
+std::strong_ordering MatrixIterator<T>::operator<=>(const MatrixIterator &iterator) const noexcept
 {
-    if (auto cmp = dataPtr.lock() <=> iterator.dataPtr.lock(); cmp != 0) {
+    if (auto cmp = dataPtr.lock() <=> iterator.dataPtr.lock(); cmp != 0)
+    {
         return cmp;
     }
 
