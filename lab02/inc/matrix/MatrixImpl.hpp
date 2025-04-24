@@ -217,6 +217,46 @@ Matrix<T> &Matrix<T>::operator+=(const Matrix<U> &matrix)
 
 #pragma endregion
 
+#pragma region subtraction
+
+template <Storable T>
+template <SubtractableTo<T> U>
+decltype(auto) Matrix<T>::sub(const U &value) const
+{
+    Matrix<decltype(std::declval<T>() - std::declval<U>())> result(*this);
+    std::ranges::transform(result, result.begin(), [&value](const auto &element) { return element - value; });
+
+    return result;
+}
+
+template <Storable T>
+template <SubtractableTo<T> U>
+decltype(auto) Matrix<T>::sub(const Matrix<U> &matrix) const 
+{
+    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+
+    Matrix<decltype(std::declval<T>() - std::declval<U>())> result(rows, columns);
+
+    std::ranges::transform(begin(), end(), matrix.begin(), matrix.end(), result.begin(), [](const auto &t, const auto &u) { return t - u; });
+    return result;
+}
+
+template <Storable T>
+template <SubtractableTo<T> U>
+decltype(auto) Matrix<T>::operator-(const U &value) const
+{
+    return sub(value);
+}
+
+template <Storable T>
+template <SubtractableTo<T> U>
+decltype(auto) Matrix<T>::operator-(const Matrix<U> &matrix) const
+{
+    return sub(matrix);
+}
+
+#pragma endregion
+
 #pragma region other
 
 template <Storable T>
