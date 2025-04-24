@@ -116,6 +116,36 @@ class Matrix : public BaseMatrix
     template <SubtractableAssignable<T> U>
     Matrix<T> &operator-=(const Matrix<U> &matrix);
 
+#pragma endregion
+
+#pragma region multiplication
+
+    template <MultipliableTo<T> U>
+    decltype(auto) mul(const U &value) const;
+
+    template <MultipliableTo<T> U>
+    decltype(auto) mul(const Matrix<U> &matrix) const;
+
+    template <MultipliableAssignable<T> U>
+    Matrix<T> &mulAssign(const U &value);
+
+    template <MultipliableAssignable<T> U>
+    Matrix<T> &mulAssign(const Matrix<U> &matrix);
+
+    template <MultipliableTo<T> U>
+    decltype(auto) operator*(const U &value) const;
+
+    template <MultipliableTo<T> U>
+    decltype(auto) operator*(const Matrix<U> &matrix) const;
+
+    template <MultipliableAssignable<T> U>
+    Matrix<T> &operator*=(const U &value);
+
+    template <MultipliableAssignable<T> U>
+    Matrix<T> &operator*=(const Matrix<U> &matrix);
+
+#pragma endregion
+
 #pragma region misc
     auto det() const
         requires DeterminantComputable<T>;

@@ -1,8 +1,10 @@
 #pragma once
 
 #include <algorithm>
+#include <iostream>
 #include <matrix/Matrix.hpp>
 #include <matrix/MatrixExceptions.hpp>
+#include <numeric>
 #include <ranges>
 
 template <Storable T>
@@ -289,6 +291,76 @@ Matrix<T> &Matrix<T>::operator-=(const Matrix<U> &matrix)
     return subAssign(matrix);
 }
 
+#pragma region multiplication
+
+template <Storable T>
+template <MultipliableTo<T> U>
+decltype(auto) Matrix<T>::mul(const U &value) const
+{
+    Matrix<decltype(std::declval<T>() * std::declval<U>())> result(*this);
+	result.mulAssign(value);
+
+    return result;
+}
+
+template <Storable T>
+template <MultipliableTo<T> U>
+decltype(auto) Matrix<T>::mul(const Matrix<U> &matrix) const
+{
+    validateEqualSize(matrix.getColumns(), matrix.getRows(), __LINE__);
+
+    Matrix<decltype(std::declval<T>() * std::declval<U>())> result(rows, columns);
+
+    std::ranges::transform(*this, matrix, result.begin(), [](const auto &t, const auto &u) { return t * u; });
+    return result;
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+Matrix<T> &Matrix<T>::mulAssign(const U &value)
+{
+    std::ranges::transform(*this, begin(), [&value](const auto &element) { return element * value; });
+
+    return *this;
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+Matrix<T> &Matrix<T>::mulAssign(const Matrix<U> &matrix)
+{
+    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+
+    return *this;
+}
+
+template <Storable T>
+template <MultipliableTo<T> U>
+decltype(auto) Matrix<T>::operator*(const U &value) const
+{
+    return mul(value);
+}
+
+template <Storable T>
+template <MultipliableTo<T> U>
+decltype(auto) Matrix<T>::operator*(const Matrix<U> &matrix) const
+{
+    return mul(matrix);
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+Matrix<T> &Matrix<T>::operator*=(const U &value)
+{
+    return mulAssign(value);
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+Matrix<T> &Matrix<T>::operator*=(const Matrix<U> &matrix)
+{
+    return mulAssign(matrix);
+}
+
 #pragma endregion
 
 #pragma region other
@@ -339,7 +411,13 @@ Matrix<T> Matrix<T>::zero(size_t rows, size_t columns)
 template <Storable T>
 Matrix<T> &Matrix<T>::transposed()
 {
-    return *this = transpose();
+	auto tranpsosed = std::views::iota(size_t{0}, columns) | std::views::transform([&](auto index) {
+		return *this | std::views::drop(index) | std::views::stride(columns);
+	}) | std::views::join;
+
+	std::ranges::copy(tranpsosed, begin());
+
+	return *this;
 }
 
 template <Storable T>

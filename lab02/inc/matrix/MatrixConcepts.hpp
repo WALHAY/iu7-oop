@@ -15,7 +15,7 @@ concept AddableTo = requires(T a, K b) {
 
 template <typename T, typename K>
 concept AddableAssignable = requires(T a, K b) {
-    { a + b } -> std::convertible_to<T>;
+    { a + b } -> std::convertible_to<K>;
 };
 
 template <typename T, typename K>
@@ -25,7 +25,17 @@ concept SubtractableTo = requires(T a, K b) {
 
 template <typename T, typename K>
 concept SubtractableAssignable = requires(T a, K b) {
-    { a - b } -> std::convertible_to<T>;
+    { a - b } -> std::convertible_to<K>;
+};
+
+template <typename T, typename K>
+concept MultipliableTo = requires(T a, K b) {
+    { a * b };
+};
+
+template <typename T, typename K>
+concept MultipliableAssignable = requires(T a, K b) {
+    { a * b } -> std::convertible_to<K>;
 };
 
 template <typename T>
