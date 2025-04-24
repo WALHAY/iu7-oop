@@ -4,7 +4,7 @@
 #include <matrix/iterators/MatrixIteratorExceptions.hpp>
 
 template <typename T>
-ConstMatrixIterator<T>::ConstMatrixIterator(const Matrix<T> &matrix)
+ConstMatrixIterator<T>::ConstMatrixIterator(const Matrix<value_type> &matrix)
 {
     this->dataPtr = matrix.data;
     this->matrixSize = matrix.getSize();
@@ -131,5 +131,5 @@ void ConstMatrixIterator<T>::validateIndex(size_type index, int line) const
         throw IteratorInvalidIndexException(__FILE_NAME__, __FUNCTION__, line);
 }
 
-static_assert(std::random_access_iterator<ConstMatrixIterator<int>>,
+static_assert(std::random_access_iterator<ConstMatrixIterator<const int>>,
               "ConstMatrixIterator fails random access iterator concept");

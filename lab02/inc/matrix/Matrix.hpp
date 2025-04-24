@@ -23,12 +23,16 @@ class Matrix : public BaseMatrix
     using const_iterator = ConstMatrixIterator<T>;
 
 #pragma region constructors
-    explicit Matrix(size_t size);
     Matrix(size_t rows, size_t columns);
+    explicit Matrix(size_t size);
 
     template <ConvertibleTo<T> U>
-	Matrix(const U* value, size_t rows, size_t columns);
-	Matrix(const T* value, size_t rows, size_t columns);
+    Matrix(const U *value, size_t rows, size_t columns);
+    Matrix(const T *value, size_t rows, size_t columns);
+
+    template <std::ranges::input_range R>
+        requires ConvertibleTo<std::ranges::range_value_t<R>, T>
+    Matrix(const R &range, size_t rows, size_t columns);
 
     template <ConvertibleTo<T> U>
     Matrix(std::initializer_list<std::initializer_list<U>> ilist);
@@ -66,26 +70,52 @@ class Matrix : public BaseMatrix
     template <AddableTo<T> U>
     decltype(auto) add(const U &value) const;
 
-    template <AddableAssignable<T> U>
-    Matrix<T> &addAssign(const U &value);
-
-    template <AddableTo<T> U>
-    decltype(auto) operator+(const U &value) const;
-
-    template <AddableAssignable<T> U>
-    Matrix<T> &operator+=(const U &value);
-
     template <AddableTo<T> U>
     decltype(auto) add(const Matrix<U> &matrix) const;
+
+    template <AddableAssignable<T> U>
+    Matrix<T> &addAssign(const U &value);
 
     template <AddableAssignable<T> U>
     Matrix<T> &addAssign(const Matrix<U> &matrix);
 
     template <AddableTo<T> U>
+    decltype(auto) operator+(const U &value) const;
+
+    template <AddableTo<T> U>
     decltype(auto) operator+(const Matrix<U> &matrix) const;
 
     template <AddableAssignable<T> U>
+    Matrix<T> &operator+=(const U &value);
+
+    template <AddableAssignable<T> U>
     Matrix<T> &operator+=(const Matrix<U> &matrix);
+#pragma endregion
+
+#pragma region subtraction
+    template <AddableTo<T> U>
+    decltype(auto) sub(const U &value) const;
+
+    template <SubtractableTo<T> U>
+    decltype(auto) sub(const Matrix<U> &matrix) const;
+
+    template <SubtractableAssignable<T> U>
+    Matrix<T> &subAssign(const U &value);
+
+    template <SubtractableAssignable<T> U>
+    Matrix<T> &subAssign(const Matrix<U> &matrix);
+
+    template <SubtractableTo<T> U>
+    decltype(auto) operator-(const U &value) const;
+
+    template <SubtractableTo<T> U>
+    decltype(auto) operator-(const Matrix<U> &matrix) const;
+
+    template <SubtractableAssignable<T> U>
+    Matrix<T> &operator-=(const U &value);
+
+    template <SubtractableAssignable<T> U>
+    Matrix<T> &operator-=(const Matrix<U> &matrix);
 #pragma endregion
 
 #pragma region misc
@@ -104,6 +134,9 @@ class Matrix : public BaseMatrix
         requires InvertComputable<T>;
     Matrix<T> &inverted()
         requires InvertComputable<T>;
+
+    void swapRows(size_t first, size_t second);
+    void swapColumns(size_t first, size_t second);
 #pragma endregion
 
 #pragma region lookup

@@ -9,19 +9,18 @@ class Matrix;
 template <typename T>
 class MatrixIterator : public BaseMatrixIterator
 {
-
-    friend class Matrix<T>;
-
   public:
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using value_type = T;
+    using value_type = std::remove_cv_t<T>;
     using pointer = T *;
     using reference = T &;
     using iterator_category = std::random_access_iterator_tag;
 
+    friend class Matrix<value_type>;
+
     MatrixIterator() = default;
-    explicit MatrixIterator(const Matrix<T> &matrix);
+    explicit MatrixIterator(const Matrix<value_type> &matrix);
     MatrixIterator(const MatrixIterator &iterator) noexcept = default;
     MatrixIterator(MatrixIterator &&iterator) noexcept = default;
 

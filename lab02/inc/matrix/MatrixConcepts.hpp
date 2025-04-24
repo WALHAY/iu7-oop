@@ -6,7 +6,7 @@ template <typename T>
 concept Storable = std::semiregular<T>;
 
 template <typename T, typename K>
-concept ConvertibleTo = std::convertible_to<T, K> || std::same_as<T, K>;
+concept ConvertibleTo = std::convertible_to<T, K>;
 
 template <typename T, typename K>
 concept AddableTo = requires(T a, K b) {
@@ -24,7 +24,7 @@ concept SubtractableTo = requires(T a, K b) {
 };
 
 template <typename T, typename K>
-concept SubtractableConvertible = requires(T a, K b) {
+concept SubtractableAssignable = requires(T a, K b) {
     { a - b } -> std::convertible_to<T>;
 };
 

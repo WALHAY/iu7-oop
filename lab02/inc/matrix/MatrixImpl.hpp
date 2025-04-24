@@ -6,17 +6,17 @@
 #include <ranges>
 
 template <Storable T>
-Matrix<T>::Matrix(size_t size) : Matrix(size, size)
-{
-}
-
-template <Storable T>
 Matrix<T>::Matrix(size_t rows, size_t columns)
 {
     this->rows = rows;
     this->columns = columns;
 
     this->data = std::make_shared<T[]>(getSize());
+}
+
+template <Storable T>
+Matrix<T>::Matrix(size_t size) : Matrix(size, size)
+{
 }
 
 template <Storable T>
@@ -30,6 +30,14 @@ template <Storable T>
 Matrix<T>::Matrix(const T *value, size_t rows, size_t columns) : Matrix(rows, columns)
 {
     std::ranges::copy(value, value + getSize(), begin());
+}
+
+template <Storable T>
+template <std::ranges::input_range R>
+    requires ConvertibleTo<std::ranges::range_value_t<R>, T>
+Matrix<T>::Matrix(const R &range, size_t rows, size_t columns) : Matrix(rows, columns)
+{
+    std::ranges::copy(range, begin());
 }
 
 template <Storable T>
@@ -74,7 +82,9 @@ template <Storable T>
 template <ConvertibleTo<T> U>
 Matrix<T> &Matrix<T>::operator=(const Matrix<U> &matrix)
 {
-    operator=(matrix);
+    this->rows = matrix.getRows();
+    this->columns = matrix.getColumns();
+    std::ranges::copy(matrix.begin(), matrix.end(), begin());
     return *this;
 }
 
@@ -91,8 +101,8 @@ template <Storable T>
 template <ConvertibleTo<T> U>
 Matrix<T> &Matrix<T>::operator=(Matrix<U> &&matrix)
 {
-    this->rows = matrix.rows;
-    this->columns = matrix.columns;
+    this->rows = matrix.getRows();
+    this->columns = matrix.getColumns();
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
     return *this;
 }
@@ -146,10 +156,33 @@ decltype(auto) Matrix<T>::add(const U &value) const
 }
 
 template <Storable T>
+template <AddableTo<T> U>
+decltype(auto) Matrix<T>::add(const Matrix<U> &matrix) const
+{
+    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+
+    Matrix<decltype(std::declval<T>() + std::declval<U>())> result(rows, columns);
+
+    std::ranges::transform(*this, matrix, result.begin(), [](const auto &t, const auto &u) { return t + u; });
+    return result;
+}
+
+template <Storable T>
 template <AddableAssignable<T> U>
 Matrix<T> &Matrix<T>::addAssign(const U &value)
 {
     std::ranges::transform(*this, begin(), [&value](const auto &element) { return element + value; });
+
+    return *this;
+}
+
+template <Storable T>
+template <AddableAssignable<T> U>
+Matrix<T> &Matrix<T>::addAssign(const Matrix<U> &matrix)
+{
+    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+
+    std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t + u; });
 
     return *this;
 }
@@ -162,33 +195,6 @@ decltype(auto) Matrix<T>::operator+(const U &value) const
 }
 
 template <Storable T>
-template <AddableAssignable<T> U>
-Matrix<T> &Matrix<T>::operator+=(const U &value)
-{
-    return addAssign(value);
-}
-
-template <Storable T>
-template <AddableTo<T> U>
-decltype(auto) Matrix<T>::add(const Matrix<U> &matrix) const
-{
-    validateEqualSize(matrix.getSize(), __LINE__);
-    Matrix<decltype(std::declval<T>() + std::declval<U>())> result(getSize());
-
-    std::ranges::transform(*this, matrix, result.begin(), [](const auto &t, const auto &u) { return t + u; });
-    return result;
-}
-
-template <Storable T>
-template <AddableAssignable<T> U>
-Matrix<T> &Matrix<T>::addAssign(const Matrix<U> &matrix)
-{
-    std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t + u; });
-
-    return *this;
-}
-
-template <Storable T>
 template <AddableTo<T> U>
 decltype(auto) Matrix<T>::operator+(const Matrix<U> &matrix) const
 {
@@ -197,11 +203,88 @@ decltype(auto) Matrix<T>::operator+(const Matrix<U> &matrix) const
 
 template <Storable T>
 template <AddableAssignable<T> U>
+Matrix<T> &Matrix<T>::operator+=(const U &value)
+{
+    return addAssign(value);
+}
+
+template <Storable T>
+template <AddableAssignable<T> U>
 Matrix<T> &Matrix<T>::operator+=(const Matrix<U> &matrix)
 {
-    std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t + u; });
+    return addAssign(matrix);
+}
+
+#pragma endregion
+
+#pragma region subtraction
+
+template <Storable T>
+template <AddableTo<T> U>
+decltype(auto) Matrix<T>::sub(const U &value) const
+{
+    Matrix<decltype(std::declval<T>() - std::declval<U>())> result(*this);
+    std::ranges::transform(result, result.begin(), [&value](const auto &element) { return element - value; });
+
+    return result;
+}
+
+template <Storable T>
+template <SubtractableTo<T> U>
+decltype(auto) Matrix<T>::sub(const Matrix<U> &matrix) const
+{
+    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    Matrix<decltype(std::declval<T>() - std::declval<U>())> result(getSize());
+
+    std::ranges::transform(*this, matrix, result.begin(), [](const auto &t, const auto &u) { return t - u; });
+    return result;
+}
+
+template <Storable T>
+template <SubtractableAssignable<T> U>
+Matrix<T> &Matrix<T>::subAssign(const U &value)
+{
+    std::ranges::transform(*this, begin(), [&value](const auto &element) { return element - value; });
 
     return *this;
+}
+
+template <Storable T>
+template <SubtractableAssignable<T> U>
+Matrix<T> &Matrix<T>::subAssign(const Matrix<U> &matrix)
+{
+    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t - u; });
+
+    return *this;
+}
+
+template <Storable T>
+template <SubtractableTo<T> U>
+decltype(auto) Matrix<T>::operator-(const U &value) const
+{
+    return sub(value);
+}
+
+template <Storable T>
+template <SubtractableTo<T> U>
+decltype(auto) Matrix<T>::operator-(const Matrix<U> &matrix) const
+{
+    return sub(matrix);
+}
+
+template <Storable T>
+template <SubtractableAssignable<T> U>
+Matrix<T> &Matrix<T>::operator-=(const U &value)
+{
+    return subAssign(value);
+}
+
+template <Storable T>
+template <SubtractableAssignable<T> U>
+Matrix<T> &Matrix<T>::operator-=(const Matrix<U> &matrix)
+{
+    return subAssign(matrix);
 }
 
 #pragma endregion
@@ -218,8 +301,8 @@ auto Matrix<T>::det() const
     size_t n = rows;
 
     std::ranges::for_each(std::views::iota(size_t{0}, n - 1), [&temp, n](auto k) {
-         std::ranges::for_each(std::views::iota(size_t{k + 1}, n), [&temp, n, k](auto i) {
-             std::ranges::for_each(std::views::iota(size_t{k + 1}, n), [&temp, i, k](auto j) {
+        std::ranges::for_each(std::views::iota(size_t{k + 1}, n), [&temp, n, k](auto i) {
+            std::ranges::for_each(std::views::iota(size_t{k + 1}, n), [&temp, i, k](auto j) {
                 temp(i, j) = (temp(k, k) * temp(i, j) - temp(i, k) * temp(k, j));
                 if (k > 0)
                     temp(i, j) /= temp(k - 1, k - 1);
@@ -269,6 +352,39 @@ Matrix<T> Matrix<T>::transpose() const
     });
 
     return transposed;
+}
+
+template <Storable T>
+void Matrix<T>::swapRows(size_t first, size_t second)
+{
+    validateRow(first, __LINE__);
+    validateRow(second, __LINE__);
+
+    if (first == second)
+        return;
+
+    std::ranges::swap_ranges(begin() + first * columns, begin() + first * columns + columns, begin() + second * columns,
+                             begin() + second * columns + columns);
+}
+
+template <Storable T>
+void Matrix<T>::swapColumns(size_t first, size_t second)
+{
+    validateColumn(first, __LINE__);
+    validateColumn(second, __LINE__);
+
+    if (first == second)
+        return;
+
+    auto column_view = [&](size_t column) {
+        return std::views::iota(size_t{0}, rows) |
+               std::views::transform([&](size_t row) { return data[row * columns + column]; });
+    };
+
+    auto colFirst = column_view(first);
+    auto colSecond = column_view(second);
+
+    std::ranges::swap_ranges(colFirst, colSecond);
 }
 
 #pragma endregion
