@@ -4,16 +4,11 @@
 #include <matrix/iterators/MatrixIteratorExceptions.hpp>
 
 template <typename T>
-ConstMatrixIterator<T>::ConstMatrixIterator(const Matrix<T> &matrix) : ConstMatrixIterator(matrix, 0)
-{
-}
-
-template <typename T>
-ConstMatrixIterator<T>::ConstMatrixIterator(const Matrix<T> &matrix, size_type index)
+ConstMatrixIterator<T>::ConstMatrixIterator(const Matrix<T> &matrix)
 {
     this->dataPtr = matrix.data;
     this->matrixSize = matrix.getSize();
-    this->currentIndex = index;
+    this->currentIndex = std::size_t{0};
 }
 
 template <typename T>
@@ -52,7 +47,7 @@ template <typename T>
 ConstMatrixIterator<T> ConstMatrixIterator<T>::operator+(difference_type step) const
 {
     ConstMatrixIterator<T> newIter(*this);
-    newIter->currentIndex += step;
+    newIter.currentIndex += step;
     return newIter;
 }
 
@@ -82,7 +77,7 @@ template <typename T>
 ConstMatrixIterator<T> ConstMatrixIterator<T>::operator-(difference_type step) const
 {
     ConstMatrixIterator<T> newIter(*this);
-    newIter->currentIndex -= step;
+    newIter.currentIndex -= step;
     return newIter;
 }
 

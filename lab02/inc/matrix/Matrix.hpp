@@ -21,11 +21,14 @@ class Matrix : public BaseMatrix
     using const_pointer = const T *;
     using const_reference = const T &;
     using const_iterator = ConstMatrixIterator<T>;
-    using size_type = std::pair<std::size_t, std::size_t>;
 
 #pragma region constructors
     explicit Matrix(size_t size);
     Matrix(size_t rows, size_t columns);
+
+    template <ConvertibleTo<T> U>
+	Matrix(const U* value, size_t rows, size_t columns);
+	Matrix(const T* value, size_t rows, size_t columns);
 
     template <ConvertibleTo<T> U>
     Matrix(std::initializer_list<std::initializer_list<U>> ilist);

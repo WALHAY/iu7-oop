@@ -21,6 +21,19 @@ Matrix<T>::Matrix(size_t rows, size_t columns)
 
 template <Storable T>
 template <ConvertibleTo<T> U>
+Matrix<T>::Matrix(const U *value, size_t rows, size_t columns) : Matrix(rows, columns)
+{
+    std::ranges::copy(value, value + getSize(), begin());
+}
+
+template <Storable T>
+Matrix<T>::Matrix(const T *value, size_t rows, size_t columns) : Matrix(rows, columns)
+{
+    std::ranges::copy(value, value + getSize(), begin());
+}
+
+template <Storable T>
+template <ConvertibleTo<T> U>
 Matrix<T>::Matrix(const Matrix<U> &matrix) : Matrix(matrix.getRows(), matrix.getColumns())
 {
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
@@ -93,7 +106,7 @@ auto Matrix<T>::begin() -> iterator
 template <Storable T>
 auto Matrix<T>::end() -> iterator
 {
-    return iterator(*this, getSize());
+    return iterator(*this) + getSize();
 }
 
 template <Storable T>
@@ -105,7 +118,7 @@ auto Matrix<T>::begin() const -> const_iterator
 template <Storable T>
 auto Matrix<T>::end() const -> const_iterator
 {
-    return const_iterator(*this, getSize());
+    return const_iterator(*this) + getSize();
 }
 
 template <Storable T>
@@ -117,7 +130,7 @@ auto Matrix<T>::cbegin() const -> const_iterator
 template <Storable T>
 auto Matrix<T>::cend() const -> const_iterator
 {
-    return const_iterator(*this, getSize());
+    return const_iterator(*this) + getSize();
 }
 
 #pragma region addition
@@ -204,18 +217,15 @@ auto Matrix<T>::det() const
     Matrix<T> temp(*this);
     size_t n = rows;
 
-    for (size_t k = 0; k < n - 1; ++k)
-    {
-        for (size_t i = k + 1; i < n; ++i)
-        {
-            for (size_t j = k + 1; j < n; ++j)
-            {
+    std::ranges::for_each(std::views::iota(size_t{0}, n - 1), [&temp, n](auto k) {
+         std::ranges::for_each(std::views::iota(size_t{k + 1}, n), [&temp, n, k](auto i) {
+             std::ranges::for_each(std::views::iota(size_t{k + 1}, n), [&temp, i, k](auto j) {
                 temp(i, j) = (temp(k, k) * temp(i, j) - temp(i, k) * temp(k, j));
                 if (k > 0)
                     temp(i, j) /= temp(k - 1, k - 1);
-            }
-        }
-    }
+            });
+        });
+    });
 
     return temp(rows - 1, columns - 1);
 }
