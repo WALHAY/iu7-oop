@@ -233,13 +233,14 @@ decltype(auto) Matrix<T>::sub(const U &value) const
 
 template <Storable T>
 template <SubtractableTo<T> U>
-decltype(auto) Matrix<T>::sub(const Matrix<U> &matrix) const 
+decltype(auto) Matrix<T>::sub(const Matrix<U> &matrix) const
 {
     validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
 
     Matrix<decltype(std::declval<T>() - std::declval<U>())> result(rows, columns);
 
-    std::ranges::transform(begin(), end(), matrix.begin(), matrix.end(), result.begin(), [](const auto &t, const auto &u) { return t - u; });
+    std::ranges::transform(begin(), end(), matrix.begin(), matrix.end(), result.begin(),
+                           [](const auto &t, const auto &u) { return t - u; });
     return result;
 }
 
@@ -298,7 +299,7 @@ template <MultipliableTo<T> U>
 decltype(auto) Matrix<T>::mul(const U &value) const
 {
     Matrix<decltype(std::declval<T>() * std::declval<U>())> result(*this);
-	result.mulAssign(value);
+    result.mulAssign(value);
 
     return result;
 }
@@ -328,7 +329,19 @@ template <Storable T>
 template <MultipliableAssignable<T> U>
 Matrix<T> &Matrix<T>::mulAssign(const Matrix<U> &matrix)
 {
-    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateEqualSize(matrix.getColumns(), matrix.getRows(), __LINE__);
+
+    auto rows = *this | std::views::chunk(columns);
+
+    auto value = rows | std::views::transform([&](auto row) {
+                     return matrix.transpose() | std::views::chunk(columns) | std::views::transform([=](auto column) {
+                                return std::inner_product(row.begin(), row.end(), column.begin(), 0);
+                            });
+                 });
+
+    // this->columns = this->rows;
+    // this->data = std::make_shared<T[]>(this->rows * this->rows);
+    std::ranges::copy(value | std::views::join, begin());
 
     return *this;
 }
@@ -411,13 +424,14 @@ Matrix<T> Matrix<T>::zero(size_t rows, size_t columns)
 template <Storable T>
 Matrix<T> &Matrix<T>::transposed()
 {
-	auto tranpsosed = std::views::iota(size_t{0}, columns) | std::views::transform([&](auto index) {
-		return *this | std::views::drop(index) | std::views::stride(columns);
-	}) | std::views::join;
+    auto tranpsosed = std::views::iota(size_t{0}, columns) | std::views::transform([&](auto index) {
+                          return *this | std::views::drop(index) | std::views::stride(columns);
+                      }) |
+                      std::views::join;
 
-	std::ranges::copy(tranpsosed, begin());
+    std::ranges::copy(tranpsosed, begin());
 
-	return *this;
+    return *this;
 }
 
 template <Storable T>
