@@ -195,6 +195,10 @@ class Matrix : public BaseMatrix
 
 #pragma region compare
 
+	bool isSquare() const noexcept {
+		return rows == columns;
+	}
+
     bool isZero() const requires HasZeroElement<T>;
     bool isZero() const requires HasZeroElement<T> && std::is_floating_point_v<T>;
 

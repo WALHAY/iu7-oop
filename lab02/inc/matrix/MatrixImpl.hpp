@@ -371,8 +371,8 @@ auto Matrix<T>::det() const
     validateDeterminantSize(__LINE__);
 
     Matrix<T> temp(*this);
-    size_t n = rows;
 
+    size_t n = rows;
     std::ranges::for_each(std::views::iota(size_t{0}, n - 1), [&temp, n](auto k) {
         std::ranges::for_each(std::views::iota(size_t{k + 1}, n), [&temp, n, k](auto i) {
             std::ranges::for_each(std::views::iota(size_t{k + 1}, n), [&temp, i, k](auto j) {
@@ -393,7 +393,7 @@ Matrix<T> Matrix<T>::identity(size_t size)
     Matrix<T> identityMatrix = Matrix<T>::zero(size, size);
 
     std::ranges::for_each(std::views::iota(size_t{0}, size),
-                          [&](auto index) { identityMatrix[index][index] = value_type{1}; });
+                          [&](auto index) { identityMatrix(index, index) = value_type{1}; });
 
     return identityMatrix;
 }
@@ -477,7 +477,15 @@ decltype(auto) Matrix<T>::invert() const
 template <Storable T>
 Matrix<T> &Matrix<T>::transposed()
 {
-    return *this = transpose();
+    validateDeterminantSize(__LINE__);
+
+    auto transposed = std::ranges::transform(std::views::iota(size_t{0}, getSize()), begin(), [&](auto index) {
+        size_t i = index / rows;
+        size_t j = index % rows;
+        return this->data[j * columns + i];
+    });
+
+    return *this;
 }
 
 template <Storable T>
@@ -485,7 +493,7 @@ Matrix<T> Matrix<T>::transpose() const
 {
     Matrix<T> transposed(columns, rows);
 
-    std::ranges::transform(std::views::iota(size_t{0}, getSize()), transposed.begin(), [&, transposed](auto index) {
+    auto newData = std::ranges::transform(std::views::iota(size_t{0}, getSize()), transposed.begin(), [&](auto index) {
         size_t i = index / rows;
         size_t j = index % rows;
         return this->data[j * columns + i];
@@ -588,7 +596,6 @@ void Matrix<T>::swapColumns(size_t first, size_t second)
 #pragma region lookup
 
 template <Storable T>
-
 Matrix<T>::RowProxy Matrix<T>::operator[](size_t row)
 {
     validateRow(row, __LINE__);
@@ -644,14 +651,15 @@ template <Storable T>
 bool Matrix<T>::isZero() const
     requires HasZeroElement<T> && std::is_floating_point_v<T>
 {
-    return std::ranges::all_of(begin(), end(), [](const auto &value) { return std::abs(value) < std::numeric_limits<T>::epsilon(); });
+    return std::ranges::all_of(begin(), end(),
+                               [](const auto &value) { return std::abs(value) < std::numeric_limits<T>::epsilon(); });
 }
 
 template <Storable T>
 bool Matrix<T>::isIdentity() const
     requires HasIdentityElement<T>
 {
-    if (getRows() != getColumns())
+    if (rows != columns)
         return false;
 
     size_t n = getRows();
@@ -664,12 +672,13 @@ template <Storable T>
 bool Matrix<T>::isIdentity() const
     requires HasIdentityElement<T> && std::is_floating_point_v<T>
 {
-    if (getRows() != getColumns())
+    if (rows != columns)
         return false;
 
     size_t n = getRows();
     return std::ranges::all_of(std::views::iota(size_t{0}, getSize()), [&](size_t index) {
-        return std::abs(this->data[index] - ((index % n == index / n) ? value_type{1} : value_type{0})) < std::numeric_limits<T>::epsilon();
+        return std::abs(this->data[index] - ((index % n == index / n) ? value_type{1} : value_type{0})) <
+               std::numeric_limits<T>::epsilon();
     });
 }
 
