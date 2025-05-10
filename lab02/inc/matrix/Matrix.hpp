@@ -47,6 +47,8 @@ class Matrix : public BaseMatrix
     Matrix(Matrix<T> &&matrix) noexcept = default;
 #pragma endregion
 
+#pragma region assign
+
     ~Matrix() override = default;
 
     template <ConvertibleTo<T> U>
@@ -56,6 +58,8 @@ class Matrix : public BaseMatrix
     template <ConvertibleTo<T> U>
     Matrix<T> &operator=(Matrix<U> &&matrix);
     Matrix<T> &operator=(Matrix<T> &&matrix) noexcept = default;
+
+#pragma endregion
 
 #pragma region iterators
     iterator begin();
@@ -67,6 +71,7 @@ class Matrix : public BaseMatrix
 #pragma endregion
 
 #pragma region addition
+
     template <AddableTo<T> U>
     decltype(auto) add(const U &value) const;
 
@@ -91,6 +96,8 @@ class Matrix : public BaseMatrix
     template <AddableAssignable<T> U>
     Matrix<T> &operator+=(const Matrix<U> &matrix);
 #pragma endregion
+
+#pragma region subtraction
 
     template <SubtractableTo<T> U>
     decltype(auto) sub(const U &value) const;
@@ -158,13 +165,19 @@ class Matrix : public BaseMatrix
     Matrix<T> transpose() const;
     Matrix<T> &transposed();
 
-    Matrix<T> invert() const
+    decltype(auto) invert() const
         requires InvertComputable<T>;
-    Matrix<T> &inverted()
-        requires InvertComputable<T>;
+    decltype(auto) invert() const
+        requires InvertComputable<T> && std::is_arithmetic_v<T>;
 
     void swapRows(size_t first, size_t second);
     void swapColumns(size_t first, size_t second);
+
+    std::pair<Matrix<T>, Matrix<T>> LU() const
+        requires LUComputable<T>;
+    std::pair<Matrix<double>, Matrix<double>> LU() const
+        requires LUComputable<T> && std::is_arithmetic_v<T>;
+
 #pragma endregion
 
 #pragma region lookup
@@ -177,6 +190,19 @@ class Matrix : public BaseMatrix
 
     reference at(size_t row, size_t column);
     const_reference at(size_t row, size_t column) const;
+
+#pragma endregion
+
+#pragma region compare
+
+    bool isZero() const requires HasZeroElement<T>;
+    bool isZero() const requires HasZeroElement<T> && std::is_arithmetic_v<T>;
+
+    bool isIdentity() const requires HasIdentityElement<T>;
+    bool isIdentity() const requires HasIdentityElement<T> && std::is_arithmetic_v<T>;
+
+	bool equals(Matrix<T> &matrix) const;
+    bool operator==(Matrix<T> &matrix) const;
 
 #pragma endregion
 

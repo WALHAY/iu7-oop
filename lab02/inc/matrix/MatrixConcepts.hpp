@@ -39,6 +39,13 @@ concept MultipliableAssignable = requires(T a, K b) {
 };
 
 template <typename T>
+concept LUComputable = requires(T a, T b) {
+    { a - b } -> std::convertible_to<double>;
+    { a * b } -> std::convertible_to<double>;
+    { a / b } -> std::convertible_to<double>;
+};
+
+template <typename T>
 concept DeterminantComputable = requires(T a, T b) {
     { a - b } -> std::convertible_to<double>;
     { a + b } -> std::convertible_to<double>;

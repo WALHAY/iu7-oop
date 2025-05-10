@@ -1,10 +1,8 @@
 #pragma once
 
 #include <algorithm>
-#include <iostream>
 #include <matrix/Matrix.hpp>
 #include <matrix/MatrixExceptions.hpp>
-#include <numeric>
 #include <ranges>
 
 template <Storable T>
@@ -233,13 +231,14 @@ decltype(auto) Matrix<T>::sub(const U &value) const
 
 template <Storable T>
 template <SubtractableTo<T> U>
-decltype(auto) Matrix<T>::sub(const Matrix<U> &matrix) const 
+decltype(auto) Matrix<T>::sub(const Matrix<U> &matrix) const
 {
     validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
 
     Matrix<decltype(std::declval<T>() - std::declval<U>())> result(rows, columns);
 
-    std::ranges::transform(begin(), end(), matrix.begin(), matrix.end(), result.begin(), [](const auto &t, const auto &u) { return t - u; });
+    std::ranges::transform(begin(), end(), matrix.begin(), matrix.end(), result.begin(),
+                           [](const auto &t, const auto &u) { return t - u; });
     return result;
 }
 
@@ -298,7 +297,7 @@ template <MultipliableTo<T> U>
 decltype(auto) Matrix<T>::mul(const U &value) const
 {
     Matrix<decltype(std::declval<T>() * std::declval<U>())> result(*this);
-	result.mulAssign(value);
+    result.mulAssign(value);
 
     return result;
 }
@@ -328,7 +327,7 @@ template <Storable T>
 template <MultipliableAssignable<T> U>
 Matrix<T> &Matrix<T>::mulAssign(const Matrix<U> &matrix)
 {
-    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateEqualSize(matrix.getColumns(), matrix.getRows(), __LINE__);
 
     return *this;
 }
@@ -391,9 +390,10 @@ template <Storable T>
 Matrix<T> Matrix<T>::identity(size_t size)
     requires HasIdentityElement<T> && HasZeroElement<T>
 {
-    Matrix<T> identityMatrix(size);
-    std::ranges::transform(std::views::iota(size_t{0}, identityMatrix.getSize()), identityMatrix.begin(),
-                           [&, size](auto index) { return (index % size == index / size) ? T{1} : T{0}; });
+    Matrix<T> identityMatrix = Matrix<T>::zero(size, size);
+
+    std::ranges::for_each(std::views::iota(size_t{0}, size),
+                          [&](auto index) { identityMatrix[index][index] = value_type{1}; });
 
     return identityMatrix;
 }
@@ -403,21 +403,81 @@ Matrix<T> Matrix<T>::zero(size_t rows, size_t columns)
     requires HasZeroElement<T>
 {
     Matrix<T> zeroMatrix(rows, columns);
-    std::ranges::fill(zeroMatrix, T{0});
+    std::ranges::fill(zeroMatrix, value_type{0});
 
     return zeroMatrix;
 }
 
 template <Storable T>
+decltype(auto) Matrix<T>::invert() const
+    requires InvertComputable<T> && std::is_arithmetic_v<T>
+{
+    auto [L, U] = this->LU();
+
+    size_t n = rows;
+    Matrix<double> invA(n, n);
+    Matrix<double> Y(n, n);
+
+    for (auto c = 0; c < n; c++)
+        for (auto r = 0; r < n; r++)
+        {
+            double sum = r == c ? 1 : 0;
+            for (int k = 0; k < r; k++)
+                sum -= L[r][k] * Y[k][c];
+            Y[r][c] = sum;
+        }
+
+    for (auto c = 0; c < n; c++)
+        for (int r = n - 1; r >= 0; r--)
+        {
+            double sum = Y[r][c];
+            for (int k = r + 1; k < n; ++k)
+                sum -= U[r][k] * invA[k][c];
+            invA[r][c] = sum / U[r][r];
+        }
+
+    return invA;
+}
+
+template <Storable T>
+decltype(auto) Matrix<T>::invert() const
+    requires InvertComputable<T>
+{
+    auto [L, U] = this->LU();
+
+    size_t n = rows;
+    Matrix inverted(n, n);
+    Matrix Y(n, n);
+
+    for (auto c = 0; c < n; c++)
+    {
+        for (auto r = 0; r < n; r++)
+        {
+            value_type sum = r == c ? value_type{1} : value_type{0};
+            for (int k = 0; k < r; k++)
+                sum -= L[r][k] * Y[k][c];
+            Y[r][c] = sum;
+        }
+    }
+
+    for (auto c = 0; c < n; c++)
+    {
+        for (int r = n - 1; r >= 0; r--)
+        {
+            value_type sum = Y[r][c];
+            for (int k = r + 1; k < n; ++k)
+                sum -= U[r][k] * inverted[k][c];
+            inverted[r][c] = sum / U[r][r];
+        }
+    }
+
+    return inverted;
+}
+
+template <Storable T>
 Matrix<T> &Matrix<T>::transposed()
 {
-	auto tranpsosed = std::views::iota(size_t{0}, columns) | std::views::transform([&](auto index) {
-		return *this | std::views::drop(index) | std::views::stride(columns);
-	}) | std::views::join;
-
-	std::ranges::copy(tranpsosed, begin());
-
-	return *this;
+    return *this = transpose();
 }
 
 template <Storable T>
@@ -432,6 +492,62 @@ Matrix<T> Matrix<T>::transpose() const
     });
 
     return transposed;
+}
+
+template <Storable T>
+std::pair<Matrix<double>, Matrix<double>> Matrix<T>::LU() const
+    requires LUComputable<T> && std::is_arithmetic_v<T>
+{
+    validateDeterminantSize(__LINE__);
+
+    auto U = Matrix<double>(*this);
+    auto L = Matrix<double>::zero(rows, columns);
+
+    size_t n = rows;
+    for (auto r = 0; r < n; r++)
+        for (int c = r; c < n; c++)
+            L[c][r] = U[c][r] / U[r][r];
+
+    for (auto k = 1; k < n; k++)
+    {
+        for (int c = k - 1; c < n; c++)
+            for (int r = c; r < n; r++)
+                L[r][c] = U[r][c] / U[c][c];
+
+        for (int r = k; r < n; r++)
+            for (int c = k - 1; c < n; c++)
+                U[r][c] = U[r][c] - L[r][k - 1] * U[k - 1][c];
+    }
+
+    return std::make_pair(L, U);
+}
+
+template <Storable T>
+std::pair<Matrix<T>, Matrix<T>> Matrix<T>::LU() const
+    requires LUComputable<T>
+{
+    validateDeterminantSize(__LINE__);
+
+    auto U = Matrix(*this);
+    auto L = Matrix::zero(rows, columns);
+
+    size_t n = rows;
+    for (int r = 0; r < n; r++)
+        for (int c = r; c < n; c++)
+            L[c][r] = U[c][r] / U[r][r];
+
+    for (auto k = 1; k < n; k++)
+    {
+        for (int c = k - 1; c < n; c++)
+            for (int r = c; r < n; r++)
+                L[r][c] = U[r][c] / U[c][c];
+
+        for (int r = k; r < n; r++)
+            for (int c = k - 1; c < n; c++)
+                U[r][c] = U[r][c] - L[r][k - 1] * U[k - 1][c];
+    }
+
+    return std::make_pair(L, U);
 }
 
 template <Storable T>
@@ -511,6 +627,42 @@ template <Storable T>
 auto Matrix<T>::at(size_t row, size_t column) const -> const_reference
 {
     return at(row, column);
+}
+
+#pragma endregion
+
+#pragma region compare
+
+template <Storable T>
+bool Matrix<T>::isZero() const
+    requires HasZeroElement<T>
+{
+    return std::ranges::all_of(begin(), end(), [](const auto &value) { return value == value_type{0}; });
+}
+
+template <Storable T>
+bool Matrix<T>::isIdentity() const
+    requires HasIdentityElement<T>
+{
+    if (getRows() != getColumns())
+        return false;
+
+    size_t n = getRows();
+    return std::ranges::all_of(std::views::iota(0, getSize()), [&](size_t index) {
+        return this->data[index] == ((index % n == index / n) ? value_type{1} : value_type{0});
+    });
+}
+
+template <Storable T>
+bool Matrix<T>::equals(Matrix<T> &matrix) const
+{
+    return std::ranges::equal(*this, matrix);
+}
+
+template <Storable T>
+bool Matrix<T>::operator==(Matrix<T> &matrix) const
+{
+    return equals(matrix);
 }
 
 #pragma endregion
