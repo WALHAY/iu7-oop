@@ -196,10 +196,10 @@ class Matrix : public BaseMatrix
 #pragma region compare
 
     bool isZero() const requires HasZeroElement<T>;
-    bool isZero() const requires HasZeroElement<T> && std::is_arithmetic_v<T>;
+    bool isZero() const requires HasZeroElement<T> && std::is_floating_point_v<T>;
 
     bool isIdentity() const requires HasIdentityElement<T>;
-    bool isIdentity() const requires HasIdentityElement<T> && std::is_arithmetic_v<T>;
+    bool isIdentity() const requires HasIdentityElement<T> && std::is_floating_point_v<T>;
 
 	bool equals(Matrix<T> &matrix) const;
     bool operator==(Matrix<T> &matrix) const;

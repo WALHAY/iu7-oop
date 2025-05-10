@@ -641,6 +641,13 @@ bool Matrix<T>::isZero() const
 }
 
 template <Storable T>
+bool Matrix<T>::isZero() const
+    requires HasZeroElement<T> && std::is_floating_point_v<T>
+{
+    return std::ranges::all_of(begin(), end(), [](const auto &value) { return std::abs(value) < std::numeric_limits<T>::epsilon(); });
+}
+
+template <Storable T>
 bool Matrix<T>::isIdentity() const
     requires HasIdentityElement<T>
 {
@@ -648,8 +655,21 @@ bool Matrix<T>::isIdentity() const
         return false;
 
     size_t n = getRows();
-    return std::ranges::all_of(std::views::iota(0, getSize()), [&](size_t index) {
+    return std::ranges::all_of(std::views::iota(size_t{0}, getSize()), [&](size_t index) {
         return this->data[index] == ((index % n == index / n) ? value_type{1} : value_type{0});
+    });
+}
+
+template <Storable T>
+bool Matrix<T>::isIdentity() const
+    requires HasIdentityElement<T> && std::is_floating_point_v<T>
+{
+    if (getRows() != getColumns())
+        return false;
+
+    size_t n = getRows();
+    return std::ranges::all_of(std::views::iota(size_t{0}, getSize()), [&](size_t index) {
+        return std::abs(this->data[index] - ((index % n == index / n) ? value_type{1} : value_type{0})) < std::numeric_limits<T>::epsilon();
     });
 }
 
