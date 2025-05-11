@@ -368,7 +368,7 @@ template <Storable T>
 auto Matrix<T>::det() const
     requires DeterminantComputable<T>
 {
-    validateDeterminantSize(__LINE__);
+    validateSquareSize(__LINE__);
 
     Matrix<T> temp(*this);
 
@@ -477,7 +477,7 @@ decltype(auto) Matrix<T>::invert() const
 template <Storable T>
 Matrix<T> &Matrix<T>::transposed()
 {
-    validateDeterminantSize(__LINE__);
+    validateSquareSize(__LINE__);
 
     auto transposed = std::ranges::transform(std::views::iota(size_t{0}, getSize()), begin(), [&](auto index) {
         size_t i = index / rows;
@@ -506,7 +506,7 @@ template <Storable T>
 std::pair<Matrix<double>, Matrix<double>> Matrix<T>::LU() const
     requires LUComputable<T> && std::is_arithmetic_v<T>
 {
-    validateDeterminantSize(__LINE__);
+    validateSquareSize(__LINE__);
 
     auto U = Matrix<double>(*this);
     auto L = Matrix<double>::zero(rows, columns);
@@ -534,7 +534,7 @@ template <Storable T>
 std::pair<Matrix<T>, Matrix<T>> Matrix<T>::LU() const
     requires LUComputable<T>
 {
-    validateDeterminantSize(__LINE__);
+    validateSquareSize(__LINE__);
 
     auto U = Matrix(*this);
     auto L = Matrix::zero(rows, columns);
@@ -606,7 +606,9 @@ Matrix<T>::RowProxy Matrix<T>::operator[](size_t row)
 template <Storable T>
 const Matrix<T>::RowProxy Matrix<T>::operator[](size_t row) const
 {
-    return operator[](row);
+    validateRow(row, __LINE__);
+
+    return RowProxy(*this, row);
 }
 
 template <Storable T>
@@ -633,7 +635,10 @@ auto Matrix<T>::at(size_t row, size_t column) -> reference
 template <Storable T>
 auto Matrix<T>::at(size_t row, size_t column) const -> const_reference
 {
-    return at(row, column);
+    validateRow(row, __LINE__);
+    validateColumn(column, __LINE__);
+
+    return data[row * columns + column];
 }
 
 #pragma endregion
@@ -685,6 +690,9 @@ bool Matrix<T>::isIdentity() const
 template <Storable T>
 bool Matrix<T>::equals(Matrix<T> &matrix) const
 {
+    if (!equalsShape(matrix))
+        return false;
+
     return std::ranges::equal(*this, matrix);
 }
 
@@ -718,8 +726,8 @@ void Matrix<T>::validateColumn(size_t column, int line) const
 }
 
 template <Storable T>
-void Matrix<T>::validateDeterminantSize(int line) const
+void Matrix<T>::validateSquareSize(int line) const
 {
-    if (columns != rows)
+    if (!isSquare())
         throw NotSquareMatrix(__FILE_NAME__, __FUNCTION__, line);
 }

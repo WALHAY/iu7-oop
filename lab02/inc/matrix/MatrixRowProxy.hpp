@@ -20,5 +20,8 @@ T &Matrix<T>::RowProxy::operator[](size_t index)
 template <Storable T>
 const T &Matrix<T>::RowProxy::operator[](size_t index) const
 {
-    return *this[index];
+    if (index < 0 || index >= matrix.columns)
+        throw MatrixColumnOutOfBounds(__FILE_NAME__, __FUNCTION__, __LINE__);
+
+    return matrix.data[row * matrix.columns + index];
 }

@@ -11,7 +11,7 @@ class BaseMatrix
 
     bool isEmpty() const;
 
-    size_t getSize() const
+    size_type getSize() const
     {
         return rows * columns;
     }

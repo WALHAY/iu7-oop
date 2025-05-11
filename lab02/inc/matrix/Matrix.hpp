@@ -170,13 +170,13 @@ class Matrix : public BaseMatrix
     decltype(auto) invert() const
         requires InvertComputable<T> && std::is_arithmetic_v<T>;
 
-    void swapRows(size_t first, size_t second);
-    void swapColumns(size_t first, size_t second);
-
     std::pair<Matrix<T>, Matrix<T>> LU() const
         requires LUComputable<T>;
     std::pair<Matrix<double>, Matrix<double>> LU() const
         requires LUComputable<T> && std::is_arithmetic_v<T>;
+
+    void swapRows(size_t first, size_t second);
+    void swapColumns(size_t first, size_t second);
 
 #pragma endregion
 
@@ -199,6 +199,10 @@ class Matrix : public BaseMatrix
 		return rows == columns;
 	}
 
+	bool equalShape(const Matrix<T> &matrix) const noexcept {
+		return rows == matrix.getRows() && columns == matrix.getColumns();
+	}
+
     bool isZero() const requires HasZeroElement<T>;
     bool isZero() const requires HasZeroElement<T> && std::is_floating_point_v<T>;
 
@@ -214,7 +218,7 @@ class Matrix : public BaseMatrix
     void validateEqualSize(size_t rows, size_t columns, int line) const;
     void validateRow(size_t row, int line) const;
     void validateColumn(size_t column, int line) const;
-    void validateDeterminantSize(int line) const;
+    void validateSquareSize(int line) const;
 
     std::shared_ptr<T[]> data;
 
