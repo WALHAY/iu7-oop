@@ -414,7 +414,7 @@ decltype(auto) Matrix<T>::div(const Matrix<U> &matrix) const
     if (det() == value_type{0})
         throw std::exception();
 
-	 return *this * matrix.invert();
+    return *this * matrix.invert();
 }
 
 template <Storable T>
@@ -463,6 +463,56 @@ Matrix<T> &Matrix<T>::operator/=(const Matrix<U> &matrix)
 
 #pragma endregion
 
+#pragma region hadamard
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+decltype(auto) Matrix<T>::hadamardMul(const Matrix<U> &matrix) const
+{
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+
+    Matrix<decltype(std::declval<T>() * std::declval<U>())> result(rows, columns);
+
+    std::ranges::transform(*this, matrix, result.begin(), [](const auto &t, const auto &u) { return t * u; });
+    return result;
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+decltype(auto) Matrix<T>::hadamardDiv(const Matrix<U> &matrix) const
+{
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+
+    Matrix<decltype(std::declval<T>() / std::declval<U>())> result(rows, columns);
+
+    std::ranges::transform(*this, matrix, result.begin(), [](const auto &t, const auto &u) { return t / u; });
+    return result;
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+decltype(auto) Matrix<T>::hadamardMulAssign(const Matrix<U> &matrix)
+{
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+
+    std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t * u; });
+
+    return *this;
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+decltype(auto) Matrix<T>::hadamardDivAssign(const Matrix<U> &matrix)
+{
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+
+    std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t / u; });
+
+    return *this;
+}
+
+#pragma endregion
+
 #pragma region other
 
 template <Storable T>
@@ -474,15 +524,18 @@ auto Matrix<T>::det() const
     Matrix<T> temp(*this);
 
     size_t n = rows;
-    std::ranges::for_each(std::views::iota(size_t{0}, n - 1), [&temp, n](auto k) {
-        std::ranges::for_each(std::views::iota(size_t{k + 1}, n), [&temp, n, k](auto i) {
-            std::ranges::for_each(std::views::iota(size_t{k + 1}, n), [&temp, i, k](auto j) {
+    for (size_t k = 0; k < n - 1; ++k)
+    {
+        for (size_t i = k + 1; i < n; ++i)
+        {
+            for (size_t j = k + 1; j < n; ++j)
+            {
                 temp(i, j) = (temp(k, k) * temp(i, j) - temp(i, k) * temp(k, j));
                 if (k > 0)
                     temp(i, j) /= temp(k - 1, k - 1);
-            });
-        });
-    });
+            }
+        }
+    }
 
     return temp(rows - 1, columns - 1);
 }
@@ -493,7 +546,7 @@ Matrix<T> Matrix<T>::identity(size_t size)
 {
     Matrix<T> identityMatrix = Matrix<T>::zero(size, size);
 
-    std::ranges::for_each(std::views::iota(size_t{0}, size),
+    std::ranges::for_each(std::views::iota(0u, size),
                           [&](auto index) { identityMatrix(index, index) = value_type{1}; });
 
     return identityMatrix;
@@ -606,7 +659,7 @@ Matrix<T> Matrix<T>::transpose() const
 {
     Matrix<T> transposed(columns, rows);
 
-    auto newData = std::ranges::transform(std::views::iota(size_t{0}, getSize()), transposed.begin(), [&](auto index) {
+    auto newData = std::ranges::transform(std::views::iota(0u, getSize()), transposed.begin(), [&](auto index) {
         size_t i = index / rows;
         size_t j = index % rows;
         return this->data[j * columns + i];
@@ -693,15 +746,10 @@ void Matrix<T>::swapColumns(size_t first, size_t second)
     if (first == second)
         return;
 
-    auto column_view = [&](size_t column) {
-        return std::views::iota(size_t{0}, rows) |
-               std::views::transform([&](size_t row) { return data[row * columns + column]; });
-    };
-
-    auto colFirst = column_view(first);
-    auto colSecond = column_view(second);
-
-    std::ranges::swap_ranges(colFirst, colSecond);
+    for (size_t i = 0; i < rows; ++i)
+    {
+        std::swap(at(i, first), at(i, second));
+    }
 }
 
 #pragma endregion
@@ -781,7 +829,7 @@ bool Matrix<T>::isIdentity() const
         return false;
 
     size_t n = getRows();
-    return std::ranges::all_of(std::views::iota(size_t{0}, getSize()), [&](size_t index) {
+    return std::ranges::all_of(std::views::iota(0u, getSize()), [&](size_t index) {
         return this->data[index] == ((index % n == index / n) ? value_type{1} : value_type{0});
     });
 }
@@ -794,7 +842,7 @@ bool Matrix<T>::isIdentity() const
         return false;
 
     size_t n = getRows();
-    return std::ranges::all_of(std::views::iota(size_t{0}, getSize()), [&](size_t index) {
+    return std::ranges::all_of(std::views::iota(0u, getSize()), [&](size_t index) {
         return std::abs(this->data[index] - ((index % n == index / n) ? value_type{1} : value_type{0})) <
                std::numeric_limits<T>::epsilon();
     });

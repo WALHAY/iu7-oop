@@ -157,7 +157,7 @@ class Matrix : public BaseMatrix
 #pragma region division
 
     template <MultipliableTo<T> U>
-    decltype(auto) div(const U &value) const; 
+    decltype(auto) div(const U &value) const;
 
     template <MultipliableTo<T> U>
     decltype(auto) div(const Matrix<U> &matrix) const;
@@ -179,6 +179,22 @@ class Matrix : public BaseMatrix
 
     template <MultipliableAssignable<T> U>
     Matrix<T> &operator/=(const Matrix<U> &matrix);
+
+#pragma endregion
+
+#pragma region hadamard
+
+    template <MultipliableAssignable<T> U>
+    decltype(auto) hadamardMul(const Matrix<U> &matrix) const;
+
+    template <MultipliableAssignable<T> U>
+    decltype(auto) hadamardDiv(const Matrix<U> &matrix) const;
+
+    template <MultipliableAssignable<T> U>
+    decltype(auto) hadamardMulAssign(const Matrix<U> &matrix);
+
+    template <MultipliableAssignable<T> U>
+    decltype(auto) hadamardDivAssign(const Matrix<U> &matrix);
 
 #pragma endregion
 
@@ -277,4 +293,4 @@ class Matrix : public BaseMatrix
 };
 
 #include <matrix/MatrixImpl.hpp>
-#include <matrix/MatrixRowProxy.hpp>
+#include <matrix/MatrixRow.hpp>

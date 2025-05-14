@@ -1,4 +1,5 @@
 #include "matrix/Matrix.hpp"
+#include <cctype>
 #include <iostream>
 
 template <Storable T>
@@ -14,9 +15,15 @@ void printMatrix(const Matrix<T> &matrix)
     }
 }
 
+void printTitle(std::string title)
+{
+    std::ranges::transform(title, title.begin(), [](const auto &c) { return std::toupper(c); });
+    std::cout << std::format("----- {} -----\n\n", title);
+}
+
 void testAdd()
 {
-    std::cout << "----- ADDITION -----\n\n";
+    printTitle("addition");
     Matrix<int> im = {{1, 2}, {3, 4}};
     Matrix<double> dm = {{-0.6, 0.4}, {0.3, -0.7}};
 
@@ -71,7 +78,7 @@ void testAdd()
 
 void testSub()
 {
-    std::cout << "----- SUBTRACTION -----\n\n";
+    printTitle("subtraction");
     Matrix<int> im = {{1, 2}, {3, 4}};
     Matrix<double> dm = {{-0.6, 0.4}, {0.3, -0.7}};
 
@@ -126,7 +133,7 @@ void testSub()
 
 void testMul()
 {
-    std::cout << "----- MULTIPLICATION -----\n\n";
+    printTitle("multiplication");
     Matrix<int> im = {{1, 2}, {3, 4}};
     Matrix<double> dm = {{-0.6, 0.4}, {0.3, -0.7}};
 
@@ -181,7 +188,7 @@ void testMul()
 
 void testDiv()
 {
-    std::cout << "----- DIVISION -----\n\n";
+    printTitle("division");
     Matrix<int> im = {{1, 2}, {3, 4}};
     Matrix<double> dm = {{-0.6, 0.4}, {0.3, -0.7}};
 
@@ -250,11 +257,147 @@ void testDiv()
     std::cout << "\n";
 }
 
+void testTranspose()
+{
+    printTitle("transpose");
+    Matrix<int> im = {{1, 2, 6}, {3, 4, 4}};
+    Matrix<double> dm = {{-0.6, 0.4, -0.2}, {0.3, -0.7, 1.1}};
+
+    std::cout << "M1:\n";
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "M1^T:\n";
+    printMatrix(im.transpose());
+    std::cout << "\n";
+
+    std::cout << "M2:\n";
+    printMatrix(dm);
+    std::cout << "\n";
+
+    std::cout << "M2^T:\n";
+    printMatrix(dm.transpose());
+    std::cout << "\n";
+}
+
+void testInvert()
+{
+    printTitle("invert");
+    Matrix<int> im = {{1, 2}, {3, 4}};
+    Matrix<double> dm = {{-0.6, 0.4}, {0.3, -0.7}};
+
+    std::cout << "M1:\n";
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "~M1:\n";
+    printMatrix(~im);
+    std::cout << "\n";
+
+    std::cout << "~M1 * M1:\n";
+    printMatrix(~im * im);
+    std::cout << "\n";
+
+    std::cout << "M2:\n";
+    printMatrix(dm);
+    std::cout << "\n";
+
+    std::cout << "M2:\n";
+    printMatrix(~dm);
+    std::cout << "\n";
+
+    std::cout << "~M2 * M2:\n";
+    printMatrix(~dm * dm);
+    std::cout << "\n";
+}
+
+void testDet()
+{
+    printTitle("determinant");
+    Matrix<int> im = {{1, 2}, {3, 4}};
+    Matrix<double> dm = {{-0.6, 0.4}, {0.3, -0.7}};
+    Matrix<int> imm = {{1, 3}, {2, 6}};
+
+    std::cout << "M1:\n";
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "|M1|: " << im.det() << "\n\n";
+
+    std::cout << "M2:\n";
+    printMatrix(dm);
+    std::cout << "\n";
+
+    std::cout << "|M2|: " << dm.det() << "\n\n";
+
+    std::cout << "M3:\n";
+    printMatrix(imm);
+    std::cout << "\n";
+
+    std::cout << "|M3|: " << imm.det() << "\n\n";
+}
+
+void testSwap()
+{
+    printTitle("swap");
+    Matrix<int> im = {{1, 2}, {3, 4}};
+
+    std::cout << "M1:\n";
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "Swap rows\n";
+    im.swapRows(0, 1);
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "Swap columns\n";
+    im.swapColumns(0, 1);
+    printMatrix(im);
+}
+
+void testHadamard()
+{
+    printTitle("hadamard");
+    Matrix<int> im = {{1, 2}, {3, 4}};
+    Matrix<double> dm = {{-0.6, 0.4}, {0.3, -0.7}};
+
+    std::cout << "M1:\n";
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "M2:\n";
+    printMatrix(dm);
+    std::cout << "\n";
+
+    std::cout << "Hadamard M1 * M2:\n";
+    printMatrix(im.hadamardMul(dm));
+    std::cout << "\n";
+
+    Matrix<double> dmm(dm);
+    std::cout << "Hadamard M2 *= M1:\n";
+    printMatrix(dm.hadamardMulAssign(im));
+    std::cout << "\n";
+
+    std::cout << "Hadamard M1 / M2:\n";
+    printMatrix(im.hadamardDiv(dmm));
+    std::cout << "\n";
+
+    std::cout << "Hadamard M2 /= M1:\n";
+    printMatrix(dmm.hadamardDivAssign(im));
+    std::cout << "\n";
+}
+
 int main()
 {
     testAdd();
     testSub();
     testMul();
     testDiv();
+    testTranspose();
+    testInvert();
+    testDet();
+    testSwap();
+	testHadamard();
     return 0;
 }
