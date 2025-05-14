@@ -9,7 +9,7 @@
 template <Storable T>
 class Matrix : public BaseMatrix
 {
-    class RowProxy;
+    class Row;
     friend class MatrixIterator<T>;
     friend class ConstMatrixIterator<T>;
 
@@ -95,6 +95,7 @@ class Matrix : public BaseMatrix
 
     template <AddableAssignable<T> U>
     Matrix<T> &operator+=(const Matrix<U> &matrix);
+
 #pragma endregion
 
 #pragma region subtraction
@@ -188,8 +189,8 @@ class Matrix : public BaseMatrix
 
 #pragma region lookup
 
-    RowProxy operator[](size_t row);
-    const RowProxy operator[](size_t row) const;
+    Row operator[](size_t row);
+    const Row operator[](size_t row) const;
 
     reference operator()(size_t row, size_t column);
     const_reference operator()(size_t row, size_t column) const;
@@ -227,16 +228,16 @@ class Matrix : public BaseMatrix
     std::shared_ptr<T[]> data;
 
   private:
-    class RowProxy
+    class Row
     {
       public:
-        RowProxy(const Matrix<T> &matrix, size_t row) noexcept;
+        Row(const Matrix<T> &matrix, size_t row) noexcept;
 
-        RowProxy(const RowProxy &) = delete;
-        RowProxy(RowProxy &&) = delete;
+        Row(const Row &) = delete;
+        Row(Row &&) = delete;
 
-        RowProxy &operator=(const RowProxy &) = delete;
-        RowProxy &operator=(RowProxy &&) = delete;
+        Row &operator=(const Row &) = delete;
+        Row &operator=(Row &&) = delete;
 
         T &operator[](size_t index);
         const T &operator[](size_t index) const;

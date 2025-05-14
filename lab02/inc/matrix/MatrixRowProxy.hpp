@@ -4,12 +4,12 @@
 #include <matrix/MatrixExceptions.hpp>
 
 template <Storable T>
-Matrix<T>::RowProxy::RowProxy(const Matrix<T> &matrix, size_t row) noexcept : matrix(matrix), row(row)
+Matrix<T>::Row::Row(const Matrix<T> &matrix, size_t row) noexcept : matrix(matrix), row(row)
 {
 }
 
 template <Storable T>
-T &Matrix<T>::RowProxy::operator[](size_t index)
+T &Matrix<T>::Row::operator[](size_t index)
 {
     if (index < 0 || index >= matrix.columns)
         throw MatrixColumnOutOfBounds(__FILE_NAME__, __FUNCTION__, __LINE__);
@@ -18,7 +18,7 @@ T &Matrix<T>::RowProxy::operator[](size_t index)
 }
 
 template <Storable T>
-const T &Matrix<T>::RowProxy::operator[](size_t index) const
+const T &Matrix<T>::Row::operator[](size_t index) const
 {
     if (index < 0 || index >= matrix.columns)
         throw MatrixColumnOutOfBounds(__FILE_NAME__, __FUNCTION__, __LINE__);
