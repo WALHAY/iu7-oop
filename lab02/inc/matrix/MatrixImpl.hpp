@@ -351,12 +351,12 @@ Matrix<T> &Matrix<T>::mulAssign(const Matrix<U> &matrix)
     {
         for (auto c = 0; c < matrix.getColumns(); c++)
         {
-			value_type value{0};
+            value_type value{0};
             for (auto k = 0; k < columns; k++)
             {
                 value += at(r, k) * matrix[k][c];
             }
-			at(r, c) = value;
+            at(r, c) = value;
         }
     }
 
@@ -389,6 +389,76 @@ template <MultipliableAssignable<T> U>
 Matrix<T> &Matrix<T>::operator*=(const Matrix<U> &matrix)
 {
     return mulAssign(matrix);
+}
+
+#pragma endregion
+
+#pragma region division
+
+template <Storable T>
+template <MultipliableTo<T> U>
+decltype(auto) Matrix<T>::div(const U &value) const
+{
+    Matrix<decltype(std::declval<T>() / std::declval<U>())> result(*this);
+    std::ranges::transform(result, result.begin(), [&value](const auto &element) { return element / value; });
+
+    return result;
+}
+
+template <Storable T>
+template <MultipliableTo<T> U>
+decltype(auto) Matrix<T>::div(const Matrix<U> &matrix) const
+{
+    validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __LINE__);
+
+    if (det() == value_type{0})
+        throw std::exception();
+
+	 return *this * matrix.invert();
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+Matrix<T> &Matrix<T>::divAssign(const U &value)
+{
+    std::ranges::transform(*this, begin(), [&value](const auto &element) { return element / value; });
+
+    return *this;
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+Matrix<T> &Matrix<T>::divAssign(const Matrix<U> &matrix)
+{
+    return *this = *this / matrix;
+}
+
+template <Storable T>
+template <MultipliableTo<T> U>
+decltype(auto) Matrix<T>::operator/(const U &value) const
+{
+    return div(value);
+}
+
+template <Storable T>
+template <MultipliableTo<T> U>
+decltype(auto) Matrix<T>::operator/(const Matrix<U> &matrix) const
+{
+    return div(matrix);
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+Matrix<T> &Matrix<T>::operator/=(const U &value)
+{
+    return divAssign(value);
+}
+
+template <Storable T>
+template <MultipliableAssignable<T> U>
+Matrix<T> &Matrix<T>::operator/=(const Matrix<U> &matrix)
+{
+    return divAssign(matrix);
 }
 
 #pragma endregion

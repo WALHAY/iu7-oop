@@ -154,6 +154,34 @@ class Matrix : public BaseMatrix
 
 #pragma endregion
 
+#pragma region division
+
+    template <MultipliableTo<T> U>
+    decltype(auto) div(const U &value) const; 
+
+    template <MultipliableTo<T> U>
+    decltype(auto) div(const Matrix<U> &matrix) const;
+
+    template <MultipliableAssignable<T> U>
+    Matrix<T> &divAssign(const U &value);
+
+    template <MultipliableAssignable<T> U>
+    Matrix<T> &divAssign(const Matrix<U> &matrix);
+
+    template <MultipliableTo<T> U>
+    decltype(auto) operator/(const U &value) const;
+
+    template <MultipliableTo<T> U>
+    decltype(auto) operator/(const Matrix<U> &matrix) const;
+
+    template <MultipliableAssignable<T> U>
+    Matrix<T> &operator/=(const U &value);
+
+    template <MultipliableAssignable<T> U>
+    Matrix<T> &operator/=(const Matrix<U> &matrix);
+
+#pragma endregion
+
 #pragma region misc
     auto det() const
         requires DeterminantComputable<T>;
@@ -165,7 +193,7 @@ class Matrix : public BaseMatrix
 
     Matrix<T> transpose() const;
 
-	bool invertible() const;
+    bool invertible() const;
 
     decltype(auto) operator~() const
         requires InvertComputable<T>;
