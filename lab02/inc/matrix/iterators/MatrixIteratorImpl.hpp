@@ -8,7 +8,7 @@ MatrixIterator<T>::MatrixIterator(const Matrix<value_type> &matrix)
 {
     this->dataPtr = matrix.data;
     this->matrixSize = matrix.getSize();
-    this->currentIndex = std::size_t{0};
+    this->currentIndex = 0u;
 }
 
 template <typename T>
@@ -97,6 +97,9 @@ auto MatrixIterator<T>::operator-(const MatrixIterator<T> &iterator) const -> di
 template <typename T>
 auto MatrixIterator<T>::operator[](difference_type offset) const -> reference
 {
+	validateIndex(currentIndex + offset , __LINE__);
+	validatePointer(__LINE__);
+
     return *(*this + offset);
 }
 
@@ -125,10 +128,11 @@ void MatrixIterator<T>::validatePointer(int line) const
 }
 
 template <typename T>
-void MatrixIterator<T>::validateIndex(size_type index, int line) const
+void MatrixIterator<T>::validateIndex(difference_type index, int line) const
 {
-    if (index >= matrixSize)
+    if (index >= matrixSize || index < 0)
         throw IteratorInvalidIndexException(__FILE_NAME__, __FUNCTION__, line);
 }
 
-static_assert(std::random_access_iterator<MatrixIterator<const int>>, "MatrixIterator fails random access iterator concept");
+static_assert(std::random_access_iterator<MatrixIterator<const int>>,
+              "MatrixIterator fails random access iterator concept");

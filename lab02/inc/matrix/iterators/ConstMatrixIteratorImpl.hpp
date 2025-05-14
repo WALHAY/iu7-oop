@@ -8,7 +8,7 @@ ConstMatrixIterator<T>::ConstMatrixIterator(const Matrix<value_type> &matrix)
 {
     this->dataPtr = matrix.data;
     this->matrixSize = matrix.getSize();
-    this->currentIndex = std::size_t{0};
+    this->currentIndex = 0u;
 }
 
 template <typename T>
@@ -97,6 +97,9 @@ auto ConstMatrixIterator<T>::operator-(const ConstMatrixIterator<T> &iterator) c
 template <typename T>
 auto ConstMatrixIterator<T>::operator[](difference_type offset) const -> reference
 {
+	validateIndex(currentIndex + offset, __LINE__);
+	validatePointer(__LINE__);
+
     return *(*this + offset);
 }
 
@@ -125,9 +128,9 @@ void ConstMatrixIterator<T>::validatePointer(int line) const
 }
 
 template <typename T>
-void ConstMatrixIterator<T>::validateIndex(size_type index, int line) const
+void ConstMatrixIterator<T>::validateIndex(difference_type index, int line) const
 {
-    if (index >= matrixSize)
+    if (index >= matrixSize || index < 0)
         throw IteratorInvalidIndexException(__FILE_NAME__, __FUNCTION__, line);
 }
 

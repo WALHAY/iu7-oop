@@ -153,6 +153,18 @@ auto Matrix<T>::cend() const -> const_iterator
     return const_iterator(*this) + getSize();
 }
 
+template <Storable T>
+auto Matrix<T>::rbegin() -> reverse_iterator
+{
+    return reverse_iterator(*this);
+}
+
+template <Storable T>
+auto Matrix<T>::rend() -> reverse_iterator
+{
+    return reverse_iterator(*this) + getSize();
+}
+
 #pragma region addition
 
 template <Storable T>

@@ -10,7 +10,6 @@ template <typename T>
 class MatrixIterator : public BaseMatrixIterator
 {
   public:
-    using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using value_type = std::remove_cv_t<T>;
     using pointer = T *;
@@ -54,11 +53,8 @@ class MatrixIterator : public BaseMatrixIterator
     std::strong_ordering operator<=>(const MatrixIterator<T> &iterator) const noexcept;
 
   protected:
-    void validateIndex(size_type index, int line) const;
+    void validateIndex(difference_type index, int line) const;
     void validatePointer(int line) const;
-
-    size_type matrixSize;
-    size_type currentIndex;
 
     std::weak_ptr<T[]> dataPtr;
 };

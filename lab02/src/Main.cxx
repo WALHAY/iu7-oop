@@ -388,6 +388,18 @@ void testHadamard()
     std::cout << "\n";
 }
 
+void testIterators()
+{
+    printTitle("iterators");
+    Matrix<int> im = {{1, 2}, {3, 4}};
+
+    std::cout << "Reverse\n";
+    for (auto it = im.rbegin(); it != im.rend(); ++it)
+    {
+        std::cout << *it << " ";
+    }
+}
+
 int main()
 {
     testAdd();
@@ -398,6 +410,7 @@ int main()
     testInvert();
     testDet();
     testSwap();
-	testHadamard();
+    testHadamard();
+    testIterators();
     return 0;
 }

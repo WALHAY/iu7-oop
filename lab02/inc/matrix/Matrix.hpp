@@ -4,6 +4,7 @@
 #include "matrix/MatrixConcepts.hpp"
 #include "matrix/iterators/ConstMatrixIterator.hpp"
 #include "matrix/iterators/MatrixIterator.hpp"
+#include "matrix/iterators/ReverseMatrixIterator.hpp"
 #include <memory>
 
 template <Storable T>
@@ -21,6 +22,7 @@ class Matrix : public BaseMatrix
     using const_pointer = const T *;
     using const_reference = const T &;
     using const_iterator = ConstMatrixIterator<T>;
+	using reverse_iterator = ReverseMatrixIterator<T>;
 
 #pragma region constructors
     Matrix(size_t rows, size_t columns);
@@ -64,10 +66,14 @@ class Matrix : public BaseMatrix
 #pragma region iterators
     iterator begin();
     iterator end();
+
     const_iterator begin() const;
     const_iterator end() const;
     const_iterator cbegin() const;
     const_iterator cend() const;
+
+	reverse_iterator rbegin();
+	reverse_iterator rend();
 #pragma endregion
 
 #pragma region addition
