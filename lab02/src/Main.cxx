@@ -394,7 +394,7 @@ void testIterators()
     Matrix<int> im = {{1, 2}, {3, 4}};
 
     std::cout << "Reverse\n";
-    for (auto it = im.rbegin(); it != im.rend(); ++it)
+    for (auto it = im.crbegin(); it != im.crend(); ++it)
     {
         std::cout << *it << " ";
     }

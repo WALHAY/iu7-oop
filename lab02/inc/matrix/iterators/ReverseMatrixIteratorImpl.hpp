@@ -6,7 +6,7 @@
 template <typename T>
 ReverseMatrixIterator<T>::ReverseMatrixIterator(const Matrix<value_type> &matrix)
 {
-    this->iterator = MatrixIterator<value_type>(matrix);
+    this->it = iterator(matrix);
     this->matrixSize = matrix.getSize();
     this->currentIndex = matrixSize - 1;
 }
@@ -14,13 +14,13 @@ ReverseMatrixIterator<T>::ReverseMatrixIterator(const Matrix<value_type> &matrix
 template <typename T>
 auto ReverseMatrixIterator<T>::operator*() const -> reference
 {
-    return this->iterator[currentIndex];
+    return this->it[currentIndex];
 }
 
 template <typename T>
 auto ReverseMatrixIterator<T>::operator->() const -> pointer
 {
-    return this->iterator.operator->() + currentIndex;
+    return this->it.operator->() + currentIndex;
 }
 
 template <typename T>
@@ -97,7 +97,7 @@ auto ReverseMatrixIterator<T>::operator[](difference_type offset) const -> refer
 template <typename T>
 bool ReverseMatrixIterator<T>::operator==(const ReverseMatrixIterator<T> &iterator) const noexcept
 {
-    return currentIndex == iterator.currentIndex && this->iterator == iterator.iterator;
+    return currentIndex == iterator.currentIndex && this->it == iterator.it;
 }
 
 template <typename T>

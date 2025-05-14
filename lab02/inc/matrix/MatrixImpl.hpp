@@ -165,6 +165,30 @@ auto Matrix<T>::rend() -> reverse_iterator
     return reverse_iterator(*this) + getSize();
 }
 
+template <Storable T>
+auto Matrix<T>::rbegin() const -> const_reverse_iterator
+{
+    return const_reverse_iterator(*this);
+}
+
+template <Storable T>
+auto Matrix<T>::rend() const -> const_reverse_iterator
+{
+    return const_reverse_iterator(*this) + getSize();
+}
+
+template <Storable T>
+auto Matrix<T>::crbegin() const -> const_reverse_iterator
+{
+    return const_reverse_iterator(*this);
+}
+
+template <Storable T>
+auto Matrix<T>::crend() const -> const_reverse_iterator
+{
+	return const_reverse_iterator(*this) + getSize();
+}
+
 #pragma region addition
 
 template <Storable T>
