@@ -11,7 +11,7 @@ Matrix<T>::Matrix(size_t rows, size_t columns)
     this->rows = rows;
     this->columns = columns;
 
-    this->data = std::make_shared<T[]>(getSize());
+	allocateMemory(getSize());
 }
 
 template <Storable T>
@@ -84,6 +84,7 @@ Matrix<T> &Matrix<T>::operator=(const Matrix<U> &matrix)
 {
     this->rows = matrix.getRows();
     this->columns = matrix.getColumns();
+	allocateMemory(getSize());
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
     return *this;
 }
@@ -93,6 +94,7 @@ Matrix<T> &Matrix<T>::operator=(const Matrix<T> &matrix)
 {
     this->rows = matrix.rows;
     this->columns = matrix.columns;
+	allocateMemory(getSize());
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
     return *this;
 }
@@ -103,6 +105,7 @@ Matrix<T> &Matrix<T>::operator=(Matrix<U> &&matrix)
 {
     this->rows = matrix.getRows();
     this->columns = matrix.getColumns();
+	allocateMemory(getSize());
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
     return *this;
 }
@@ -159,7 +162,7 @@ template <Storable T>
 template <AddableTo<T> U>
 decltype(auto) Matrix<T>::add(const Matrix<U> &matrix) const
 {
-    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
 
     Matrix<decltype(std::declval<T>() + std::declval<U>())> result(rows, columns);
 
@@ -180,7 +183,7 @@ template <Storable T>
 template <AddableAssignable<T> U>
 Matrix<T> &Matrix<T>::addAssign(const Matrix<U> &matrix)
 {
-    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
 
     std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t + u; });
 
@@ -233,7 +236,7 @@ template <Storable T>
 template <SubtractableTo<T> U>
 decltype(auto) Matrix<T>::sub(const Matrix<U> &matrix) const
 {
-    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
 
     Matrix<decltype(std::declval<T>() - std::declval<U>())> result(rows, columns);
 
@@ -255,7 +258,7 @@ template <Storable T>
 template <SubtractableAssignable<T> U>
 Matrix<T> &Matrix<T>::subAssign(const Matrix<U> &matrix)
 {
-    validateEqualSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
 
     std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t - u; });
 
@@ -306,7 +309,7 @@ template <Storable T>
 template <MultipliableTo<T> U>
 decltype(auto) Matrix<T>::mul(const Matrix<U> &matrix) const
 {
-    validateEqualSize(matrix.getColumns(), matrix.getRows(), __LINE__);
+    validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __LINE__);
 
     Matrix<decltype(std::declval<T>() * std::declval<U>())> result(rows, columns);
 
@@ -327,7 +330,7 @@ template <Storable T>
 template <MultipliableAssignable<T> U>
 Matrix<T> &Matrix<T>::mulAssign(const Matrix<U> &matrix)
 {
-    validateEqualSize(matrix.getColumns(), matrix.getRows(), __LINE__);
+    validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __LINE__);
 
     return *this;
 }
@@ -409,9 +412,27 @@ Matrix<T> Matrix<T>::zero(size_t rows, size_t columns)
 }
 
 template <Storable T>
+bool Matrix<T>::invertible() const {
+	return isSquare() && det() != value_type{0};
+}
+
+template<Storable T>
+decltype(auto) Matrix<T>::operator~() const requires InvertComputable<T> && std::is_arithmetic_v<T> {
+	return invert();
+}
+
+template<Storable T>
+decltype(auto) Matrix<T>::operator~() const requires InvertComputable<T> {
+	return invert();
+}
+
+template <Storable T>
 decltype(auto) Matrix<T>::invert() const
     requires InvertComputable<T> && std::is_arithmetic_v<T>
 {
+	if(!invertible())
+		throw NotInvertible(__FILE_NAME__, __FUNCTION__, __LINE__);
+
     auto [L, U] = this->LU();
 
     size_t n = rows;
@@ -443,6 +464,9 @@ template <Storable T>
 decltype(auto) Matrix<T>::invert() const
     requires InvertComputable<T>
 {
+	if(!invertible())
+		throw NotInvertible(__FILE_NAME__, __FUNCTION__, __LINE__);
+
     auto [L, U] = this->LU();
 
     size_t n = rows;
@@ -472,20 +496,6 @@ decltype(auto) Matrix<T>::invert() const
     }
 
     return inverted;
-}
-
-template <Storable T>
-Matrix<T> &Matrix<T>::transposed()
-{
-    validateSquareSize(__LINE__);
-
-    auto transposed = std::ranges::transform(std::views::iota(size_t{0}, getSize()), begin(), [&](auto index) {
-        size_t i = index / rows;
-        size_t j = index % rows;
-        return this->data[j * columns + i];
-    });
-
-    return *this;
 }
 
 template <Storable T>
@@ -705,7 +715,7 @@ bool Matrix<T>::operator==(Matrix<T> &matrix) const
 #pragma endregion
 
 template <Storable T>
-void Matrix<T>::validateEqualSize(size_t rows, size_t columns, int line) const
+void Matrix<T>::validateOtherMatrixSize(size_t rows, size_t columns, int line) const
 {
     if (rows != this->rows || columns != this->columns)
         throw NotEqualSize(__FILE_NAME__, __FUNCTION__, line);
@@ -730,4 +740,9 @@ void Matrix<T>::validateSquareSize(int line) const
 {
     if (!isSquare())
         throw NotSquareMatrix(__FILE_NAME__, __FUNCTION__, line);
+}
+
+template<Storable T>
+void Matrix<T>::allocateMemory(size_t elements) {
+	this->data = std::make_shared<T[]>(elements);
 }

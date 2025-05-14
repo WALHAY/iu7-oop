@@ -26,6 +26,14 @@ class BaseMatrix
         return columns;
     }
 
+	bool isSquare() const noexcept {
+		return rows == columns;
+	}
+
+	bool equalShape(const BaseMatrix&& matrix) const noexcept {
+		return rows == matrix.getRows() && columns == matrix.getColumns();
+	}
+
   protected:
     size_t rows;
     size_t columns;

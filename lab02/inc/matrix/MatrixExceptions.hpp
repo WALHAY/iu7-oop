@@ -46,3 +46,11 @@ class NotSquareMatrix : public BaseException
     {
     }
 };
+
+class NotInvertible : public BaseException
+{
+  public:
+    NotInvertible(const char *filename, const char *method, int line) : BaseException(filename, method, line)
+    {
+    }
+};
