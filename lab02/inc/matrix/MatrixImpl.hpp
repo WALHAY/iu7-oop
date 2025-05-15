@@ -1,8 +1,10 @@
 #pragma once
 
 #include <algorithm>
+#include <iostream>
 #include <matrix/Matrix.hpp>
 #include <matrix/MatrixExceptions.hpp>
+#include <ostream>
 #include <ranges>
 
 template <Storable T>
@@ -35,7 +37,7 @@ Matrix<T>::Matrix(const T *value, size_t rows, size_t columns) : Matrix(rows, co
 template <Storable T>
 template <std::ranges::input_range R>
     requires ConvertibleTo<std::ranges::range_value_t<R>, T>
-Matrix<T>::Matrix(const R &range, size_t rows, size_t columns) : Matrix(rows, columns)
+Matrix<T>::Matrix(const R range, size_t rows, size_t columns) : Matrix(rows, columns)
 {
     std::ranges::copy(range, begin());
 }
@@ -186,7 +188,7 @@ auto Matrix<T>::crbegin() const -> const_reverse_iterator
 template <Storable T>
 auto Matrix<T>::crend() const -> const_reverse_iterator
 {
-	return const_reverse_iterator(*this) + getSize();
+    return const_reverse_iterator(*this) + getSize();
 }
 
 #pragma region addition
@@ -760,6 +762,180 @@ std::pair<Matrix<T>, Matrix<T>> Matrix<T>::LU() const
     return std::make_pair(L, U);
 }
 
+#pragma endregion
+
+#pragma region row/col management
+
+template <Storable T>
+void Matrix<T>::removeRow(size_t row)
+{
+    validateRow(row, __LINE__);
+
+    auto oldData = data;
+    size_t oldRows = rows;
+    this->rows--;
+
+    allocateMemory(getSize());
+
+    size_t currentRow = 0;
+    for (size_t i = 0; i < oldRows; ++i)
+    {
+        if (i == row)
+            continue;
+
+        for (size_t j = 0; j < columns; ++j)
+            data[currentRow * columns + j] = oldData[i * columns + j];
+
+        currentRow++;
+    }
+}
+
+template <Storable T>
+void Matrix<T>::removeColumn(size_t column)
+{
+    validateColumn(column, __LINE__);
+
+    size_t oldColumns = columns;
+    auto oldData = data;
+    this->columns--;
+
+    allocateMemory(getSize());
+
+    for (size_t i = 0; i < rows; ++i)
+    {
+        size_t rowIndex = i * oldColumns;
+
+        size_t currentColumn = 0;
+        for (size_t j = 0; j < oldColumns; ++j)
+        {
+            if (j == column)
+                continue;
+
+            data[rowIndex + currentColumn] = oldData[rowIndex + j];
+
+            currentColumn++;
+        }
+    }
+}
+
+template <Storable T>
+void Matrix<T>::insertRow(size_t row)
+    requires HasZeroElement<T>
+{
+    insertRow(row, value_type{0});
+}
+
+template <Storable T>
+void Matrix<T>::insertRow(size_t row, const value_type &fill)
+{
+    validateInsertRow(row, __LINE__);
+
+    auto oldData = data;
+    this->rows++;
+
+    allocateMemory(getSize());
+
+    size_t currentRow = 0;
+    for (size_t i = 0; i < rows; ++i)
+    {
+        for (size_t j = 0; j < columns; ++j)
+            data[i * columns + j] = i == row ? value_type{fill} : oldData[currentRow * columns + j];
+
+        if (i != row)
+            currentRow++;
+    }
+}
+
+template <Storable T>
+template <Container C>
+void Matrix<T>::insertRow(size_t row, const C &container)
+{
+    validateInsertRow(row, __LINE__);
+
+    auto oldData = data;
+    this->rows++;
+
+    allocateMemory(getSize());
+
+    if (std::ranges::distance(container) != columns)
+    {
+    }
+
+    auto it = container.begin();
+
+    size_t currentRow = 0;
+    for (size_t i = 0; i < rows; ++i)
+    {
+        for (size_t j = 0; j < columns; ++j)
+            data[i * columns + j] = i == row ? value_type{*(it++)} : oldData[currentRow * columns + j];
+
+        if (i != row)
+            currentRow++;
+    }
+}
+
+template <Storable T>
+void Matrix<T>::insertColumn(size_t column)
+    requires HasZeroElement<T>
+{
+    insertColumn(column, value_type{0});
+}
+
+template <Storable T>
+void Matrix<T>::insertColumn(size_t column, const value_type &fill)
+{
+    validateInsertColumn(column, __LINE__);
+
+    auto oldData = data;
+	size_t oldColumns = columns;
+    this->columns++;
+
+    allocateMemory(getSize());
+
+    for (size_t i = 0; i < rows; ++i)
+    {
+        size_t currentColumn = 0;
+        for (size_t j = 0; j < columns; ++j)
+        {
+            data[i * columns + j] = j == column ? value_type{fill} : oldData[i * oldColumns + currentColumn];
+
+            if (j != column)
+                currentColumn++;
+        }
+    }
+}
+
+template <Storable T>
+template <Container C>
+void Matrix<T>::insertColumn(size_t column, const C &container)
+{
+    validateInsertColumn(column, __LINE__);
+
+    auto oldData = data;
+	size_t oldColumns = columns;
+    this->columns++;
+
+    allocateMemory(getSize());
+
+    if (std::ranges::distance(container) != rows)
+    {
+    }
+
+    auto it = container.begin();
+
+    for (size_t i = 0; i < rows; ++i)
+    {
+        size_t currentColumn = 0;
+        for (size_t j = 0; j < columns; ++j)
+        {
+            data[i * columns + j] = j == column ? value_type{*(it++)} : oldData[oldColumns * i + currentColumn];
+
+            if (j != column)
+                currentColumn++;
+        }
+    }
+}
+
 template <Storable T>
 void Matrix<T>::swapRows(size_t first, size_t second)
 {
@@ -923,6 +1099,20 @@ void Matrix<T>::validateColumn(size_t column, int line) const
 }
 
 template <Storable T>
+void Matrix<T>::validateInsertRow(size_t row, int line) const
+{
+    if (row < 0 || row > rows)
+        throw MatrixRowOutOfBounds(__FILE_NAME__, __FUNCTION__, line);
+}
+
+template <Storable T>
+void Matrix<T>::validateInsertColumn(size_t column, int line) const
+{
+    if (column < 0 || column > columns)
+        throw MatrixColumnOutOfBounds(__FILE_NAME__, __FUNCTION__, line);
+}
+
+template <Storable T>
 void Matrix<T>::validateSquareSize(int line) const
 {
     if (!isSquare())
@@ -932,5 +1122,12 @@ void Matrix<T>::validateSquareSize(int line) const
 template <Storable T>
 void Matrix<T>::allocateMemory(size_t elements)
 {
-    this->data = std::make_shared<T[]>(elements);
+    try
+    {
+        this->data = std::make_shared<T[]>(elements);
+    }
+    catch (std::bad_alloc err)
+    {
+        throw MatrixBadAlloc(__FILE_NAME__, __FUNCTION__, __LINE__);
+    }
 }

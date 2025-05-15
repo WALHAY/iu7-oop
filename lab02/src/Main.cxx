@@ -1,6 +1,7 @@
 #include "matrix/Matrix.hpp"
 #include <cctype>
 #include <iostream>
+#include <vector>
 
 template <Storable T>
 void printMatrix(const Matrix<T> &matrix)
@@ -337,14 +338,47 @@ void testDet()
     std::cout << "|M3|: " << imm.det() << "\n\n";
 }
 
-void testSwap()
+void testManagement()
 {
-    printTitle("swap");
+    printTitle("management");
     Matrix<int> im = {{1, 2}, {3, 4}};
 
     std::cout << "M1:\n";
     printMatrix(im);
     std::cout << "\n";
+
+    std::cout << "Insert row at 1\n";
+    im.insertRow(1);
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "Insert column at 2\n";
+    im.insertColumn(2);
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "Insert row of {7, 8, 9} at 3\n";
+    im.insertRow(3, std::vector{7, 8, 9});
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "Insert column of {5, 6, 9, 9} at 1\n";
+    im.insertColumn(1, std::vector{5, 6, 9, 9});
+    printMatrix(im);
+    std::cout << "\n";
+
+    Matrix<int> imm(im);
+    std::cout << "Remove row 0\n";
+    imm.removeRow(0);
+    printMatrix(imm);
+    std::cout << "\n";
+
+    imm = Matrix<int>(im);
+    std::cout << "Remove column 0\n";
+    imm.removeColumn(0);
+    printMatrix(imm);
+    std::cout << "\n";
+    return;
 
     std::cout << "Swap rows\n";
     im.swapRows(0, 1);
@@ -409,8 +443,8 @@ int main()
     testTranspose();
     testInvert();
     testDet();
-    testSwap();
-    testHadamard();
+    testManagement();
+    // testHadamard();
     testIterators();
     return 0;
 }

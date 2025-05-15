@@ -38,6 +38,24 @@ class MatrixColumnOutOfBounds : public BaseException
     }
 };
 
+class InvalidInsertColumn : public BaseException
+{
+  public:
+    InvalidInsertColumn(const char *filename, const char *method, int line)
+        : BaseException(filename, method, line, "Invalid matrix column")
+    {
+    }
+};
+
+class InvalidInsertRow : public BaseException
+{
+  public:
+    InvalidInsertRow(const char *filename, const char *method, int line)
+        : BaseException(filename, method, line, "Invalid matrix column")
+    {
+    }
+};
+
 class NotSquareMatrix : public BaseException
 {
   public:
@@ -51,6 +69,14 @@ class NotInvertible : public BaseException
 {
   public:
     NotInvertible(const char *filename, const char *method, int line) : BaseException(filename, method, line)
+    {
+    }
+};
+
+class MatrixBadAlloc : public BaseException
+{
+  public:
+    MatrixBadAlloc(const char *filename, const char *method, int line) : BaseException(filename, method, line)
     {
     }
 };

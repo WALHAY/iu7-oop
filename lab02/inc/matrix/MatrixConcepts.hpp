@@ -66,3 +66,9 @@ template <typename T>
 concept HasIdentityElement = requires {
     { T{1} };
 };
+
+template <typename T>
+concept Container = requires(T &a) {
+	a.begin();
+	a.end();
+};

@@ -36,7 +36,7 @@ class Matrix : public BaseMatrix
 
     template <std::ranges::input_range R>
         requires ConvertibleTo<std::ranges::range_value_t<R>, T>
-    Matrix(const R &range, size_t rows, size_t columns);
+    Matrix(const R range, size_t rows, size_t columns);
 
     template <ConvertibleTo<T> U>
     Matrix(std::initializer_list<std::initializer_list<U>> ilist);
@@ -79,8 +79,8 @@ class Matrix : public BaseMatrix
     const_reverse_iterator rbegin() const;
     const_reverse_iterator rend() const;
 
-	const_reverse_iterator crbegin() const;
-	const_reverse_iterator crend() const;
+    const_reverse_iterator crbegin() const;
+    const_reverse_iterator crend() const;
 #pragma endregion
 
 #pragma region addition
@@ -239,6 +239,25 @@ class Matrix : public BaseMatrix
     std::pair<Matrix<double>, Matrix<double>> LU() const
         requires LUComputable<T> && std::is_arithmetic_v<T>;
 
+#pragma endregion
+
+#pragma region row/col management
+
+    void removeRow(size_t column);
+    void removeColumn(size_t column);
+
+    void insertRow(size_t row)
+        requires HasZeroElement<T>;
+    void insertRow(size_t row, const value_type &fill);
+    template <Container C>
+    void insertRow(size_t row, const C &container);
+
+    void insertColumn(size_t column)
+        requires HasZeroElement<T>;
+    void insertColumn(size_t column, const value_type &fill);
+    template <Container C>
+    void insertColumn(size_t row, const C &container);
+
     void swapRows(size_t first, size_t second);
     void swapColumns(size_t first, size_t second);
 
@@ -277,7 +296,11 @@ class Matrix : public BaseMatrix
   protected:
     void validateOtherMatrixSize(size_t rows, size_t columns, int line) const;
     void validateRow(size_t row, int line) const;
+
     void validateColumn(size_t column, int line) const;
+    void validateInsertRow(size_t row, int line) const;
+
+    void validateInsertColumn(size_t column, int line) const;
     void validateSquareSize(int line) const;
 
     void allocateMemory(size_t elements);
