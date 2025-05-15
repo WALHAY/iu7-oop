@@ -557,7 +557,7 @@ template <Storable T>
 Matrix<T> Matrix<T>::identity(size_t size)
     requires HasIdentityElement<T> && HasZeroElement<T>
 {
-	return diagonal(size, value_type{0});
+	return diagonal(size, value_type{1});
 }
 
 template <Storable T>

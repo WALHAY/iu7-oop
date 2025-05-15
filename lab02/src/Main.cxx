@@ -297,7 +297,7 @@ void testInvert()
 
     std::cout << "~M1 * M1:\n";
     printMatrix(~im * im);
-	std::cout << "Is identity: " << (~im * im).isIdentity() << "\n";
+    std::cout << "Is identity: " << (~im * im).isIdentity() << "\n";
     std::cout << "\n";
 
     std::cout << "M2:\n";
@@ -310,7 +310,7 @@ void testInvert()
 
     std::cout << "~M2 * M2:\n";
     printMatrix(~dm * dm);
-	std::cout << "Is identity: " << (~dm * dm).isIdentity() << "\n";
+    std::cout << "Is identity: " << (~dm * dm).isIdentity() << "\n";
     std::cout << "\n";
 }
 
@@ -434,6 +434,28 @@ void testIterators()
     {
         std::cout << *it << " ";
     }
+	std::cout << "\n\n";
+}
+
+void testDefaultMatrices()
+{
+    printTitle("default matrices");
+
+    std::cout << "Zero int matrix(3, 2):\n";
+    printMatrix(Matrix<int>::zero(3, 2));
+	std::cout << "\n";
+
+    std::cout << "Fill(6.66) matrix(3, 4):\n";
+    printMatrix(Matrix<double>::fill(3, 4, 6.66));
+	std::cout << "\n";
+
+    std::cout << "Identity int matrix(5):\n";
+    printMatrix(Matrix<int>::identity(5));
+	std::cout << "\n";
+
+    std::cout << "Diagonal char matrix(4, 'a'):\n";
+    printMatrix(Matrix<char>::diagonal(4, 'a'));
+	std::cout << "\n";
 }
 
 int main()
@@ -448,5 +470,6 @@ int main()
     testManagement();
     testHadamard();
     testIterators();
+    testDefaultMatrices();
     return 0;
 }
