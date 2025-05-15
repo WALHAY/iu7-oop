@@ -285,7 +285,7 @@ void testInvert()
 {
     printTitle("invert");
     Matrix<int> im = {{1, 2}, {3, 4}};
-    Matrix<double> dm = {{-0.6, 0.4}, {0.3, -0.7}};
+    Matrix<double> dm = {{-0.6, 0.5}, {0.3, -0.7}};
 
     std::cout << "M1:\n";
     printMatrix(im);
@@ -297,6 +297,7 @@ void testInvert()
 
     std::cout << "~M1 * M1:\n";
     printMatrix(~im * im);
+	std::cout << "Is identity: " << (~im * im).isIdentity() << "\n";
     std::cout << "\n";
 
     std::cout << "M2:\n";
@@ -309,6 +310,7 @@ void testInvert()
 
     std::cout << "~M2 * M2:\n";
     printMatrix(~dm * dm);
+	std::cout << "Is identity: " << (~dm * dm).isIdentity() << "\n";
     std::cout << "\n";
 }
 
@@ -444,7 +446,7 @@ int main()
     testInvert();
     testDet();
     testManagement();
-    // testHadamard();
+    testHadamard();
     testIterators();
     return 0;
 }

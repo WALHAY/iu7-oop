@@ -551,6 +551,44 @@ decltype(auto) Matrix<T>::hadamardDivAssign(const Matrix<U> &matrix)
 
 #pragma endregion
 
+#pragma region default matrices
+
+template <Storable T>
+Matrix<T> Matrix<T>::identity(size_t size)
+    requires HasIdentityElement<T> && HasZeroElement<T>
+{
+	return diagonal(size, value_type{0});
+}
+
+template <Storable T>
+Matrix<T> Matrix<T>::zero(size_t rows, size_t columns)
+    requires HasZeroElement<T>
+{
+	return fill(rows, columns, value_type{0});
+}
+
+template <Storable T>
+Matrix<T> Matrix<T>::fill(size_t rows, size_t columns, const value_type &fill)
+{
+    Matrix<T> zeroMatrix(rows, columns);
+    std::ranges::fill(zeroMatrix, fill);
+
+    return zeroMatrix;
+}
+
+template <Storable T>
+Matrix<T> Matrix<T>::diagonal(size_t size, const value_type &fill)
+{
+    Matrix<T> diagonalMatrix = Matrix<T>::zero(size, size);
+
+    std::ranges::for_each(std::views::iota(0u, size),
+                          [&](auto index) { diagonalMatrix(index, index) = value_type{fill}; });
+
+    return diagonalMatrix;
+}
+
+#pragma endregion
+
 #pragma region other
 
 template <Storable T>
@@ -576,28 +614,6 @@ auto Matrix<T>::det() const
     }
 
     return temp(rows - 1, columns - 1);
-}
-
-template <Storable T>
-Matrix<T> Matrix<T>::identity(size_t size)
-    requires HasIdentityElement<T> && HasZeroElement<T>
-{
-    Matrix<T> identityMatrix = Matrix<T>::zero(size, size);
-
-    std::ranges::for_each(std::views::iota(0u, size),
-                          [&](auto index) { identityMatrix(index, index) = value_type{1}; });
-
-    return identityMatrix;
-}
-
-template <Storable T>
-Matrix<T> Matrix<T>::zero(size_t rows, size_t columns)
-    requires HasZeroElement<T>
-{
-    Matrix<T> zeroMatrix(rows, columns);
-    std::ranges::fill(zeroMatrix, value_type{0});
-
-    return zeroMatrix;
 }
 
 template <Storable T>
@@ -887,7 +903,7 @@ void Matrix<T>::insertColumn(size_t column, const value_type &fill)
     validateInsertColumn(column, __LINE__);
 
     auto oldData = data;
-	size_t oldColumns = columns;
+    size_t oldColumns = columns;
     this->columns++;
 
     allocateMemory(getSize());
@@ -912,7 +928,7 @@ void Matrix<T>::insertColumn(size_t column, const C &container)
     validateInsertColumn(column, __LINE__);
 
     auto oldData = data;
-	size_t oldColumns = columns;
+    size_t oldColumns = columns;
     this->columns++;
 
     allocateMemory(getSize());
@@ -1042,7 +1058,12 @@ bool Matrix<T>::isIdentity() const
 
     size_t n = getRows();
     return std::ranges::all_of(std::views::iota(0u, getSize()), [&](size_t index) {
-        return this->data[index] == ((index % n == index / n) ? value_type{1} : value_type{0});
+        size_t i = index / columns;
+        size_t j = index % columns;
+
+        if (i == j)
+            return data[index] == value_type{1};
+        return data[index] == value_type{0};
     });
 }
 
@@ -1055,8 +1076,12 @@ bool Matrix<T>::isIdentity() const
 
     size_t n = getRows();
     return std::ranges::all_of(std::views::iota(0u, getSize()), [&](size_t index) {
-        return std::abs(this->data[index] - ((index % n == index / n) ? value_type{1} : value_type{0})) <
-               std::numeric_limits<T>::epsilon();
+        size_t i = index / columns;
+        size_t j = index % columns;
+
+        if (i == j)
+            return std::abs(data[index] - value_type{1}) <= std::numeric_limits<T>::epsilon();
+        return std::abs(data[index]) <= std::numeric_limits<T>::epsilon();
     });
 }
 

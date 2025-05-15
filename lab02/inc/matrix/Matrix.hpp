@@ -211,14 +211,21 @@ class Matrix : public BaseMatrix
 
 #pragma endregion
 
-#pragma region misc
-    auto det() const
-        requires DeterminantComputable<T>;
+#pragma region default matrices
 
     static Matrix<T> identity(size_t size)
         requires HasIdentityElement<T> && HasZeroElement<T>;
     static Matrix<T> zero(size_t rows, size_t columns)
         requires HasZeroElement<T>;
+
+    static Matrix<T> fill(size_t rows, size_t columns, const value_type &fill);
+    static Matrix<T> diagonal(size_t size, const value_type &fill);
+
+#pragma endregion
+
+#pragma region misc
+    auto det() const
+        requires DeterminantComputable<T>;
 
     Matrix<T> transpose() const;
 
