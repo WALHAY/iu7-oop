@@ -429,12 +429,33 @@ void testIterators()
     printTitle("iterators");
     Matrix<int> im = {{1, 2}, {3, 4}};
 
+    std::cout << "Forward\n";
+    for (auto it = im.begin(); it != im.end(); ++it)
+    {
+        std::cout << *it << " ";
+    }
+    std::cout << "\n\n";
+
+    std::cout << "Const Forward\n";
+    for (auto it = im.cbegin(); it != im.cend(); ++it)
+    {
+        std::cout << *it << " ";
+    }
+    std::cout << "\n\n";
+
     std::cout << "Reverse\n";
+    for (auto it = im.rbegin(); it != im.rend(); ++it)
+    {
+        std::cout << *it << " ";
+    }
+    std::cout << "\n\n";
+
+    std::cout << "Const Reverse\n";
     for (auto it = im.crbegin(); it != im.crend(); ++it)
     {
         std::cout << *it << " ";
     }
-	std::cout << "\n\n";
+    std::cout << "\n\n";
 }
 
 void testDefaultMatrices()
@@ -443,19 +464,19 @@ void testDefaultMatrices()
 
     std::cout << "Zero int matrix(3, 2):\n";
     printMatrix(Matrix<int>::zero(3, 2));
-	std::cout << "\n";
+    std::cout << "\n";
 
     std::cout << "Fill(6.66) matrix(3, 4):\n";
     printMatrix(Matrix<double>::fill(3, 4, 6.66));
-	std::cout << "\n";
+    std::cout << "\n";
 
     std::cout << "Identity int matrix(5):\n";
     printMatrix(Matrix<int>::identity(5));
-	std::cout << "\n";
+    std::cout << "\n";
 
     std::cout << "Diagonal char matrix(4, 'a'):\n";
     printMatrix(Matrix<char>::diagonal(4, 'a'));
-	std::cout << "\n";
+    std::cout << "\n";
 }
 
 int main()
