@@ -1,15 +1,15 @@
 #pragma once
 
 #include <algorithm>
-#include <iostream>
 #include <matrix/Matrix.hpp>
 #include <matrix/MatrixExceptions.hpp>
-#include <ostream>
 #include <ranges>
 
 template <Storable T>
 Matrix<T>::Matrix(size_t rows, size_t columns)
 {
+    validateMatrixSize(rows, columns);
+
     this->rows = rows;
     this->columns = columns;
 
@@ -93,7 +93,9 @@ Matrix<T> &Matrix<T>::operator=(const Matrix<U> &matrix)
 {
     this->rows = matrix.getRows();
     this->columns = matrix.getColumns();
+
     allocateMemory(getSize());
+
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
     return *this;
 }
@@ -103,7 +105,9 @@ Matrix<T> &Matrix<T>::operator=(const Matrix<T> &matrix)
 {
     this->rows = matrix.rows;
     this->columns = matrix.columns;
+
     allocateMemory(getSize());
+
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
     return *this;
 }
@@ -114,7 +118,9 @@ Matrix<T> &Matrix<T>::operator=(Matrix<U> &&matrix)
 {
     this->rows = matrix.getRows();
     this->columns = matrix.getColumns();
+
     allocateMemory(getSize());
+
     std::ranges::copy(matrix.begin(), matrix.end(), begin());
     return *this;
 }
@@ -450,7 +456,7 @@ decltype(auto) Matrix<T>::div(const Matrix<U> &matrix) const
     validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __LINE__);
 
     if (det() == value_type{0})
-        throw std::exception();
+        throw ZeroDeterminant(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     return *this * matrix.invert();
 }
@@ -578,6 +584,7 @@ Matrix<T> Matrix<T>::fill(size_t rows, size_t columns, const value_type &fill)
 
 template <Storable T>
 Matrix<T> Matrix<T>::diagonal(size_t size, const value_type &fill)
+    requires HasZeroElement<T>
 {
     Matrix<T> diagonalMatrix = Matrix<T>::zero(size, size);
 
@@ -806,7 +813,7 @@ Matrix<T> &Matrix<T>::removeRow(size_t row)
         currentRow++;
     }
 
-	return *this;
+    return *this;
 }
 
 template <Storable T>
@@ -881,8 +888,7 @@ Matrix<T> &Matrix<T>::insertRow(size_t row, const C &container)
     allocateMemory(getSize());
 
     if (std::ranges::distance(container) != columns)
-    {
-    }
+        throw InsertContainerInvalidSize(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     auto it = container.begin();
 
@@ -945,8 +951,7 @@ Matrix<T> &Matrix<T>::insertColumn(size_t column, const C &container)
     allocateMemory(getSize());
 
     if (std::ranges::distance(container) != rows)
-    {
-    }
+        throw InsertContainerInvalidSize(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     auto it = container.begin();
 
@@ -1007,6 +1012,8 @@ Matrix<T> &Matrix<T>::reshape(size_t rows, size_t columns)
 template <Storable T>
 Matrix<T> &Matrix<T>::reshape(size_t rows, size_t columns, const value_type &fill)
 {
+    validateMatrixSize(rows, columns);
+
     size_t oldRows = this->rows;
     size_t oldColumns = this->columns;
 
@@ -1139,12 +1146,36 @@ bool Matrix<T>::equals(Matrix<T> &matrix) const
 }
 
 template <Storable T>
+bool Matrix<T>::equals(Matrix<T> &matrix) const
+    requires std::is_floating_point_v<T>
+{
+    if (!equalsShape(matrix))
+        return false;
+
+    return std::ranges::all_of(*this, matrix, [](const auto &t, const auto &m) { return std::abs(t - m) <= std::numeric_limits<value_type>::epsilon(); });
+}
+
+template <Storable T>
 bool Matrix<T>::operator==(Matrix<T> &matrix) const
 {
     return equals(matrix);
 }
 
+template <Storable T>
+bool Matrix<T>::operator==(Matrix<T> &matrix) const
+    requires std::is_floating_point_v<T>
+{
+    return equals(matrix);
+}
+
 #pragma endregion
+
+template <Storable T>
+void Matrix<T>::validateMatrixSize(size_t rows, size_t columns)
+{
+    if (rows <= 0 || columns <= 0)
+        throw MatrixInvalidSize(__FILE_NAME__, __FUNCTION__, __LINE__);
+}
 
 template <Storable T>
 void Matrix<T>::validateOtherMatrixSize(size_t rows, size_t columns, int line) const

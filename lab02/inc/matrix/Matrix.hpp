@@ -219,7 +219,7 @@ class Matrix : public BaseMatrix
         requires HasZeroElement<T>;
 
     static Matrix<T> fill(size_t rows, size_t columns, const value_type &fill);
-    static Matrix<T> diagonal(size_t size, const value_type &fill);
+    static Matrix<T> diagonal(size_t size, const value_type &fill) requires HasZeroElement<T>;
 
 #pragma endregion
 
@@ -300,6 +300,8 @@ class Matrix : public BaseMatrix
         requires HasIdentityElement<T> && std::is_floating_point_v<T>;
 
     bool equals(Matrix<T> &matrix) const;
+    bool equals(Matrix<T> &matrix) const requires std::is_floating_point_v<T>;
+
     bool operator==(Matrix<T> &matrix) const;
     bool operator==(Matrix<T> &matrix) const
         requires std::is_floating_point_v<T>;
@@ -307,6 +309,7 @@ class Matrix : public BaseMatrix
 #pragma endregion
 
   protected:
+    void validateMatrixSize(size_t rows, size_t columns);
     void validateOtherMatrixSize(size_t rows, size_t columns, int line) const;
     void validateRow(size_t row, int line) const;
 

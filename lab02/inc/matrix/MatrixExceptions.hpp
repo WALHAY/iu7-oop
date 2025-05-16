@@ -80,3 +80,27 @@ class MatrixBadAlloc : public BaseException
     {
     }
 };
+
+class MatrixInvalidSize : public BaseException
+{
+  public:
+    MatrixInvalidSize(const char *filename, const char *method, int line) : BaseException(filename, method, line)
+    {
+    }
+};
+
+class InsertContainerInvalidSize : public BaseException
+{
+  public:
+    InsertContainerInvalidSize(const char *filename, const char *method, int line) : BaseException(filename, method, line)
+    {
+    }
+};
+
+class ZeroDeterminant : public BaseException
+{
+  public:
+    ZeroDeterminant(const char *filename, const char *method, int line) : BaseException(filename, method, line)
+    {
+    }
+};
