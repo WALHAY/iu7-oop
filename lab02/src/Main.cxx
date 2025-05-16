@@ -369,16 +369,24 @@ void testManagement()
     printMatrix(im);
     std::cout << "\n";
 
-    Matrix<int> imm(im);
-    std::cout << "Remove row 0\n";
-    imm.removeRow(0);
-    printMatrix(imm);
+    std::cout << "Reshape (3, 3):\n";
+	im.reshape(3, 3);
+    printMatrix(im);
     std::cout << "\n";
 
-    imm = Matrix<int>(im);
-    std::cout << "Remove column 0\n";
-    imm.removeColumn(0);
-    printMatrix(imm);
+    std::cout << "Reshape (5, 4):\n";
+	im.reshape(5, 4);
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "Remove row 2\n";
+    im.removeRow(2);
+    printMatrix(im);
+    std::cout << "\n";
+
+    std::cout << "Remove column 1\n";
+    im.removeColumn(1);
+    printMatrix(im);
     std::cout << "\n";
     return;
 

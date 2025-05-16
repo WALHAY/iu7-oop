@@ -248,25 +248,29 @@ class Matrix : public BaseMatrix
 
 #pragma endregion
 
-#pragma region row/col management
+#pragma region size management
 
-    void removeRow(size_t column);
-    void removeColumn(size_t column);
+    Matrix<T> &removeRow(size_t column);
+    Matrix<T> &removeColumn(size_t column);
 
-    void insertRow(size_t row)
+    Matrix<T> &insertRow(size_t row)
         requires HasZeroElement<T>;
-    void insertRow(size_t row, const value_type &fill);
+    Matrix<T> &insertRow(size_t row, const value_type &fill);
     template <Container C>
-    void insertRow(size_t row, const C &container);
+    Matrix<T> &insertRow(size_t row, const C &container);
 
-    void insertColumn(size_t column)
+    Matrix<T> &insertColumn(size_t column)
         requires HasZeroElement<T>;
-    void insertColumn(size_t column, const value_type &fill);
+    Matrix<T> &insertColumn(size_t column, const value_type &fill);
     template <Container C>
-    void insertColumn(size_t row, const C &container);
+    Matrix<T> &insertColumn(size_t row, const C &container);
 
-    void swapRows(size_t first, size_t second);
-    void swapColumns(size_t first, size_t second);
+    Matrix<T> &swapRows(size_t first, size_t second);
+    Matrix<T> &swapColumns(size_t first, size_t second);
+
+    Matrix<T> &reshape(size_t rows, size_t cols)
+        requires HasZeroElement<T>;
+    Matrix<T> &reshape(size_t rows, size_t cols, const value_type &fill);
 
 #pragma endregion
 
@@ -297,6 +301,8 @@ class Matrix : public BaseMatrix
 
     bool equals(Matrix<T> &matrix) const;
     bool operator==(Matrix<T> &matrix) const;
+    bool operator==(Matrix<T> &matrix) const
+        requires std::is_floating_point_v<T>;
 
 #pragma endregion
 

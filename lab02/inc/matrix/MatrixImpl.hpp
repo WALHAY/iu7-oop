@@ -557,14 +557,14 @@ template <Storable T>
 Matrix<T> Matrix<T>::identity(size_t size)
     requires HasIdentityElement<T> && HasZeroElement<T>
 {
-	return diagonal(size, value_type{1});
+    return diagonal(size, value_type{1});
 }
 
 template <Storable T>
 Matrix<T> Matrix<T>::zero(size_t rows, size_t columns)
     requires HasZeroElement<T>
 {
-	return fill(rows, columns, value_type{0});
+    return fill(rows, columns, value_type{0});
 }
 
 template <Storable T>
@@ -716,6 +716,7 @@ Matrix<T> Matrix<T>::transpose() const
     auto newData = std::ranges::transform(std::views::iota(0u, getSize()), transposed.begin(), [&](auto index) {
         size_t i = index / rows;
         size_t j = index % rows;
+
         return this->data[j * columns + i];
     });
 
@@ -780,10 +781,10 @@ std::pair<Matrix<T>, Matrix<T>> Matrix<T>::LU() const
 
 #pragma endregion
 
-#pragma region row/col management
+#pragma region size management
 
 template <Storable T>
-void Matrix<T>::removeRow(size_t row)
+Matrix<T> &Matrix<T>::removeRow(size_t row)
 {
     validateRow(row, __LINE__);
 
@@ -804,10 +805,12 @@ void Matrix<T>::removeRow(size_t row)
 
         currentRow++;
     }
+
+	return *this;
 }
 
 template <Storable T>
-void Matrix<T>::removeColumn(size_t column)
+Matrix<T> &Matrix<T>::removeColumn(size_t column)
 {
     validateColumn(column, __LINE__);
 
@@ -832,17 +835,19 @@ void Matrix<T>::removeColumn(size_t column)
             currentColumn++;
         }
     }
+
+    return *this;
 }
 
 template <Storable T>
-void Matrix<T>::insertRow(size_t row)
+Matrix<T> &Matrix<T>::insertRow(size_t row)
     requires HasZeroElement<T>
 {
-    insertRow(row, value_type{0});
+    return insertRow(row, value_type{0});
 }
 
 template <Storable T>
-void Matrix<T>::insertRow(size_t row, const value_type &fill)
+Matrix<T> &Matrix<T>::insertRow(size_t row, const value_type &fill)
 {
     validateInsertRow(row, __LINE__);
 
@@ -860,11 +865,13 @@ void Matrix<T>::insertRow(size_t row, const value_type &fill)
         if (i != row)
             currentRow++;
     }
+
+    return *this;
 }
 
 template <Storable T>
 template <Container C>
-void Matrix<T>::insertRow(size_t row, const C &container)
+Matrix<T> &Matrix<T>::insertRow(size_t row, const C &container)
 {
     validateInsertRow(row, __LINE__);
 
@@ -888,17 +895,19 @@ void Matrix<T>::insertRow(size_t row, const C &container)
         if (i != row)
             currentRow++;
     }
+
+    return *this;
 }
 
 template <Storable T>
-void Matrix<T>::insertColumn(size_t column)
+Matrix<T> &Matrix<T>::insertColumn(size_t column)
     requires HasZeroElement<T>
 {
-    insertColumn(column, value_type{0});
+    return insertColumn(column, value_type{0});
 }
 
 template <Storable T>
-void Matrix<T>::insertColumn(size_t column, const value_type &fill)
+Matrix<T> &Matrix<T>::insertColumn(size_t column, const value_type &fill)
 {
     validateInsertColumn(column, __LINE__);
 
@@ -919,11 +928,13 @@ void Matrix<T>::insertColumn(size_t column, const value_type &fill)
                 currentColumn++;
         }
     }
+
+    return *this;
 }
 
 template <Storable T>
 template <Container C>
-void Matrix<T>::insertColumn(size_t column, const C &container)
+Matrix<T> &Matrix<T>::insertColumn(size_t column, const C &container)
 {
     validateInsertColumn(column, __LINE__);
 
@@ -950,34 +961,67 @@ void Matrix<T>::insertColumn(size_t column, const C &container)
                 currentColumn++;
         }
     }
+
+    return *this;
 }
 
 template <Storable T>
-void Matrix<T>::swapRows(size_t first, size_t second)
+Matrix<T> &Matrix<T>::swapRows(size_t first, size_t second)
 {
     validateRow(first, __LINE__);
     validateRow(second, __LINE__);
 
     if (first == second)
-        return;
+        return *this;
 
     std::ranges::swap_ranges(begin() + first * columns, begin() + first * columns + columns, begin() + second * columns,
                              begin() + second * columns + columns);
+
+    return *this;
 }
 
 template <Storable T>
-void Matrix<T>::swapColumns(size_t first, size_t second)
+Matrix<T> &Matrix<T>::swapColumns(size_t first, size_t second)
 {
     validateColumn(first, __LINE__);
     validateColumn(second, __LINE__);
 
     if (first == second)
-        return;
+        return *this;
 
     for (size_t i = 0; i < rows; ++i)
     {
         std::swap(at(i, first), at(i, second));
     }
+
+    return *this;
+}
+
+template <Storable T>
+Matrix<T> &Matrix<T>::reshape(size_t rows, size_t columns)
+    requires HasZeroElement<T>
+{
+    return reshape(rows, columns, value_type{0});
+}
+
+template <Storable T>
+Matrix<T> &Matrix<T>::reshape(size_t rows, size_t columns, const value_type &fill)
+{
+    size_t oldRows = this->rows;
+    size_t oldColumns = this->columns;
+
+    this->rows = rows;
+    this->columns = columns;
+
+    auto oldData = data;
+
+    allocateMemory(getSize());
+
+    for (size_t i = 0; i < rows; ++i)
+        for (size_t j = 0; j < columns; ++j)
+            data[i * columns + j] = (i > oldRows || j > oldColumns) ? value_type{fill} : oldData[i * oldColumns + j];
+
+    return *this;
 }
 
 #pragma endregion
