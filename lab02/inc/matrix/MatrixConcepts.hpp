@@ -39,12 +39,12 @@ concept MultipliableAssignable = requires(T &a, K &b) {
 };
 
 template <typename T, typename K>
-concept Dividable = requires(T &a, K &b) {
+concept Divisible = requires(T &a, K &b) {
     { a * b };
 };
 
 template <typename T, typename K>
-concept DividableAssignable = requires(T &a, K &b) {
+concept DivisibleAssignable = requires(T &a, K &b) {
     { a * b } -> std::convertible_to<K>;
 };
 

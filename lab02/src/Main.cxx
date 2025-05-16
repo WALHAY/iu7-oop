@@ -479,21 +479,50 @@ void testDefaultMatrices()
 {
     printTitle("default matrices");
 
+    auto zero = Matrix<int>::zero(3, 2);
     std::cout << "Zero int matrix(3, 2):\n";
-    printMatrix(Matrix<int>::zero(3, 2));
+    printMatrix(zero);
     std::cout << "\n";
+    std::cout << "Is zero: " << zero.isZero() << "\n";
+    std::cout << "Is identity: " << zero.isIdentity() << "\n";
 
+    auto fill = Matrix<double>::fill(3, 4, 6.66);
     std::cout << "Fill(6.66) matrix(3, 4):\n";
-    printMatrix(Matrix<double>::fill(3, 4, 6.66));
+    printMatrix(fill);
     std::cout << "\n";
+    std::cout << "Is zero: " << fill.isZero() << "\n";
+    std::cout << "Is identity: " << fill.isIdentity() << "\n";
 
+    auto identity = Matrix<int>::identity(5);
     std::cout << "Identity int matrix(5):\n";
-    printMatrix(Matrix<int>::identity(5));
+    printMatrix(identity);
+    std::cout << "\n";
+    std::cout << "Is zero: " << identity.isZero() << "\n";
+    std::cout << "Is identity: " << identity.isIdentity() << "\n";
+
+    auto diag = Matrix<char>::diagonal(4, 'a');
+    std::cout << "Diagonal char matrix(4, 'a'):\n";
+    printMatrix(diag);
+    std::cout << "\n";
+    std::cout << "Is zero: " << diag.isZero() << "\n";
+    std::cout << "Is identity: " << diag.isIdentity() << "\n";
+}
+
+void testCompare()
+{
+    Matrix<int> im = Matrix<int>::fill(3, 3, 5);
+    Matrix<int> dm = Matrix<int>::fill(3, 3, 5);
+
+    std::cout << "M1:\n";
+    printMatrix(im);
     std::cout << "\n";
 
-    std::cout << "Diagonal char matrix(4, 'a'):\n";
-    printMatrix(Matrix<char>::diagonal(4, 'a'));
+    std::cout << "M2:\n";
+    printMatrix(dm);
     std::cout << "\n";
+
+	std::cout << "Equal shape: " << (im.equalsShape(dm)) << "\n";
+	std::cout << "Equals: " << (im == dm) << "\n";
 }
 
 int main()
@@ -509,5 +538,6 @@ int main()
     testHadamard();
     testIterators();
     testDefaultMatrices();
+	testCompare();
     return 0;
 }

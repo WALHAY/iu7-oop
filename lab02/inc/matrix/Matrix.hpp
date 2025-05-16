@@ -183,16 +183,16 @@ class Matrix : public BaseMatrix
     template <MultipliableAssignable<T> U>
     Matrix<T> &divAssign(const Matrix<U> &matrix);
 
-    template <Multipliable<T> U>
+    template <Divisible<T> U>
     decltype(auto) operator/(const U &value) const;
 
-    template <Multipliable<T> U>
+    template <Divisible<T> U>
     decltype(auto) operator/(const Matrix<U> &matrix) const;
 
-    template <MultipliableAssignable<T> U>
+    template <DivisibleAssignable<T> U>
     Matrix<T> &operator/=(const U &value);
 
-    template <MultipliableAssignable<T> U>
+    template <DivisibleAssignable<T> U>
     Matrix<T> &operator/=(const Matrix<U> &matrix);
 
 #pragma endregion
@@ -292,6 +292,8 @@ class Matrix : public BaseMatrix
 
 #pragma region compare
 
+    bool equalsShape(const Matrix<T> &matrix) const;
+
     bool isZero() const
         requires HasZeroElement<T>;
     bool isZero() const
@@ -302,12 +304,12 @@ class Matrix : public BaseMatrix
     bool isIdentity() const
         requires HasIdentityElement<T> && std::is_floating_point_v<T>;
 
-    bool equals(Matrix<T> &matrix) const;
-    bool equals(Matrix<T> &matrix) const
+    bool equals(const Matrix<T> &matrix) const;
+    bool equals(const Matrix<T> &matrix) const
         requires std::is_floating_point_v<T>;
 
-    bool operator==(Matrix<T> &matrix) const;
-    bool operator==(Matrix<T> &matrix) const
+    bool operator==(const Matrix<T> &matrix) const;
+    bool operator==(const Matrix<T> &matrix) const
         requires std::is_floating_point_v<T>;
 
 #pragma endregion

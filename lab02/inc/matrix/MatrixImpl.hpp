@@ -478,28 +478,28 @@ Matrix<T> &Matrix<T>::divAssign(const Matrix<U> &matrix)
 }
 
 template <Storable T>
-template <Multipliable<T> U>
+template <Divisible<T> U>
 decltype(auto) Matrix<T>::operator/(const U &value) const
 {
     return div(value);
 }
 
 template <Storable T>
-template <Multipliable<T> U>
+template <Divisible<T> U>
 decltype(auto) Matrix<T>::operator/(const Matrix<U> &matrix) const
 {
     return div(matrix);
 }
 
 template <Storable T>
-template <MultipliableAssignable<T> U>
+template <DivisibleAssignable<T> U>
 Matrix<T> &Matrix<T>::operator/=(const U &value)
 {
     return divAssign(value);
 }
 
 template <Storable T>
-template <MultipliableAssignable<T> U>
+template <DivisibleAssignable<T> U>
 Matrix<T> &Matrix<T>::operator/=(const Matrix<U> &matrix)
 {
     return divAssign(matrix);
@@ -1086,6 +1086,12 @@ auto Matrix<T>::at(size_t row, size_t column) const -> const_reference
 #pragma region compare
 
 template <Storable T>
+bool Matrix<T>::equalsShape(const Matrix<T> &matrix) const
+{
+	return matrix.getRows() == rows && matrix.getColumns() == columns;
+}
+
+template <Storable T>
 bool Matrix<T>::isZero() const
     requires HasZeroElement<T>
 {
@@ -1137,7 +1143,7 @@ bool Matrix<T>::isIdentity() const
 }
 
 template <Storable T>
-bool Matrix<T>::equals(Matrix<T> &matrix) const
+bool Matrix<T>::equals(const Matrix<T> &matrix) const
 {
     if (!equalsShape(matrix))
         return false;
@@ -1146,7 +1152,7 @@ bool Matrix<T>::equals(Matrix<T> &matrix) const
 }
 
 template <Storable T>
-bool Matrix<T>::equals(Matrix<T> &matrix) const
+bool Matrix<T>::equals(const Matrix<T> &matrix) const
     requires std::is_floating_point_v<T>
 {
     if (!equalsShape(matrix))
@@ -1158,13 +1164,13 @@ bool Matrix<T>::equals(Matrix<T> &matrix) const
 }
 
 template <Storable T>
-bool Matrix<T>::operator==(Matrix<T> &matrix) const
+bool Matrix<T>::operator==(const Matrix<T> &matrix) const
 {
     return equals(matrix);
 }
 
 template <Storable T>
-bool Matrix<T>::operator==(Matrix<T> &matrix) const
+bool Matrix<T>::operator==(const Matrix<T> &matrix) const
     requires std::is_floating_point_v<T>
 {
     return equals(matrix);
