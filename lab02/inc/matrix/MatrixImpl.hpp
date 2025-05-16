@@ -1088,7 +1088,7 @@ auto Matrix<T>::at(size_t row, size_t column) const -> const_reference
 template <Storable T>
 bool Matrix<T>::equalsShape(const Matrix<T> &matrix) const
 {
-	return matrix.getRows() == rows && matrix.getColumns() == columns;
+    return matrix.getRows() == rows && matrix.getColumns() == columns;
 }
 
 template <Storable T>
@@ -1143,6 +1143,16 @@ bool Matrix<T>::isIdentity() const
 }
 
 template <Storable T>
+template <EqualityComparable<T> U>
+bool Matrix<T>::equals(const Matrix<U> &matrix) const
+{
+    if (!equalsShape(matrix))
+        return false;
+
+    return std::ranges::equal(*this, matrix);
+}
+
+template <Storable T>
 bool Matrix<T>::equals(const Matrix<T> &matrix) const
 {
     if (!equalsShape(matrix))
@@ -1161,6 +1171,13 @@ bool Matrix<T>::equals(const Matrix<T> &matrix) const
     return std::ranges::all_of(*this, matrix, [](const auto &t, const auto &m) {
         return std::abs(t - m) <= std::numeric_limits<value_type>::epsilon();
     });
+}
+
+template <Storable T>
+template <EqualityComparable<T> U>
+bool Matrix<T>::operator==(const Matrix<U> &matrix) const
+{
+	return equals(matrix);
 }
 
 template <Storable T>

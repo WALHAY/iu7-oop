@@ -6,6 +6,9 @@ template <typename T>
 concept Storable = std::semiregular<T>;
 
 template <typename T, typename K>
+concept EqualityComparable = std::equality_comparable_with<T, K>;
+
+template <typename T, typename K>
 concept ConvertibleTo = std::convertible_to<T, K>;
 
 template <typename T, typename K>
@@ -60,14 +63,7 @@ concept DeterminantComputable = requires(T &a, T &b) {
     { a - b } -> std::convertible_to<double>;
     { a + b } -> std::convertible_to<double>;
     { a / b } -> std::convertible_to<double>;
-};
-
-template <typename T>
-concept InvertComputable = LUComputable<T> && DeterminantComputable<T> && requires(T &a, T &b) {
-    { a - b };
-    { a + b };
-    { a * b };
-    { a / b };
+    { a * b } -> std::convertible_to<double>;
 };
 
 template <typename T>
@@ -85,3 +81,6 @@ concept Iterable = requires(T &a) {
     a.begin();
     a.end();
 };
+
+template <typename T>
+concept InvertComputable = HasIdentityElement<T> && LUComputable<T>;

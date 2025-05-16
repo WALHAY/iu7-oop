@@ -304,10 +304,14 @@ class Matrix : public BaseMatrix
     bool isIdentity() const
         requires HasIdentityElement<T> && std::is_floating_point_v<T>;
 
+	template<EqualityComparable<T> U>
+    bool equals(const Matrix<U> &matrix) const;
     bool equals(const Matrix<T> &matrix) const;
     bool equals(const Matrix<T> &matrix) const
         requires std::is_floating_point_v<T>;
 
+	template<EqualityComparable<T> U>
+    bool operator==(const Matrix<U> &matrix) const;
     bool operator==(const Matrix<T> &matrix) const;
     bool operator==(const Matrix<T> &matrix) const
         requires std::is_floating_point_v<T>;

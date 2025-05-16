@@ -511,7 +511,7 @@ void testDefaultMatrices()
 void testCompare()
 {
     Matrix<int> im = Matrix<int>::fill(3, 3, 5);
-    Matrix<int> dm = Matrix<int>::fill(3, 3, 5);
+    Matrix<double> dm = Matrix<double>::fill(3, 3, 5);
 
     std::cout << "M1:\n";
     printMatrix(im);
