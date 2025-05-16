@@ -171,16 +171,16 @@ class Matrix : public BaseMatrix
 
 #pragma region division
 
-    template <Multipliable<T> U>
+    template <Divisible<T> U>
     decltype(auto) div(const U &value) const;
 
-    template <Multipliable<T> U>
+    template <Divisible<T> U>
     decltype(auto) div(const Matrix<U> &matrix) const;
 
-    template <MultipliableAssignable<T> U>
+    template <DivisibleAssignable<T> U>
     Matrix<T> &divAssign(const U &value);
 
-    template <MultipliableAssignable<T> U>
+    template <DivisibleAssignable<T> U>
     Matrix<T> &divAssign(const Matrix<U> &matrix);
 
     template <Divisible<T> U>

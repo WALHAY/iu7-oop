@@ -440,7 +440,7 @@ Matrix<T> &Matrix<T>::operator*=(const Matrix<U> &matrix)
 #pragma region division
 
 template <Storable T>
-template <Multipliable<T> U>
+template <Divisible<T> U>
 decltype(auto) Matrix<T>::div(const U &value) const
 {
     Matrix<decltype(std::declval<T>() / std::declval<U>())> result(*this);
@@ -450,7 +450,7 @@ decltype(auto) Matrix<T>::div(const U &value) const
 }
 
 template <Storable T>
-template <Multipliable<T> U>
+template <Divisible<T> U>
 decltype(auto) Matrix<T>::div(const Matrix<U> &matrix) const
 {
     validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __FILE_NAME__, __FUNCTION__, __LINE__);
@@ -462,7 +462,7 @@ decltype(auto) Matrix<T>::div(const Matrix<U> &matrix) const
 }
 
 template <Storable T>
-template <MultipliableAssignable<T> U>
+template <DivisibleAssignable<T> U>
 Matrix<T> &Matrix<T>::divAssign(const U &value)
 {
     std::ranges::transform(*this, begin(), [&value](const auto &element) { return element / value; });
@@ -471,7 +471,7 @@ Matrix<T> &Matrix<T>::divAssign(const U &value)
 }
 
 template <Storable T>
-template <MultipliableAssignable<T> U>
+template <DivisibleAssignable<T> U>
 Matrix<T> &Matrix<T>::divAssign(const Matrix<U> &matrix)
 {
     return *this = *this / matrix;
