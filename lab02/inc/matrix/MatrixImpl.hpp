@@ -200,7 +200,7 @@ auto Matrix<T>::crend() const -> const_reverse_iterator
 #pragma region addition
 
 template <Storable T>
-template <AddableTo<T> U>
+template <Addable<T> U>
 decltype(auto) Matrix<T>::add(const U &value) const
 {
     Matrix<decltype(std::declval<T>() + std::declval<U>())> result(*this);
@@ -210,7 +210,7 @@ decltype(auto) Matrix<T>::add(const U &value) const
 }
 
 template <Storable T>
-template <AddableTo<T> U>
+template <Addable<T> U>
 decltype(auto) Matrix<T>::add(const Matrix<U> &matrix) const
 {
     validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
@@ -242,14 +242,14 @@ Matrix<T> &Matrix<T>::addAssign(const Matrix<U> &matrix)
 }
 
 template <Storable T>
-template <AddableTo<T> U>
+template <Addable<T> U>
 decltype(auto) Matrix<T>::operator+(const U &value) const
 {
     return add(value);
 }
 
 template <Storable T>
-template <AddableTo<T> U>
+template <Addable<T> U>
 decltype(auto) Matrix<T>::operator+(const Matrix<U> &matrix) const
 {
     return add(matrix);
@@ -274,7 +274,7 @@ Matrix<T> &Matrix<T>::operator+=(const Matrix<U> &matrix)
 #pragma region subtraction
 
 template <Storable T>
-template <SubtractableTo<T> U>
+template <Subtractable<T> U>
 decltype(auto) Matrix<T>::sub(const U &value) const
 {
     Matrix<decltype(std::declval<T>() - std::declval<U>())> result(*this);
@@ -284,7 +284,7 @@ decltype(auto) Matrix<T>::sub(const U &value) const
 }
 
 template <Storable T>
-template <SubtractableTo<T> U>
+template <Subtractable<T> U>
 decltype(auto) Matrix<T>::sub(const Matrix<U> &matrix) const
 {
     validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
@@ -317,14 +317,14 @@ Matrix<T> &Matrix<T>::subAssign(const Matrix<U> &matrix)
 }
 
 template <Storable T>
-template <SubtractableTo<T> U>
+template <Subtractable<T> U>
 decltype(auto) Matrix<T>::operator-(const U &value) const
 {
     return sub(value);
 }
 
 template <Storable T>
-template <SubtractableTo<T> U>
+template <Subtractable<T> U>
 decltype(auto) Matrix<T>::operator-(const Matrix<U> &matrix) const
 {
     return sub(matrix);
@@ -347,7 +347,7 @@ Matrix<T> &Matrix<T>::operator-=(const Matrix<U> &matrix)
 #pragma region multiplication
 
 template <Storable T>
-template <MultipliableTo<T> U>
+template <Multipliable<T> U>
 decltype(auto) Matrix<T>::mul(const U &value) const
 {
     Matrix<decltype(std::declval<T>() * std::declval<U>())> result(*this);
@@ -357,7 +357,7 @@ decltype(auto) Matrix<T>::mul(const U &value) const
 }
 
 template <Storable T>
-template <MultipliableTo<T> U>
+template <Multipliable<T> U>
 decltype(auto) Matrix<T>::mul(const Matrix<U> &matrix) const
 {
     validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __LINE__);
@@ -408,14 +408,14 @@ Matrix<T> &Matrix<T>::mulAssign(const Matrix<U> &matrix)
 }
 
 template <Storable T>
-template <MultipliableTo<T> U>
+template <Multipliable<T> U>
 decltype(auto) Matrix<T>::operator*(const U &value) const
 {
     return mul(value);
 }
 
 template <Storable T>
-template <MultipliableTo<T> U>
+template <Multipliable<T> U>
 decltype(auto) Matrix<T>::operator*(const Matrix<U> &matrix) const
 {
     return mul(matrix);
@@ -440,7 +440,7 @@ Matrix<T> &Matrix<T>::operator*=(const Matrix<U> &matrix)
 #pragma region division
 
 template <Storable T>
-template <MultipliableTo<T> U>
+template <Multipliable<T> U>
 decltype(auto) Matrix<T>::div(const U &value) const
 {
     Matrix<decltype(std::declval<T>() / std::declval<U>())> result(*this);
@@ -450,7 +450,7 @@ decltype(auto) Matrix<T>::div(const U &value) const
 }
 
 template <Storable T>
-template <MultipliableTo<T> U>
+template <Multipliable<T> U>
 decltype(auto) Matrix<T>::div(const Matrix<U> &matrix) const
 {
     validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __LINE__);
@@ -478,14 +478,14 @@ Matrix<T> &Matrix<T>::divAssign(const Matrix<U> &matrix)
 }
 
 template <Storable T>
-template <MultipliableTo<T> U>
+template <Multipliable<T> U>
 decltype(auto) Matrix<T>::operator/(const U &value) const
 {
     return div(value);
 }
 
 template <Storable T>
-template <MultipliableTo<T> U>
+template <Multipliable<T> U>
 decltype(auto) Matrix<T>::operator/(const Matrix<U> &matrix) const
 {
     return div(matrix);
@@ -877,7 +877,7 @@ Matrix<T> &Matrix<T>::insertRow(size_t row, const value_type &fill)
 }
 
 template <Storable T>
-template <Container C>
+template <Iterable C>
 Matrix<T> &Matrix<T>::insertRow(size_t row, const C &container)
 {
     validateInsertRow(row, __LINE__);
@@ -939,7 +939,7 @@ Matrix<T> &Matrix<T>::insertColumn(size_t column, const value_type &fill)
 }
 
 template <Storable T>
-template <Container C>
+template <Iterable C>
 Matrix<T> &Matrix<T>::insertColumn(size_t column, const C &container)
 {
     validateInsertColumn(column, __LINE__);
@@ -1152,7 +1152,9 @@ bool Matrix<T>::equals(Matrix<T> &matrix) const
     if (!equalsShape(matrix))
         return false;
 
-    return std::ranges::all_of(*this, matrix, [](const auto &t, const auto &m) { return std::abs(t - m) <= std::numeric_limits<value_type>::epsilon(); });
+    return std::ranges::all_of(*this, matrix, [](const auto &t, const auto &m) {
+        return std::abs(t - m) <= std::numeric_limits<value_type>::epsilon();
+    });
 }
 
 template <Storable T>

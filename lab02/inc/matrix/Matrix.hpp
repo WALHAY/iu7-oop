@@ -27,6 +27,7 @@ class Matrix : public BaseMatrix
     using const_reverse_iterator = ConstReverseMatrixIterator<T>;
 
 #pragma region constructors
+
     Matrix(size_t rows, size_t columns);
     explicit Matrix(size_t size);
 
@@ -49,6 +50,7 @@ class Matrix : public BaseMatrix
     template <ConvertibleTo<T> U>
     Matrix(Matrix<U> &&matrix);
     Matrix(Matrix<T> &&matrix) noexcept = default;
+
 #pragma endregion
 
 #pragma region assign
@@ -85,10 +87,10 @@ class Matrix : public BaseMatrix
 
 #pragma region addition
 
-    template <AddableTo<T> U>
+    template <Addable<T> U>
     decltype(auto) add(const U &value) const;
 
-    template <AddableTo<T> U>
+    template <Addable<T> U>
     decltype(auto) add(const Matrix<U> &matrix) const;
 
     template <AddableAssignable<T> U>
@@ -97,10 +99,10 @@ class Matrix : public BaseMatrix
     template <AddableAssignable<T> U>
     Matrix<T> &addAssign(const Matrix<U> &matrix);
 
-    template <AddableTo<T> U>
+    template <Addable<T> U>
     decltype(auto) operator+(const U &value) const;
 
-    template <AddableTo<T> U>
+    template <Addable<T> U>
     decltype(auto) operator+(const Matrix<U> &matrix) const;
 
     template <AddableAssignable<T> U>
@@ -113,10 +115,10 @@ class Matrix : public BaseMatrix
 
 #pragma region subtraction
 
-    template <SubtractableTo<T> U>
+    template <Subtractable<T> U>
     decltype(auto) sub(const U &value) const;
 
-    template <SubtractableTo<T> U>
+    template <Subtractable<T> U>
     decltype(auto) sub(const Matrix<U> &matrix) const;
 
     template <SubtractableAssignable<T> U>
@@ -125,10 +127,10 @@ class Matrix : public BaseMatrix
     template <SubtractableAssignable<T> U>
     Matrix<T> &subAssign(const Matrix<U> &matrix);
 
-    template <SubtractableTo<T> U>
+    template <Subtractable<T> U>
     decltype(auto) operator-(const U &value) const;
 
-    template <SubtractableTo<T> U>
+    template <Subtractable<T> U>
     decltype(auto) operator-(const Matrix<U> &matrix) const;
 
     template <SubtractableAssignable<T> U>
@@ -141,10 +143,10 @@ class Matrix : public BaseMatrix
 
 #pragma region multiplication
 
-    template <MultipliableTo<T> U>
+    template <Multipliable<T> U>
     decltype(auto) mul(const U &value) const;
 
-    template <MultipliableTo<T> U>
+    template <Multipliable<T> U>
     decltype(auto) mul(const Matrix<U> &matrix) const;
 
     template <MultipliableAssignable<T> U>
@@ -153,10 +155,10 @@ class Matrix : public BaseMatrix
     template <MultipliableAssignable<T> U>
     Matrix<T> &mulAssign(const Matrix<U> &matrix);
 
-    template <MultipliableTo<T> U>
+    template <Multipliable<T> U>
     decltype(auto) operator*(const U &value) const;
 
-    template <MultipliableTo<T> U>
+    template <Multipliable<T> U>
     decltype(auto) operator*(const Matrix<U> &matrix) const;
 
     template <MultipliableAssignable<T> U>
@@ -169,10 +171,10 @@ class Matrix : public BaseMatrix
 
 #pragma region division
 
-    template <MultipliableTo<T> U>
+    template <Multipliable<T> U>
     decltype(auto) div(const U &value) const;
 
-    template <MultipliableTo<T> U>
+    template <Multipliable<T> U>
     decltype(auto) div(const Matrix<U> &matrix) const;
 
     template <MultipliableAssignable<T> U>
@@ -181,10 +183,10 @@ class Matrix : public BaseMatrix
     template <MultipliableAssignable<T> U>
     Matrix<T> &divAssign(const Matrix<U> &matrix);
 
-    template <MultipliableTo<T> U>
+    template <Multipliable<T> U>
     decltype(auto) operator/(const U &value) const;
 
-    template <MultipliableTo<T> U>
+    template <Multipliable<T> U>
     decltype(auto) operator/(const Matrix<U> &matrix) const;
 
     template <MultipliableAssignable<T> U>
@@ -219,7 +221,8 @@ class Matrix : public BaseMatrix
         requires HasZeroElement<T>;
 
     static Matrix<T> fill(size_t rows, size_t columns, const value_type &fill);
-    static Matrix<T> diagonal(size_t size, const value_type &fill) requires HasZeroElement<T>;
+    static Matrix<T> diagonal(size_t size, const value_type &fill)
+        requires HasZeroElement<T>;
 
 #pragma endregion
 
@@ -256,13 +259,13 @@ class Matrix : public BaseMatrix
     Matrix<T> &insertRow(size_t row)
         requires HasZeroElement<T>;
     Matrix<T> &insertRow(size_t row, const value_type &fill);
-    template <Container C>
+    template <Iterable C>
     Matrix<T> &insertRow(size_t row, const C &container);
 
     Matrix<T> &insertColumn(size_t column)
         requires HasZeroElement<T>;
     Matrix<T> &insertColumn(size_t column, const value_type &fill);
-    template <Container C>
+    template <Iterable C>
     Matrix<T> &insertColumn(size_t row, const C &container);
 
     Matrix<T> &swapRows(size_t first, size_t second);
@@ -300,7 +303,8 @@ class Matrix : public BaseMatrix
         requires HasIdentityElement<T> && std::is_floating_point_v<T>;
 
     bool equals(Matrix<T> &matrix) const;
-    bool equals(Matrix<T> &matrix) const requires std::is_floating_point_v<T>;
+    bool equals(Matrix<T> &matrix) const
+        requires std::is_floating_point_v<T>;
 
     bool operator==(Matrix<T> &matrix) const;
     bool operator==(Matrix<T> &matrix) const

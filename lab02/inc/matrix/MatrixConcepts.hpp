@@ -9,52 +9,65 @@ template <typename T, typename K>
 concept ConvertibleTo = std::convertible_to<T, K>;
 
 template <typename T, typename K>
-concept AddableTo = requires(T a, K b) {
+concept Addable = requires(T &a, K &b) {
     { a + b };
 };
 
 template <typename T, typename K>
-concept AddableAssignable = requires(T a, K b) {
+concept AddableAssignable = requires(T &a, K &b) {
     { a + b } -> std::convertible_to<K>;
 };
 
 template <typename T, typename K>
-concept SubtractableTo = requires(T a, K b) {
+concept Subtractable = requires(T &a, K &b) {
     { a - b };
 };
 
 template <typename T, typename K>
-concept SubtractableAssignable = requires(T a, K b) {
+concept SubtractableAssignable = requires(T &a, K &b) {
     { a - b } -> std::convertible_to<K>;
 };
 
 template <typename T, typename K>
-concept MultipliableTo = requires(T a, K b) {
+concept Multipliable = requires(T &a, K &b) {
     { a * b };
 };
 
 template <typename T, typename K>
-concept MultipliableAssignable = requires(T a, K b) {
+concept MultipliableAssignable = requires(T &a, K &b) {
+    { a * b } -> std::convertible_to<K>;
+};
+
+template <typename T, typename K>
+concept Dividable = requires(T &a, K &b) {
+    { a * b };
+};
+
+template <typename T, typename K>
+concept DividableAssignable = requires(T &a, K &b) {
     { a * b } -> std::convertible_to<K>;
 };
 
 template <typename T>
-concept LUComputable = requires(T a, T b) {
+concept LUComputable = requires(T &a, T &b) {
     { a - b } -> std::convertible_to<double>;
     { a * b } -> std::convertible_to<double>;
     { a / b } -> std::convertible_to<double>;
 };
 
 template <typename T>
-concept DeterminantComputable = requires(T a, T b) {
+concept DeterminantComputable = requires(T &a, T &b) {
     { a - b } -> std::convertible_to<double>;
     { a + b } -> std::convertible_to<double>;
     { a / b } -> std::convertible_to<double>;
 };
 
 template <typename T>
-concept InvertComputable = requires  {
-	{ true };
+concept InvertComputable = LUComputable<T> && DeterminantComputable<T> && requires(T &a, T &b) {
+    { a - b };
+    { a + b };
+    { a * b };
+    { a / b };
 };
 
 template <typename T>
@@ -68,7 +81,7 @@ concept HasIdentityElement = requires {
 };
 
 template <typename T>
-concept Container = requires(T &a) {
-	a.begin();
-	a.end();
+concept Iterable = requires(T &a) {
+    a.begin();
+    a.end();
 };
