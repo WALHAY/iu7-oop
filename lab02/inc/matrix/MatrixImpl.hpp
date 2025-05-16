@@ -8,7 +8,7 @@
 template <Storable T>
 Matrix<T>::Matrix(size_t rows, size_t columns)
 {
-    validateMatrixSize(rows, columns);
+    validateMatrixSize(rows, columns, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     this->rows = rows;
     this->columns = columns;
@@ -70,7 +70,7 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<U>> ilist)
 
 {
     if (std::ranges::any_of(ilist, [this](const auto &l) { return l.size() != this->columns; }))
-        throw InitListWrongSize(__FILE_NAME__, __FUNCTION__, __LINE__);
+        throw InitListInvalidSize(__FILE_NAME__, __FUNCTION__, __LINE__, time(nullptr));
 
     std::ranges::copy(ilist | std::views::join, begin());
 }
@@ -82,7 +82,7 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> ilist)
 
 {
     if (std::ranges::any_of(ilist, [this](const auto &l) { return l.size() != this->columns; }))
-        throw InitListWrongSize(__FILE_NAME__, __FUNCTION__, __LINE__);
+        throw InitListInvalidSize(__FILE_NAME__, __FUNCTION__, __LINE__, time(nullptr));
 
     std::ranges::copy(ilist | std::views::join, begin());
 }
@@ -213,7 +213,7 @@ template <Storable T>
 template <Addable<T> U>
 decltype(auto) Matrix<T>::add(const Matrix<U> &matrix) const
 {
-    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     Matrix<decltype(std::declval<T>() + std::declval<U>())> result(rows, columns);
 
@@ -234,7 +234,7 @@ template <Storable T>
 template <AddableAssignable<T> U>
 Matrix<T> &Matrix<T>::addAssign(const Matrix<U> &matrix)
 {
-    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t + u; });
 
@@ -287,7 +287,7 @@ template <Storable T>
 template <Subtractable<T> U>
 decltype(auto) Matrix<T>::sub(const Matrix<U> &matrix) const
 {
-    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     Matrix<decltype(std::declval<T>() - std::declval<U>())> result(rows, columns);
 
@@ -309,7 +309,7 @@ template <Storable T>
 template <SubtractableAssignable<T> U>
 Matrix<T> &Matrix<T>::subAssign(const Matrix<U> &matrix)
 {
-    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t - u; });
 
@@ -360,7 +360,7 @@ template <Storable T>
 template <Multipliable<T> U>
 decltype(auto) Matrix<T>::mul(const Matrix<U> &matrix) const
 {
-    validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __LINE__);
+    validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     Matrix<decltype(std::declval<T>() * std::declval<U>() + std::declval<T>() * std::declval<U>())> newMatrix =
         zero(rows, matrix.getColumns());
@@ -386,7 +386,7 @@ template <Storable T>
 template <MultipliableAssignable<T> U>
 Matrix<T> &Matrix<T>::mulAssign(const Matrix<U> &matrix)
 {
-    validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __LINE__);
+    validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     Matrix<decltype(std::declval<T>() * std::declval<U>() + std::declval<T>() * std::declval<U>())> newMatrix =
         zero(rows, matrix.getColumns());
@@ -453,10 +453,10 @@ template <Storable T>
 template <Multipliable<T> U>
 decltype(auto) Matrix<T>::div(const Matrix<U> &matrix) const
 {
-    validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __LINE__);
+    validateOtherMatrixSize(matrix.getColumns(), matrix.getRows(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     if (det() == value_type{0})
-        throw ZeroDeterminant(__FILE_NAME__, __FUNCTION__, __LINE__);
+        throw DivisionZeroDeterminant(__FILE_NAME__, __FUNCTION__, __LINE__, time(nullptr));
 
     return *this * matrix.invert();
 }
@@ -513,7 +513,7 @@ template <Storable T>
 template <MultipliableAssignable<T> U>
 decltype(auto) Matrix<T>::hadamardMul(const Matrix<U> &matrix) const
 {
-    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     Matrix<decltype(std::declval<T>() * std::declval<U>())> result(rows, columns);
 
@@ -525,7 +525,7 @@ template <Storable T>
 template <MultipliableAssignable<T> U>
 decltype(auto) Matrix<T>::hadamardDiv(const Matrix<U> &matrix) const
 {
-    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     Matrix<decltype(std::declval<T>() / std::declval<U>())> result(rows, columns);
 
@@ -537,7 +537,7 @@ template <Storable T>
 template <MultipliableAssignable<T> U>
 decltype(auto) Matrix<T>::hadamardMulAssign(const Matrix<U> &matrix)
 {
-    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t * u; });
 
@@ -548,7 +548,7 @@ template <Storable T>
 template <MultipliableAssignable<T> U>
 decltype(auto) Matrix<T>::hadamardDivAssign(const Matrix<U> &matrix)
 {
-    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __LINE__);
+    validateOtherMatrixSize(matrix.getRows(), matrix.getColumns(), __FILE_NAME__, __FUNCTION__, __LINE__);
 
     std::ranges::transform(*this, matrix, begin(), [](const auto &t, const auto &u) { return t / u; });
 
@@ -602,7 +602,7 @@ template <Storable T>
 auto Matrix<T>::det() const
     requires DeterminantComputable<T>
 {
-    validateSquareSize(__LINE__);
+    validateSquareSize(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     Matrix<T> temp(*this);
 
@@ -648,7 +648,7 @@ decltype(auto) Matrix<T>::invert() const
     requires InvertComputable<T> && std::is_arithmetic_v<T>
 {
     if (!invertible())
-        throw NotInvertible(__FILE_NAME__, __FUNCTION__, __LINE__);
+        throw NotInvertible(__FILE_NAME__, __FUNCTION__, __LINE__, time(nullptr));
 
     auto [L, U] = this->LU();
 
@@ -720,7 +720,7 @@ Matrix<T> Matrix<T>::transpose() const
 {
     Matrix<T> transposed(columns, rows);
 
-    auto newData = std::ranges::transform(std::views::iota(0u, getSize()), transposed.begin(), [&](auto index) {
+    std::ranges::transform(std::views::iota(0u, getSize()), transposed.begin(), [&](auto index) {
         size_t i = index / rows;
         size_t j = index % rows;
 
@@ -734,7 +734,7 @@ template <Storable T>
 std::pair<Matrix<double>, Matrix<double>> Matrix<T>::LU() const
     requires LUComputable<T> && std::is_arithmetic_v<T>
 {
-    validateSquareSize(__LINE__);
+    validateSquareSize(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     auto U = Matrix<double>(*this);
     auto L = Matrix<double>::zero(rows, columns);
@@ -762,7 +762,7 @@ template <Storable T>
 std::pair<Matrix<T>, Matrix<T>> Matrix<T>::LU() const
     requires LUComputable<T>
 {
-    validateSquareSize(__LINE__);
+    validateSquareSize(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     auto U = Matrix(*this);
     auto L = Matrix::zero(rows, columns);
@@ -793,7 +793,7 @@ std::pair<Matrix<T>, Matrix<T>> Matrix<T>::LU() const
 template <Storable T>
 Matrix<T> &Matrix<T>::removeRow(size_t row)
 {
-    validateRow(row, __LINE__);
+    validateRow(row, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     auto oldData = data;
     size_t oldRows = rows;
@@ -819,7 +819,7 @@ Matrix<T> &Matrix<T>::removeRow(size_t row)
 template <Storable T>
 Matrix<T> &Matrix<T>::removeColumn(size_t column)
 {
-    validateColumn(column, __LINE__);
+    validateColumn(column, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     size_t oldColumns = columns;
     auto oldData = data;
@@ -856,7 +856,7 @@ Matrix<T> &Matrix<T>::insertRow(size_t row)
 template <Storable T>
 Matrix<T> &Matrix<T>::insertRow(size_t row, const value_type &fill)
 {
-    validateInsertRow(row, __LINE__);
+    validateInsertRow(row, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     auto oldData = data;
     this->rows++;
@@ -880,7 +880,7 @@ template <Storable T>
 template <Iterable C>
 Matrix<T> &Matrix<T>::insertRow(size_t row, const C &container)
 {
-    validateInsertRow(row, __LINE__);
+    validateInsertRow(row, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     auto oldData = data;
     this->rows++;
@@ -888,7 +888,7 @@ Matrix<T> &Matrix<T>::insertRow(size_t row, const C &container)
     allocateMemory(getSize());
 
     if (std::ranges::distance(container) != columns)
-        throw InsertContainerInvalidSize(__FILE_NAME__, __FUNCTION__, __LINE__);
+        throw InsertContainerInvalidSize(__FILE_NAME__, __FUNCTION__, __LINE__, time(nullptr));
 
     auto it = container.begin();
 
@@ -915,7 +915,7 @@ Matrix<T> &Matrix<T>::insertColumn(size_t column)
 template <Storable T>
 Matrix<T> &Matrix<T>::insertColumn(size_t column, const value_type &fill)
 {
-    validateInsertColumn(column, __LINE__);
+    validateInsertColumn(column, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     auto oldData = data;
     size_t oldColumns = columns;
@@ -942,7 +942,7 @@ template <Storable T>
 template <Iterable C>
 Matrix<T> &Matrix<T>::insertColumn(size_t column, const C &container)
 {
-    validateInsertColumn(column, __LINE__);
+    validateInsertColumn(column, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     auto oldData = data;
     size_t oldColumns = columns;
@@ -951,7 +951,7 @@ Matrix<T> &Matrix<T>::insertColumn(size_t column, const C &container)
     allocateMemory(getSize());
 
     if (std::ranges::distance(container) != rows)
-        throw InsertContainerInvalidSize(__FILE_NAME__, __FUNCTION__, __LINE__);
+        throw InsertContainerInvalidSize(__FILE_NAME__, __FUNCTION__, __LINE__, time(nullptr));
 
     auto it = container.begin();
 
@@ -973,8 +973,8 @@ Matrix<T> &Matrix<T>::insertColumn(size_t column, const C &container)
 template <Storable T>
 Matrix<T> &Matrix<T>::swapRows(size_t first, size_t second)
 {
-    validateRow(first, __LINE__);
-    validateRow(second, __LINE__);
+    validateRow(first, __FILE_NAME__, __FUNCTION__, __LINE__);
+    validateRow(second, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     if (first == second)
         return *this;
@@ -988,8 +988,8 @@ Matrix<T> &Matrix<T>::swapRows(size_t first, size_t second)
 template <Storable T>
 Matrix<T> &Matrix<T>::swapColumns(size_t first, size_t second)
 {
-    validateColumn(first, __LINE__);
-    validateColumn(second, __LINE__);
+    validateColumn(first, __FILE_NAME__, __FUNCTION__, __LINE__);
+    validateColumn(second, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     if (first == second)
         return *this;
@@ -1012,7 +1012,7 @@ Matrix<T> &Matrix<T>::reshape(size_t rows, size_t columns)
 template <Storable T>
 Matrix<T> &Matrix<T>::reshape(size_t rows, size_t columns, const value_type &fill)
 {
-    validateMatrixSize(rows, columns);
+    validateMatrixSize(rows, columns, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     size_t oldRows = this->rows;
     size_t oldColumns = this->columns;
@@ -1038,7 +1038,7 @@ Matrix<T> &Matrix<T>::reshape(size_t rows, size_t columns, const value_type &fil
 template <Storable T>
 Matrix<T>::Row Matrix<T>::operator[](size_t row)
 {
-    validateRow(row, __LINE__);
+    validateRow(row, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     return Row(*this, row);
 }
@@ -1046,7 +1046,7 @@ Matrix<T>::Row Matrix<T>::operator[](size_t row)
 template <Storable T>
 const Matrix<T>::Row Matrix<T>::operator[](size_t row) const
 {
-    validateRow(row, __LINE__);
+    validateRow(row, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     return Row(*this, row);
 }
@@ -1066,8 +1066,8 @@ auto Matrix<T>::operator()(size_t row, size_t column) const -> const_reference
 template <Storable T>
 auto Matrix<T>::at(size_t row, size_t column) -> reference
 {
-    validateRow(row, __LINE__);
-    validateColumn(column, __LINE__);
+    validateRow(row, __FILE_NAME__, __FUNCTION__, __LINE__);
+    validateColumn(column, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     return data[row * columns + column];
 }
@@ -1075,8 +1075,8 @@ auto Matrix<T>::at(size_t row, size_t column) -> reference
 template <Storable T>
 auto Matrix<T>::at(size_t row, size_t column) const -> const_reference
 {
-    validateRow(row, __LINE__);
-    validateColumn(column, __LINE__);
+    validateRow(row, __FILE_NAME__, __FUNCTION__, __LINE__);
+    validateColumn(column, __FILE_NAME__, __FUNCTION__, __LINE__);
 
     return data[row * columns + column];
 }
@@ -1173,52 +1173,53 @@ bool Matrix<T>::operator==(Matrix<T> &matrix) const
 #pragma endregion
 
 template <Storable T>
-void Matrix<T>::validateMatrixSize(size_t rows, size_t columns)
+void Matrix<T>::validateMatrixSize(size_t rows, size_t columns, const char *filename, const char *function, int line)
 {
     if (rows <= 0 || columns <= 0)
-        throw MatrixInvalidSize(__FILE_NAME__, __FUNCTION__, __LINE__);
+        throw MatrixInvalidShape(filename, function, line, time(nullptr));
 }
 
 template <Storable T>
-void Matrix<T>::validateOtherMatrixSize(size_t rows, size_t columns, int line) const
+void Matrix<T>::validateOtherMatrixSize(size_t rows, size_t columns, const char *filename, const char *function,
+                                        int line) const
 {
     if (rows != this->rows || columns != this->columns)
-        throw NotEqualSize(__FILE_NAME__, __FUNCTION__, line);
+        throw MatricesNotEqualSize(filename, function, line, time(nullptr));
 }
 
 template <Storable T>
-void Matrix<T>::validateRow(size_t row, int line) const
+void Matrix<T>::validateRow(size_t row, const char *filename, const char *function, int line) const
 {
     if (row < 0 || row >= rows)
-        throw MatrixRowOutOfBounds(__FILE_NAME__, __FUNCTION__, line);
+        throw MatrixRowOutOfBounds(filename, function, line, time(nullptr));
 }
 
 template <Storable T>
-void Matrix<T>::validateColumn(size_t column, int line) const
+void Matrix<T>::validateColumn(size_t column, const char *filename, const char *function, int line) const
 {
     if (column < 0 || column >= columns)
-        throw MatrixColumnOutOfBounds(__FILE_NAME__, __FUNCTION__, line);
+        throw MatrixColumnOutOfBounds(filename, function, line, time(nullptr));
 }
 
 template <Storable T>
-void Matrix<T>::validateInsertRow(size_t row, int line) const
+void Matrix<T>::validateInsertRow(size_t row, const char *filename, const char *function, int line) const
 {
     if (row < 0 || row > rows)
-        throw MatrixRowOutOfBounds(__FILE_NAME__, __FUNCTION__, line);
+        throw MatrixRowOutOfBounds(filename, function, line, time(nullptr));
 }
 
 template <Storable T>
-void Matrix<T>::validateInsertColumn(size_t column, int line) const
+void Matrix<T>::validateInsertColumn(size_t column, const char *filename, const char *function, int line) const
 {
     if (column < 0 || column > columns)
-        throw MatrixColumnOutOfBounds(__FILE_NAME__, __FUNCTION__, line);
+        throw MatrixColumnOutOfBounds(filename, function, line, time(nullptr));
 }
 
 template <Storable T>
-void Matrix<T>::validateSquareSize(int line) const
+void Matrix<T>::validateSquareSize(const char *filename, const char *function, int line) const
 {
     if (!isSquare())
-        throw NotSquareMatrix(__FILE_NAME__, __FUNCTION__, line);
+        throw DeterminantNotSquareMatrix(filename, function, line, time(nullptr));
 }
 
 template <Storable T>
@@ -1230,6 +1231,6 @@ void Matrix<T>::allocateMemory(size_t elements)
     }
     catch (std::bad_alloc err)
     {
-        throw MatrixBadAlloc(__FILE_NAME__, __FUNCTION__, __LINE__);
+        throw MatrixBadAlloc(__FILE_NAME__, __FUNCTION__, __LINE__, time(nullptr));
     }
 }

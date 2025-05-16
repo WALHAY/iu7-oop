@@ -313,15 +313,16 @@ class Matrix : public BaseMatrix
 #pragma endregion
 
   protected:
-    void validateMatrixSize(size_t rows, size_t columns);
-    void validateOtherMatrixSize(size_t rows, size_t columns, int line) const;
-    void validateRow(size_t row, int line) const;
+    void validateMatrixSize(size_t rows, size_t columns, const char *filename, const char *function, int line);
+    void validateOtherMatrixSize(size_t rows, size_t columns, const char *filename, const char *function,
+                                 int line) const;
+    void validateRow(size_t row, const char *filename, const char *function, int line) const;
 
-    void validateColumn(size_t column, int line) const;
-    void validateInsertRow(size_t row, int line) const;
+    void validateColumn(size_t column, const char *filename, const char *function, int line) const;
+    void validateInsertRow(size_t row, const char *filename, const char *function, int line) const;
 
-    void validateInsertColumn(size_t column, int line) const;
-    void validateSquareSize(int line) const;
+    void validateInsertColumn(size_t column, const char *filename, const char *function, int line) const;
+    void validateSquareSize(const char *filename, const char *function, int line) const;
 
     void allocateMemory(size_t elements);
 

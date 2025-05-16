@@ -54,8 +54,8 @@ class ConstMatrixIterator : public BaseMatrixIterator
     std::strong_ordering operator<=>(const ConstMatrixIterator<T> &iterator) const noexcept;
 
   protected:
-    void validateIndex(difference_type index, int line) const;
-    void validatePointer(int line) const;
+    void validateIndex(difference_type index, const char *filename, const char *function, int line) const;
+    void validatePointer(const char *filename, const char *function, int line) const;
 
     std::weak_ptr<T[]> dataPtr;
 };

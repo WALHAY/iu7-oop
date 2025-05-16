@@ -14,8 +14,8 @@ MatrixIterator<T>::MatrixIterator(const Matrix<value_type> &matrix)
 template <typename T>
 auto MatrixIterator<T>::operator*() const -> reference
 {
-    validateIndex(currentIndex, __LINE__);
-    validatePointer(__LINE__);
+    validateIndex(currentIndex, __FILE_NAME__, __FUNCTION__, __LINE__);
+    validatePointer(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     return this->dataPtr.lock()[currentIndex];
 }
@@ -23,8 +23,8 @@ auto MatrixIterator<T>::operator*() const -> reference
 template <typename T>
 auto MatrixIterator<T>::operator->() const -> pointer
 {
-    validateIndex(currentIndex, __LINE__);
-    validatePointer(__LINE__);
+    validateIndex(currentIndex, __FILE_NAME__, __FUNCTION__, __LINE__);
+    validatePointer(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     return this->dataPtr.lock().get() + currentIndex;
 }
@@ -97,8 +97,8 @@ auto MatrixIterator<T>::operator-(const MatrixIterator<T> &iterator) const -> di
 template <typename T>
 auto MatrixIterator<T>::operator[](difference_type offset) const -> reference
 {
-	validateIndex(currentIndex + offset , __LINE__);
-	validatePointer(__LINE__);
+    validateIndex(currentIndex + offset, __FILE_NAME__, __FUNCTION__, __LINE__);
+    validatePointer(__FILE_NAME__, __FUNCTION__, __LINE__);
 
     return *(*this + offset);
 }
@@ -121,17 +121,17 @@ std::strong_ordering MatrixIterator<T>::operator<=>(const MatrixIterator &iterat
 }
 
 template <typename T>
-void MatrixIterator<T>::validatePointer(int line) const
+void MatrixIterator<T>::validatePointer(const char *filename, const char *function, int line) const
 {
     if (dataPtr.expired() || dataPtr.lock() == nullptr)
-        throw IteratorExpiredException(__FILE_NAME__, __FUNCTION__, line);
+        throw IteratorExpiredException(filename, function, line, time(nullptr));
 }
 
 template <typename T>
-void MatrixIterator<T>::validateIndex(difference_type index, int line) const
+void MatrixIterator<T>::validateIndex(difference_type index, const char *filename, const char *function, int line) const
 {
     if (index >= matrixSize || index < 0)
-        throw IteratorInvalidIndexException(__FILE_NAME__, __FUNCTION__, line);
+        throw IteratorInvalidIndexException(filename, function, line, time(nullptr));
 }
 
 static_assert(std::random_access_iterator<MatrixIterator<const int>>,

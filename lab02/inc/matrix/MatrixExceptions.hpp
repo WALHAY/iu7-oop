@@ -2,20 +2,20 @@
 
 #include "base/BaseException.hpp"
 
-class NotEqualSize : public BaseException
+class MatricesNotEqualSize : public BaseException
 {
   public:
-    NotEqualSize(const char *filename, const char *method, int line)
-        : BaseException(filename, method, line, "Invalid addition/subtraction matrix size")
+    MatricesNotEqualSize(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Invalid addition/subtraction matrix size")
     {
     }
 };
 
-class InitListWrongSize : public BaseException
+class InitListInvalidSize : public BaseException
 {
   public:
-    InitListWrongSize(const char *filename, const char *method, int line)
-        : BaseException(filename, method, line, "Invalid initializer list dimension")
+    InitListInvalidSize(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Invalid initializer list shape")
     {
     }
 };
@@ -23,8 +23,8 @@ class InitListWrongSize : public BaseException
 class MatrixRowOutOfBounds : public BaseException
 {
   public:
-    MatrixRowOutOfBounds(const char *filename, const char *method, int line)
-        : BaseException(filename, method, line, "Invalid matrix row")
+    MatrixRowOutOfBounds(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Invalid matrix row access")
     {
     }
 };
@@ -32,8 +32,8 @@ class MatrixRowOutOfBounds : public BaseException
 class MatrixColumnOutOfBounds : public BaseException
 {
   public:
-    MatrixColumnOutOfBounds(const char *filename, const char *method, int line)
-        : BaseException(filename, method, line, "Invalid matrix column")
+    MatrixColumnOutOfBounds(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Invalid matrix column access")
     {
     }
 };
@@ -41,8 +41,8 @@ class MatrixColumnOutOfBounds : public BaseException
 class InvalidInsertColumn : public BaseException
 {
   public:
-    InvalidInsertColumn(const char *filename, const char *method, int line)
-        : BaseException(filename, method, line, "Invalid matrix column")
+    InvalidInsertColumn(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Invalid matrix column insertion")
     {
     }
 };
@@ -50,17 +50,17 @@ class InvalidInsertColumn : public BaseException
 class InvalidInsertRow : public BaseException
 {
   public:
-    InvalidInsertRow(const char *filename, const char *method, int line)
-        : BaseException(filename, method, line, "Invalid matrix column")
+    InvalidInsertRow(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Invalid matrix column insertion")
     {
     }
 };
 
-class NotSquareMatrix : public BaseException
+class DeterminantNotSquareMatrix : public BaseException
 {
   public:
-    NotSquareMatrix(const char *filename, const char *method, int line)
-        : BaseException(filename, method, line, "Matrix is not square")
+    DeterminantNotSquareMatrix(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Determinant require square matrix")
     {
     }
 };
@@ -68,7 +68,8 @@ class NotSquareMatrix : public BaseException
 class NotInvertible : public BaseException
 {
   public:
-    NotInvertible(const char *filename, const char *method, int line) : BaseException(filename, method, line)
+    NotInvertible(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Matrix is not invertible")
     {
     }
 };
@@ -76,15 +77,17 @@ class NotInvertible : public BaseException
 class MatrixBadAlloc : public BaseException
 {
   public:
-    MatrixBadAlloc(const char *filename, const char *method, int line) : BaseException(filename, method, line)
+    MatrixBadAlloc(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Failed to allocate memory for matrix")
     {
     }
 };
 
-class MatrixInvalidSize : public BaseException
+class MatrixInvalidShape : public BaseException
 {
   public:
-    MatrixInvalidSize(const char *filename, const char *method, int line) : BaseException(filename, method, line)
+    MatrixInvalidShape(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Invalid matrix shape")
     {
     }
 };
@@ -92,15 +95,17 @@ class MatrixInvalidSize : public BaseException
 class InsertContainerInvalidSize : public BaseException
 {
   public:
-    InsertContainerInvalidSize(const char *filename, const char *method, int line) : BaseException(filename, method, line)
+    InsertContainerInvalidSize(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Wrong iterable size on insertion")
     {
     }
 };
 
-class ZeroDeterminant : public BaseException
+class DivisionZeroDeterminant : public BaseException
 {
   public:
-    ZeroDeterminant(const char *filename, const char *method, int line) : BaseException(filename, method, line)
+    DivisionZeroDeterminant(const char *filename, const char *method, int line, time_t time)
+        : BaseException(filename, method, line, time, "Trying to invert matrix with zero determinant")
     {
     }
 };

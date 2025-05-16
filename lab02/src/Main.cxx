@@ -286,10 +286,12 @@ void testInvert()
     printTitle("invert");
     Matrix<int> im = {{1, 2}, {3, 4}};
     Matrix<double> dm = {{-0.6, 0.5}, {0.3, -0.7}};
+    Matrix<int> nim = {{1, 2}, {2, 4}};
 
     std::cout << "M1:\n";
     printMatrix(im);
     std::cout << "\n";
+    std::cout << "M1 is invertible: " << im.invertible() << "\n";
 
     std::cout << "~M1:\n";
     printMatrix(~im);
@@ -303,6 +305,7 @@ void testInvert()
     std::cout << "M2:\n";
     printMatrix(dm);
     std::cout << "\n";
+    std::cout << "M2 is invertible: " << dm.invertible() << "\n";
 
     std::cout << "M2:\n";
     printMatrix(~dm);
@@ -312,6 +315,12 @@ void testInvert()
     printMatrix(~dm * dm);
     std::cout << "Is identity: " << (~dm * dm).isIdentity() << "\n";
     std::cout << "\n";
+
+    std::cout << "M3:\n";
+    printMatrix(nim);
+    std::cout << "\n";
+
+    std::cout << "M3 is invertible: " << nim.invertible() << "\n";
 }
 
 void testDet()
@@ -370,12 +379,12 @@ void testManagement()
     std::cout << "\n";
 
     std::cout << "Reshape (3, 3):\n";
-	im.reshape(3, 3);
+    im.reshape(3, 3);
     printMatrix(im);
     std::cout << "\n";
 
     std::cout << "Reshape (5, 4):\n";
-	im.reshape(5, 4);
+    im.reshape(5, 4);
     printMatrix(im);
     std::cout << "\n";
 
