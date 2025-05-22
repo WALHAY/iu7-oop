@@ -1,15 +1,15 @@
 #pragma once
 
-#include <memory>
+#include <cstddef>
 
 class BaseMatrixIterator
 {
   public:
-    using size_type = size_t;
+    using size_type = std::size_t;
 
     virtual ~BaseMatrixIterator() = 0;
 
   protected:
-	size_type currentIndex = 0;
-	size_type matrixSize = 0;
+    size_type currentIndex = 0;
+    size_type matrixSize = 0;
 };

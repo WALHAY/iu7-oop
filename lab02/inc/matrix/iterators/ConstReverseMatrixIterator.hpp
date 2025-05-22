@@ -15,7 +15,7 @@ class ConstReverseMatrixIterator : public BaseMatrixIterator
     using value_type = std::remove_cv_t<T>;
     using pointer = const T *;
     using reference = const T &;
-	using iterator = ConstMatrixIterator<T>;
+    using iterator = ConstMatrixIterator<T>;
     using iterator_category = std::random_access_iterator_tag;
 
     friend class Matrix<value_type>;
@@ -36,7 +36,8 @@ class ConstReverseMatrixIterator : public BaseMatrixIterator
     ConstReverseMatrixIterator<T> operator+(difference_type) const;
     ConstReverseMatrixIterator<T> &operator+=(difference_type);
 
-    friend ConstReverseMatrixIterator<T> operator+(difference_type offset, const ConstReverseMatrixIterator<T> &iterator)
+    friend ConstReverseMatrixIterator<T> operator+(difference_type offset,
+                                                   const ConstReverseMatrixIterator<T> &iterator)
     {
         return iterator + offset;
     }
@@ -55,7 +56,7 @@ class ConstReverseMatrixIterator : public BaseMatrixIterator
     std::strong_ordering operator<=>(const ConstReverseMatrixIterator<T> &iterator) const noexcept;
 
   protected:
-	iterator it;
+    iterator it;
 };
 
 #include <matrix/iterators/ConstReverseMatrixIteratorImpl.hpp>

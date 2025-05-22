@@ -604,6 +604,9 @@ auto Matrix<T>::det() const
 {
     validateSquareSize(__FILE_NAME__, __FUNCTION__, __LINE__);
 
+	if(isLinearDependent())
+		return value_type{0};
+
     Matrix<T> temp(*this);
 
     size_t n = rows;
@@ -1086,9 +1089,137 @@ auto Matrix<T>::at(size_t row, size_t column) const -> const_reference
 #pragma region compare
 
 template <Storable T>
-bool Matrix<T>::equalsShape(const Matrix<T> &matrix) const
+bool Matrix<T>::equalsShape(const Matrix<T> &matrix) const noexcept
 {
     return matrix.getRows() == rows && matrix.getColumns() == columns;
+}
+
+template <Storable T>
+bool Matrix<T>::hasLinearDependentRows() const
+{
+    for (size_t row1 = 0; row1 < rows; ++row1)
+    {
+        for (size_t row2 = 0; row2 < rows; ++row2)
+        {
+            if (row1 == row2 || at(row2, 0) == value_type{0})
+                continue;
+
+            auto mult = at(row1, 0) / at(row2, 0);
+            bool dependent = true;
+            for (size_t j = 1; j < columns; ++j)
+            {
+                auto value = at(row2, j);
+                if (value == value_type{0} || at(row1, j) / value != mult)
+                {
+                    dependent = false;
+                    break;
+                }
+            }
+
+            if (dependent)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+template <Storable T>
+bool Matrix<T>::hasLinearDependentRows() const
+    requires std::is_arithmetic_v<T>
+{
+    for (size_t row1 = 0; row1 < rows; ++row1)
+    {
+        for (size_t row2 = 0; row2 < rows; ++row2)
+        {
+            if (row1 == row2 || abs(at(row2, 0)) <= std::numeric_limits<T>::epsilon())
+                continue;
+
+            double mult = static_cast<double>(at(row1, 0)) / at(row2, 0);
+            bool dependent = true;
+            for (size_t j = 1; j < columns; ++j)
+            {
+                auto value = at(row2, j);
+                if (value == value_type{0} || at(row1, j) / value != mult)
+                {
+                    dependent = false;
+                    break;
+                }
+            }
+
+            if (dependent)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+template <Storable T>
+bool Matrix<T>::hasLinearDependentColumns() const
+{
+    for (size_t col1 = 0; col1 < columns; ++col1)
+    {
+        for (size_t col2 = 0; col2 < columns; ++col2)
+        {
+            if (col1 == col2 || at(0, col2) == value_type{0})
+                continue;
+
+            auto mult = at(0, col1) / at(0, col2);
+            bool dependent = true;
+            for (size_t j = 1; j < rows; ++j)
+            {
+                auto value = at(j, col2);
+                if (value == value_type{0} || at(j, col1) / value != mult)
+                {
+                    dependent = false;
+                    break;
+                }
+            }
+
+            if (dependent)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+template <Storable T>
+bool Matrix<T>::hasLinearDependentColumns() const
+    requires std::is_arithmetic_v<T>
+{
+    for (size_t col1 = 0; col1 < columns; ++col1)
+    {
+        for (size_t col2 = 0; col2 < columns; ++col2)
+        {
+            if (col1 == col2 || abs(at(0, col2)) <= std::numeric_limits<T>::epsilon())
+                continue;
+
+            double mult = static_cast<double>(at(0, col1)) / at(0, col2);
+            bool dependent = true;
+            for (size_t j = 1; j < rows; ++j)
+            {
+                auto value = at(j, col2);
+                if (value == value_type{0} || at(j, col1) / value != mult)
+                {
+                    dependent = false;
+                    break;
+                }
+            }
+
+            if (dependent)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+template <Storable T>
+bool Matrix<T>::isLinearDependent() const
+{
+    return this->hasLinearDependentColumns() || this->hasLinearDependentRows();
 }
 
 template <Storable T>
@@ -1177,7 +1308,7 @@ template <Storable T>
 template <EqualityComparable<T> U>
 bool Matrix<T>::operator==(const Matrix<U> &matrix) const
 {
-	return equals(matrix);
+    return equals(matrix);
 }
 
 template <Storable T>

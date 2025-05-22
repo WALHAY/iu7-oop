@@ -33,28 +33,28 @@ concept SubtractableAssignable = requires(T &a, K &b) {
 
 template <typename T, typename K>
 concept Multipliable = requires(T &a, K &b) {
-    { a * b };
+    { a *b };
 };
 
 template <typename T, typename K>
 concept MultipliableAssignable = requires(T &a, K &b) {
-    { a * b } -> std::convertible_to<K>;
+    { a *b } -> std::convertible_to<K>;
 };
 
 template <typename T, typename K>
 concept Divisible = requires(T &a, K &b) {
-    { a * b };
+    { a *b };
 };
 
 template <typename T, typename K>
 concept DivisibleAssignable = requires(T &a, K &b) {
-    { a * b } -> std::convertible_to<K>;
+    { a *b } -> std::convertible_to<K>;
 };
 
 template <typename T>
 concept LUComputable = requires(T &a, T &b) {
     { a - b } -> std::convertible_to<double>;
-    { a * b } -> std::convertible_to<double>;
+    { a *b } -> std::convertible_to<double>;
     { a / b } -> std::convertible_to<double>;
 };
 
@@ -63,7 +63,7 @@ concept DeterminantComputable = requires(T &a, T &b) {
     { a - b } -> std::convertible_to<double>;
     { a + b } -> std::convertible_to<double>;
     { a / b } -> std::convertible_to<double>;
-    { a * b } -> std::convertible_to<double>;
+    { a *b } -> std::convertible_to<double>;
 };
 
 template <typename T>

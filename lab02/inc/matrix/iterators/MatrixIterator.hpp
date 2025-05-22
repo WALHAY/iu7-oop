@@ -2,6 +2,7 @@
 
 #include "base/BaseMatrixIterator.hpp"
 #include "matrix/MatrixConcepts.hpp"
+#include <memory>
 
 template <Storable T>
 class Matrix;

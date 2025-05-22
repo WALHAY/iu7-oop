@@ -521,8 +521,26 @@ void testCompare()
     printMatrix(dm);
     std::cout << "\n";
 
-	std::cout << "Equal shape: " << (im.equalsShape(dm)) << "\n";
-	std::cout << "Equals: " << (im == dm) << "\n";
+    std::cout << "Equal shape: " << (im.equalsShape(dm)) << "\n";
+    std::cout << "Equals: " << (im == dm) << "\n\n";
+
+    Matrix<int> linearRow = {{1, 2, 3}, {2, 4, 6}, {7, 7, 7}};
+
+    std::cout << "M3:\n";
+    printMatrix(linearRow);
+    std::cout << "\n";
+
+    std::cout << "M3 has linear rows: " << linearRow.hasLinearDependentRows() << "\n";
+    std::cout << "M3 has linear cols: " << linearRow.hasLinearDependentColumns() << "\n";
+    std::cout << "M3 is linear: " << linearRow.isLinearDependent() << "\n";
+
+	auto m3_transposed = linearRow.transpose();
+    std::cout << "M4:\n";
+    printMatrix(m3_transposed);
+    std::cout << "\n";
+    std::cout << "M4 has linear rows: " << m3_transposed.hasLinearDependentRows() << "\n";
+    std::cout << "M4 has linear cols: " << m3_transposed.hasLinearDependentColumns() << "\n";
+    std::cout << "M4 is linear: " << m3_transposed.isLinearDependent() << "\n";
 }
 
 int main()
@@ -538,6 +556,6 @@ int main()
     testHadamard();
     testIterators();
     testDefaultMatrices();
-	testCompare();
+    testCompare();
     return 0;
 }

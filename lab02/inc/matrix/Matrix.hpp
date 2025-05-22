@@ -217,10 +217,12 @@ class Matrix : public BaseMatrix
 
     static Matrix<T> identity(size_t size)
         requires HasIdentityElement<T> && HasZeroElement<T>;
+
     static Matrix<T> zero(size_t rows, size_t columns)
         requires HasZeroElement<T>;
 
     static Matrix<T> fill(size_t rows, size_t columns, const value_type &fill);
+
     static Matrix<T> diagonal(size_t size, const value_type &fill)
         requires HasZeroElement<T>;
 
@@ -292,7 +294,15 @@ class Matrix : public BaseMatrix
 
 #pragma region compare
 
-    bool equalsShape(const Matrix<T> &matrix) const;
+    bool hasLinearDependentRows() const;
+    bool hasLinearDependentRows() const requires std::is_arithmetic_v<T>;
+
+    bool hasLinearDependentColumns() const;
+    bool hasLinearDependentColumns() const requires std::is_arithmetic_v<T>;
+
+    bool isLinearDependent() const;
+
+    bool equalsShape(const Matrix<T> &matrix) const noexcept;
 
     bool isZero() const
         requires HasZeroElement<T>;
@@ -304,13 +314,13 @@ class Matrix : public BaseMatrix
     bool isIdentity() const
         requires HasIdentityElement<T> && std::is_floating_point_v<T>;
 
-	template<EqualityComparable<T> U>
+    template <EqualityComparable<T> U>
     bool equals(const Matrix<U> &matrix) const;
     bool equals(const Matrix<T> &matrix) const;
     bool equals(const Matrix<T> &matrix) const
         requires std::is_floating_point_v<T>;
 
-	template<EqualityComparable<T> U>
+    template <EqualityComparable<T> U>
     bool operator==(const Matrix<U> &matrix) const;
     bool operator==(const Matrix<T> &matrix) const;
     bool operator==(const Matrix<T> &matrix) const
