@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Controller.hpp"
 #include <Cabin.hpp>
 #include <Door.hpp>
 #include <QObject>
@@ -10,11 +11,13 @@ class Elevator : public QObject {
 public:
   explicit Elevator(QObject *parent = nullptr);
 
+  void moveFloor(int floor);
+
 signals:
 
 public slots:
 
 private:
-  Door door;
   Cabin cabin;
+  Controller controller;
 };

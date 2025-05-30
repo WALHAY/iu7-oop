@@ -1,12 +1,17 @@
-#include "../inc/Door.hpp"
+#include "Cabin.hpp"
+#include "MainWindow.hpp"
+#include <QApplication>
 #include <QDebug>
 #include <QThread>
-#include <QApplication>
 
 int main(int argc, char **argv) {
   QApplication app(argc, argv);
-  Door door{};
-	door.opening();
 
-  return app.exec(); 
+  Cabin cabin;
+  cabin.move();
+
+  MainWindow window;
+  window.show();
+
+  return app.exec();
 }
