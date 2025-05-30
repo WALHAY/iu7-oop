@@ -14,9 +14,12 @@ set(APP_NAME Elevator)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 file(GLOB SOURCES src/*.cxx)
+file(GLOB HEADERS inc/*.hpp)
+
+qt6_wrap_cpp(MOC_SOURCES ${HEADERS})  # Ensure moc runs on Door.hpp
 
 include_directories(inc)
 
-add_executable(${APP_NAME} ${SOURCES})
+add_executable(Elevator ${MOC_SOURCES} ${SOURCES})
 
 target_link_libraries(${APP_NAME} PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QObject>
 
 class Controller : public QObject {
@@ -9,4 +11,12 @@ public:
 signals:
 
 public slots:
+
+private:
+  enum State {
+    WAITING,
+    HANDLING,
+    MOVING,
+
+  } state;
 };

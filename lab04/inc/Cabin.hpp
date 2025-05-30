@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QObject>
 
 class Cabin : public QObject {
@@ -9,4 +11,7 @@ public:
 signals:
 
 public slots:
+
+private:
+  enum State { LOCKED, UNLOCKED, MOVING } state;
 };
