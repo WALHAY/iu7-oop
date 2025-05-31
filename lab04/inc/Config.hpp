@@ -8,7 +8,8 @@ constexpr int OPEN_TIME = 2500;
 constexpr int INITIAL_FLOOR = 1;
 constexpr int FLOORS = 10;
 
-#define FLOOR_INDICATOR_STYLESHEET R"(
+#define FLOOR_INDICATOR_STYLESHEET                                                                                     \
+    R"(
 QRadioButton {
 spacing: 5px; /* Расстояние между кружком и текстом */
 color: #333333; /* Цвет текста */
@@ -56,4 +57,4 @@ color: #7f8c8d;
 }
 )"
 
-#endif //TIMERINFO_HPP
+#endif // TIMERINFO_HPP

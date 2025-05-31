@@ -3,26 +3,33 @@
 #include <QObject>
 #include <QTimer>
 
-class Door : public QObject {
-  Q_OBJECT
+class Door : public QObject
+{
+    Q_OBJECT
 
-public:
-  explicit Door(QObject *parent = nullptr);
+  public:
+    explicit Door(QObject *parent = nullptr);
 
-signals:
-  void signalOpen();
-  void signalClosed();
+  signals:
+    void signalOpen();
+    void signalClosed();
 
-public slots:
-  void open();
-  void close();
-  void closing();
-  void opening();
+  public slots:
+    void open();
+    void close();
+    void closing();
+    void opening();
 
-private:
-  enum State { CLOSED, CLOSING, OPEN, OPENING } state;
+  private:
+    enum State
+    {
+        CLOSED,
+        CLOSING,
+        OPEN,
+        OPENING
+    } state;
 
-  QTimer openingTimer;
-  QTimer openTimer;
-  QTimer closingTimer;
+    QTimer openingTimer;
+    QTimer openTimer;
+    QTimer closingTimer;
 };

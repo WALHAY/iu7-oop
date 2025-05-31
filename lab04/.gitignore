@@ -1,5 +1,5 @@
-./build
-./cache
+.build
+.cache
 *.json
 
 .DS_Store

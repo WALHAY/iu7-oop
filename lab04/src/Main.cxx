@@ -3,11 +3,12 @@
 #include <QDebug>
 #include <QThread>
 
-int main(int argc, char **argv) {
-  QApplication app(argc, argv);
+int main(int argc, char **argv)
+{
+    QApplication app(argc, argv);
 
-  MainWindow window;
-  window.show();
+    MainWindow window;
+    window.show();
 
-  return app.exec();
+    return app.exec();
 }

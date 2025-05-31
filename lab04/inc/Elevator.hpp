@@ -5,22 +5,22 @@
 #include <Door.hpp>
 #include <QObject>
 
-class Elevator : public QObject {
-  Q_OBJECT
+class Elevator : public QObject
+{
+    Q_OBJECT
 
-  friend class MainWindow;
-  friend class Controller;
-  friend class Cabin;
+    friend class MainWindow;
+    friend class Cabin;
 
-public:
-  explicit Elevator(QObject *parent = nullptr);
+  public:
+    explicit Elevator(QObject *parent = nullptr);
 
-signals:
+  signals:
 
-public slots:
-  void addFloor(int floor);
+  public slots:
+    void addFloor(int floor);
 
-private:
-  Cabin cabin;
-  Controller controller;
+  private:
+    Cabin cabin;
+    Controller controller;
 };

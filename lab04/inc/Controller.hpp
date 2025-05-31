@@ -3,33 +3,48 @@
 #include <QObject>
 #include <QTimer>
 
-class Controller : public QObject {
-  Q_OBJECT;
+class Controller : public QObject
+{
+    Q_OBJECT;
 
-  friend class Elevator;
+  public:
+    explicit Controller(QObject *parent = nullptr);
 
-public:
-  explicit Controller(QObject *parent = nullptr);
+  signals:
+    void signalMoveCabin();
+    void signalStopCabin();
 
-signals:
-  void signalMoving();
-  void signalStopped();
-  void signalOnFloor(int);
+    void signalMove();
+    void signalStop();
 
-public slots:
-  void handleRequest();
-  void handleMove();
-  void handleStop();
+    void signalOnFloor(int);
 
-private slots:
-  void addRequest(int floor);
+    void signalNewRequest();
+    void signalNoRequests();
 
-private:
-  enum State { WAITING, REQUEST_HANDLING, MOVE_HANDLING, STOP_HANDLING } state;
-  int floor;
-  enum Direction { UP = 1, DOWN = -1 } direction;
+  public slots:
+    void handleMove();
+    void handleStop();
+    void handleWait();
 
-  std::queue<int> q;
+    void handleRequest(int floor);
 
-  void addToQueue(int floor);
+  private:
+    enum State
+    {
+        WAITING,
+        REQUEST_HANDLING,
+        MOVE_HANDLING,
+        STOP_HANDLING
+    } state;
+    int floor;
+    enum Direction : int
+    {
+        UP = 1,
+        DOWN = -1
+    } direction;
+
+    std::queue<int> requests;
+
+    void addToQueue(int floor);
 };

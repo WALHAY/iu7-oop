@@ -3,26 +3,32 @@
 #include "Door.hpp"
 #include <QObject>
 
-class Cabin : public QObject {
-  Q_OBJECT;
+class Cabin : public QObject
+{
+    Q_OBJECT;
 
-	friend class Elevator;
+    friend class Elevator;
 
-public:
-  explicit Cabin(QObject *parent = nullptr);
+  public:
+    explicit Cabin(QObject *parent = nullptr);
 
-signals:
-  void signalLocked();
-  void signalUnlocked();
+  signals:
+    void signalLocked();
+    void signalUnlocked();
 
-public slots:
-  void lock();
-  void unlock();
-  void move();
+  public slots:
+    void lock();
+    void unlock();
+    void move();
 
-private:
-  enum State { LOCKED, UNLOCKED, MOVING } state;
+  private:
+    enum State
+    {
+        LOCKED,
+        UNLOCKED,
+        MOVING
+    } state;
 
-  Door door;
-  QTimer movingTimer;
+    Door door;
+    QTimer movingTimer;
 };
