@@ -6,6 +6,8 @@
 class Cabin : public QObject {
   Q_OBJECT;
 
+	friend class Elevator;
+
 public:
   explicit Cabin(QObject *parent = nullptr);
 

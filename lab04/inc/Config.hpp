@@ -1,12 +1,12 @@
 #ifndef TIMERINFO_HPP
 #define TIMERINFO_HPP
 
-constexpr int DOOR_OPENING_CLOSING_TIME = 1500;
-constexpr int ONE_FLOOR_MOVING_TIME = 1500;
-constexpr int DOOR_WAITING_TIME = 2500;
+constexpr int OPENING_TIME = 1500;
+constexpr int MOVE_TIME = 1500;
+constexpr int OPEN_TIME = 2500;
 
 constexpr int INITIAL_FLOOR = 1;
-constexpr int FLOORS = 8;
+constexpr int FLOORS = 10;
 
 #define FLOOR_INDICATOR_STYLESHEET R"(
 QRadioButton {

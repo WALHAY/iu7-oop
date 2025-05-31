@@ -8,14 +8,17 @@
 class Elevator : public QObject {
   Q_OBJECT
 
+  friend class MainWindow;
+  friend class Controller;
+  friend class Cabin;
+
 public:
   explicit Elevator(QObject *parent = nullptr);
-
-  void moveFloor(int floor);
 
 signals:
 
 public slots:
+  void addFloor(int floor);
 
 private:
   Cabin cabin;

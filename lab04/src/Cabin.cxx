@@ -4,17 +4,19 @@
 Cabin::Cabin(QObject *parent) : QObject(parent), state(UNLOCKED) {
   movingTimer.setSingleShot(true);
 
-  connect(&door, SIGNAL(signalClosed()), this, SLOT(unlock()));
-  connect(this, SIGNAL(signalLocked()), &door, SLOT(opening()));
+  connect(&door, &Door::signalClosed, this, &Cabin::unlock);
+  connect(this, &Cabin::signalLocked, &door, &Door::opening);
 }
 
 void Cabin::lock() {
-  if (state != MOVING && state != UNLOCKED) {
+  if (state != MOVING && state != UNLOCKED && state != LOCKED) {
     return;
   }
 
+  auto prev = state;
   state = LOCKED;
-  qDebug() << "Кабина заблокирована";
+  if (prev != LOCKED)
+    qDebug() << "Кабина заблокирована";
   emit signalLocked();
 }
 
@@ -29,7 +31,7 @@ void Cabin::unlock() {
 }
 
 void Cabin::move() {
-  if (state != UNLOCKED) {
+  if (state != UNLOCKED && state != MOVING) {
     return;
   }
 

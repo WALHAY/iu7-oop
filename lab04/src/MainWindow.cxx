@@ -11,18 +11,16 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
-  // connect(this, &MainWindow::buttonClicked, &elevator,
-  // &Elevator::newRequest);
+  connect(this, &MainWindow::buttonClicked, &elevator, &Elevator::addFloor);
 
   ui->setupUi(this);
   generateUI();
 
-  qDebug() << "Лифт на этаже №" << INITIAL_FLOOR
+  qDebug() << "Лифт на этаже " << INITIAL_FLOOR
            << "Двери закрыты, кабина готова к движению";
 }
 
 void MainWindow::generateUI() {
-  // Floor Buttons
   for (auto i = FLOORS; i > 0; --i) {
     auto btn = new QPushButton(this);
     btn->setText(QString::number(i));
@@ -59,8 +57,8 @@ void MainWindow::generateUI() {
   }
 
   floorIndicators->button(INITIAL_FLOOR)->setChecked(true);
-  // connect(&elevator._controller, &Controller::onFloor, this,
-  //         &MainWindow::updateFloorIndicator);
+  connect(&elevator.controller, &Controller::signalOnFloor, this,
+          &MainWindow::updateFloorIndicator);
 }
 
 MainWindow::~MainWindow() { delete ui; }

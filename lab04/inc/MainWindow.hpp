@@ -1,43 +1,42 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include <QButtonGroup>
+#include <QMainWindow>
 
 #include "Elevator.hpp"
 
 QT_BEGIN_NAMESPACE
 
-namespace Ui
-{
+namespace Ui {
 class MainWindow;
 }
 
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QMainWindow {
+  Q_OBJECT
+
+	friend class Elevator;
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+  MainWindow(QWidget *parent = nullptr);
+  ~MainWindow();
 
-    signals:
-        void buttonClicked(int floor);
+signals:
+  void buttonClicked(int floor);
 
 private slots:
-    void updateFloorIndicator(int floor) const;
-    void onButtonClicked(int floor);
+  void updateFloorIndicator(int floor) const;
+  void onButtonClicked(int floor);
 
 private:
-    void generateUI();
+  void generateUI();
 
 private:
-    Ui::MainWindow *ui;
-    QButtonGroup* floorIndicators;
+  Ui::MainWindow *ui;
+  QButtonGroup *floorIndicators;
 
-    Elevator elevator;
-
+  Elevator elevator;
 };
 #endif // MAINWINDOW_H
