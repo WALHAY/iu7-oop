@@ -8,7 +8,7 @@ class Controller : public QObject
     Q_OBJECT;
 
   public:
-	using floor_type = int;
+    using floor_type = int;
 
     explicit Controller(QObject *parent = nullptr);
 

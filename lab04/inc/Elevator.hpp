@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Controller.hpp"
 #include <Cabin.hpp>
+#include <Controller.hpp>
 #include <Door.hpp>
 #include <QObject>
 
@@ -12,7 +12,7 @@ class Elevator : public QObject
     friend class MainWindow;
 
   public:
-	using floor_type = Controller::floor_type;
+    using floor_type = Controller::floor_type;
 
     explicit Elevator(QObject *parent = nullptr);
 

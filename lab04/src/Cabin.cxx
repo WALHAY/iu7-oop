@@ -1,6 +1,6 @@
-#include "../inc/Cabin.hpp"
-#include "Config.hpp"
+#include <Cabin.hpp>
 #include <QDebug>
+#include <Settings.hpp>
 
 Cabin::Cabin(QObject *parent) : QObject(parent), state(UNLOCKED)
 {
@@ -45,7 +45,7 @@ void Cabin::move()
 
     auto prevState = state;
     state = MOVING;
-	if(prevState == UNLOCKED)
-		qDebug() << "Кабина начала движение";
+    if (prevState == UNLOCKED)
+        qDebug() << "Кабина начала движение";
     movingTimer.start(MOVE_TIME);
 }

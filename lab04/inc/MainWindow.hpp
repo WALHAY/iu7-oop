@@ -1,10 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <Elevator.hpp>
 #include <QButtonGroup>
 #include <QMainWindow>
-
-#include "Elevator.hpp"
 
 QT_BEGIN_NAMESPACE
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Door.hpp"
+#include <Door.hpp>
 #include <QObject>
 
 class Cabin : public QObject

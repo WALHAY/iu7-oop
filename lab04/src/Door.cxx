@@ -1,7 +1,7 @@
-#include "../inc/Door.hpp"
-#include "Config.hpp"
+#include <Door.hpp>
 #include <QDebug>
 #include <QThread>
+#include <Settings.hpp>
 
 Door::Door(QObject *parent) : QObject(parent), state(CLOSED)
 {
@@ -49,12 +49,12 @@ void Door::opening()
     State previous = state;
     state = OPENING;
 
-	auto time = OPENING_TIME;
+    auto time = OPENING_TIME;
     if (previous == CLOSING)
     {
         qDebug() << "Прервано закрытие двери";
 
-		time -= closingTimer.remainingTime();
+        time -= closingTimer.remainingTime();
         closingTimer.stop();
     }
 

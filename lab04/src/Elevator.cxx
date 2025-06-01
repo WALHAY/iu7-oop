@@ -1,4 +1,4 @@
-#include "../inc/Elevator.hpp"
+#include <Elevator.hpp>
 
 Elevator::Elevator(QObject *parent) : QObject(parent)
 {

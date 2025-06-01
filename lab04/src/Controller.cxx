@@ -1,6 +1,6 @@
-#include "../inc/Controller.hpp"
-#include "Config.hpp"
+#include <Controller.hpp>
 #include <QDebug>
+#include <Settings.hpp>
 
 Controller::Controller(QObject *parent) : QObject(parent), state(WAITING), direction(UP), floor(INITIAL_FLOOR)
 {

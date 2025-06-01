@@ -1,13 +1,11 @@
-#include "MainWindow.hpp"
-
-#include "Config.hpp"
 #include "ui_mainwindow.h"
-
+#include <MainWindow.hpp>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QVBoxLayout>
+#include <Settings.hpp>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -23,38 +21,38 @@ void MainWindow::generateUI()
 {
     for (auto i = FLOORS; i > 0; --i)
     {
-        auto btn = new QPushButton(this);
-        btn->setText(QString::number(i));
-        btn->setMinimumSize(QSize(70, 60));
-        btn->setMaximumSize(QSize(70, 60));
-        ui->floorButtons->addWidget(btn);
+        auto button = new QPushButton(this);
+        button->setText(QString::number(i));
+        button->setMinimumSize(QSize(70, 60));
+        button->setMaximumSize(QSize(70, 60));
+        ui->floorButtons->addWidget(button);
 
-        connect(btn, &QPushButton::pressed, this, [i, this]() { onButtonClicked(i); });
+        connect(button, &QPushButton::pressed, this, [i, this]() { onButtonClicked(i); });
     }
 
     // Cabin Buttons
-    for (auto i = FLOORS; i > 0; --i)
+    for (auto i = 0; i < FLOORS; --i)
     {
-        auto btn = new QPushButton(this);
-        btn->setText(QString::number(i));
-        btn->setMinimumSize(QSize(70, 60));
-        btn->setMaximumSize(QSize(70, 60));
-        ui->cabinButtons->addWidget(btn);
+        auto button = new QPushButton(this);
+        button->setText(QString::number(i));
+        button->setMinimumSize(QSize(70, 60));
+        button->setMaximumSize(QSize(70, 60));
+        ui->cabinButtons->addWidget(button);
 
-        connect(btn, &QPushButton::pressed, this, [i, this]() { onButtonClicked(i); });
+        connect(button, &QPushButton::pressed, this, [i, this]() { onButtonClicked(i); });
     }
 
     floorIndicators = new QButtonGroup();
     for (auto i = FLOORS; i > 0; --i)
     {
-        auto btn = new QRadioButton(this);
-        btn->setMinimumSize(QSize(70, 60));
-        btn->setText(QString::number(i));
-        btn->setEnabled(false);
-        floorIndicators->addButton(btn, i);
-        ui->verticalLayout->addWidget(btn);
+        auto button = new QRadioButton(this);
+        button->setMinimumSize(QSize(70, 60));
+        button->setText(QString::number(i));
+        button->setEnabled(false);
+        floorIndicators->addButton(button, i);
+        ui->verticalLayout->addWidget(button);
 
-        btn->setStyleSheet(FLOOR_INDICATOR_STYLESHEET);
+        button->setStyleSheet(FLOOR_INDICATOR_STYLESHEET);
     }
 
     floorIndicators->button(INITIAL_FLOOR)->setChecked(true);
