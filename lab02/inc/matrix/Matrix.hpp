@@ -295,10 +295,12 @@ class Matrix : public BaseMatrix
 #pragma region compare
 
     bool hasLinearDependentRows() const;
-    bool hasLinearDependentRows() const requires std::is_arithmetic_v<T>;
+    bool hasLinearDependentRows() const
+        requires std::is_arithmetic_v<T>;
 
     bool hasLinearDependentColumns() const;
-    bool hasLinearDependentColumns() const requires std::is_arithmetic_v<T>;
+    bool hasLinearDependentColumns() const
+        requires std::is_arithmetic_v<T>;
 
     bool isLinearDependent() const;
 

@@ -604,8 +604,8 @@ auto Matrix<T>::det() const
 {
     validateSquareSize(__FILE_NAME__, __FUNCTION__, __LINE__);
 
-	if(isLinearDependent())
-		return value_type{0};
+    if (isLinearDependent())
+        return value_type{0};
 
     Matrix<T> temp(*this);
 
