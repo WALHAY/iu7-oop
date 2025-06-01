@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
     generateUI();
 
-    qDebug() << "Лифт на этаже " << INITIAL_FLOOR << "Двери закрыты, кабина готова к движению";
+    qDebug() << "Лифт на" << INITIAL_FLOOR << "этаже. Двери закрыты, кабина разблокирована";
 }
 
 void MainWindow::generateUI()

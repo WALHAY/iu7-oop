@@ -7,18 +7,19 @@
 
 class Elevator : public QObject
 {
-    Q_OBJECT
+    Q_OBJECT;
 
     friend class MainWindow;
-    friend class Cabin;
 
   public:
+	using floor_type = Controller::floor_type;
+
     explicit Elevator(QObject *parent = nullptr);
 
   signals:
 
   public slots:
-    void addFloor(int floor);
+    void addFloor(floor_type floor);
 
   private:
     Cabin cabin;

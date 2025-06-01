@@ -8,6 +8,8 @@ class Controller : public QObject
     Q_OBJECT;
 
   public:
+	using floor_type = int;
+
     explicit Controller(QObject *parent = nullptr);
 
   signals:
@@ -17,7 +19,7 @@ class Controller : public QObject
     void signalMove();
     void signalStop();
 
-    void signalOnFloor(int);
+    void signalOnFloor(floor_type);
 
     void signalNewRequest();
     void signalNoRequests();
@@ -26,8 +28,7 @@ class Controller : public QObject
     void handleMove();
     void handleStop();
     void handleWait();
-
-    void handleRequest(int floor);
+    void handleRequest(floor_type floor);
 
   private:
     enum State
@@ -37,14 +38,14 @@ class Controller : public QObject
         MOVE_HANDLING,
         STOP_HANDLING
     } state;
-    int floor;
-    enum Direction : int
+    floor_type floor;
+    enum Direction : floor_type
     {
         UP = 1,
         DOWN = -1
     } direction;
 
-    std::queue<int> requests;
+    std::deque<floor_type> requests;
 
-    void addToQueue(int floor);
+    void addRequest(floor_type floor);
 };

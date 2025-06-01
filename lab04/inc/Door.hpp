@@ -5,7 +5,7 @@
 
 class Door : public QObject
 {
-    Q_OBJECT
+    Q_OBJECT;
 
   public:
     explicit Door(QObject *parent = nullptr);
@@ -30,6 +30,6 @@ class Door : public QObject
     } state;
 
     QTimer openingTimer;
-    QTimer openTimer;
+    QTimer openedTimer;
     QTimer closingTimer;
 };

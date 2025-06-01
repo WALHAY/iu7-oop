@@ -1,17 +1,16 @@
 #include "../inc/Door.hpp"
+#include "Config.hpp"
 #include <QDebug>
 #include <QThread>
 
 Door::Door(QObject *parent) : QObject(parent), state(CLOSED)
 {
-    openTimer.setSingleShot(true);
+    openedTimer.setSingleShot(true);
     openingTimer.setSingleShot(true);
     closingTimer.setSingleShot(true);
-    openTimer.setInterval(1000);
 
     connect(&openingTimer, &QTimer::timeout, this, &Door::open);
-    connect(this, SIGNAL(signalOpen()), &openTimer, SLOT(start()));
-    connect(&openTimer, &QTimer::timeout, this, &Door::closing);
+    connect(&openedTimer, &QTimer::timeout, this, &Door::closing);
     connect(&closingTimer, &QTimer::timeout, this, &Door::close);
 }
 
@@ -25,6 +24,7 @@ void Door::open()
     state = OPEN;
     qDebug() << "Дверь открыта";
     emit signalOpen();
+    openedTimer.start(OPENED_TIME);
 }
 
 void Door::close()
@@ -49,15 +49,17 @@ void Door::opening()
     State previous = state;
     state = OPENING;
 
+	auto time = OPENING_TIME;
     if (previous == CLOSING)
     {
         qDebug() << "Прервано закрытие двери";
 
+		time -= closingTimer.remainingTime();
         closingTimer.stop();
     }
 
     qDebug() << "Дверь открывается";
-    openingTimer.start(1000);
+    openingTimer.start(time);
 }
 
 void Door::closing()
@@ -69,5 +71,5 @@ void Door::closing()
 
     state = CLOSING;
     qDebug() << "Дверь закрываается";
-    closingTimer.start(1000);
+    closingTimer.start(OPENING_TIME);
 }
