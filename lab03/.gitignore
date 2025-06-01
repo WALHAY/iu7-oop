@@ -1,0 +1,5 @@
+.build
+.cache
+*.json
+
+.DS_Store
