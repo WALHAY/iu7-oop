@@ -14,5 +14,7 @@
 ## Total score
 
 Labs: 2/5
+
 Additional tasks: Hash-map(Lab2)
+
 Score: 22(19?)/70 
