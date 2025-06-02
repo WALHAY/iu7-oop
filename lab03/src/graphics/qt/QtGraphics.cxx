@@ -1,7 +1,7 @@
 #include <QGraphicsScene>
 #include <graphics/qt/QtGraphics.hpp>
 
-QtGraphics::QtGraphics(const std::shared_ptr<QGraphicsScene> &scene) : scene(scene)
+QtGraphics::QtGraphics(const std::shared_ptr<QGraphicsScene> scene) : scene(scene)
 {
 }
 
