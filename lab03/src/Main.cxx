@@ -1,8 +1,12 @@
+#include "MainWindow.hpp"
 #include <QApplication>
 
-int main(int argc, char **argv) {
-	QApplication app(argc, argv);
+int main(int argc, char **argv)
+{
+    QApplication app(argc, argv);
 
-	qDebug() << "Wireframe viewer starting";
-	return app.exec();
+    MainWindow window;
+    window.show();
+
+    return app.exec();
 }

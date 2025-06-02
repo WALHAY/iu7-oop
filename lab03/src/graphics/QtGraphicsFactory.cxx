@@ -21,7 +21,7 @@ std::shared_ptr<Point2D> QtGraphicsFactory::createPoint2D(int x, int y)
 
 std::shared_ptr<Painter> QtGraphicsFactory::createPainter(std::shared_ptr<Canvas> canvas)
 {
-    return std::make_shared<QtPainter>(canvas);
+    return std::make_shared<QtPainter>(std::any_cast<std::shared_ptr<QImage>>(canvas->canvas()));
 }
 
 std::shared_ptr<Graphics> QtGraphicsFactory::getGraphics()

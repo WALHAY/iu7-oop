@@ -7,7 +7,8 @@
 class QtPainter : public Painter
 {
   public:
-    QtPainter(std::shared_ptr<Canvas> canvas);
+    QtPainter(std::shared_ptr<QImage> image);
+	~QtPainter();
 
     void drawLine(std::shared_ptr<Point2D> first, std::shared_ptr<Point2D> second) override;
 
