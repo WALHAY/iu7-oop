@@ -38,7 +38,9 @@ class Controller : public QObject
         MOVE_HANDLING,
         STOP_HANDLING
     } state;
+
     floor_type floor;
+
     enum Direction : floor_type
     {
         UP = 1,

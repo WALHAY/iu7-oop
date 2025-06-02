@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <Elevator.hpp>
 #include <QButtonGroup>
@@ -40,4 +39,3 @@ class MainWindow : public QMainWindow
 
     Elevator elevator;
 };
-#endif // MAINWINDOW_H

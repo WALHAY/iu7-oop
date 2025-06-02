@@ -1,11 +1,13 @@
 #pragma once
 
+#include <Controller.hpp>
+
 constexpr int OPENING_TIME = 1500;
 constexpr int MOVE_TIME = 1500;
 constexpr int OPENED_TIME = 2500;
 
-constexpr int INITIAL_FLOOR = 1;
-constexpr int FLOORS = 10;
+constexpr Controller::floor_type INITIAL_FLOOR = 1;
+constexpr Controller::floor_type FLOORS = 10;
 
 #define FLOOR_INDICATOR_STYLESHEET                                                                                     \
     R"(
