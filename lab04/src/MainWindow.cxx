@@ -30,8 +30,7 @@ void MainWindow::generateUI()
         connect(button, &QPushButton::pressed, this, [i, this]() { onButtonClicked(i); });
     }
 
-    // Cabin Buttons
-    for (auto i = 0; i < FLOORS; --i)
+    for (auto i = FLOORS; i > 0; --i)
     {
         auto button = new QPushButton(this);
         button->setText(QString::number(i));
