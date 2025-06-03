@@ -2,7 +2,7 @@
 #include <objects/Object.hpp>
 
 auto Object::id() -> id_type {
-	return _id;
+	return objectId;
 }
 
 void Object::add(std::shared_ptr<Object> object)
