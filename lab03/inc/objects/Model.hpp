@@ -9,7 +9,7 @@ class Model : public Object
 	friend class TransformVisitor;
 
   public:
-    Model() = default;
+    Model() : Object() {}
     Model(std::shared_ptr<Wireframe> wireframeModel);
 
     void accept(std::shared_ptr<ObjectVisitor> visitor) override;

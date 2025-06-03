@@ -9,7 +9,7 @@ class Scene
   public:
     using iterator = std::list<std::shared_ptr<Object>>::iterator;
 
-    Scene();
+    Scene() = default;
 
     void add(std::shared_ptr<Object> object);
     void remove(iterator &iter);

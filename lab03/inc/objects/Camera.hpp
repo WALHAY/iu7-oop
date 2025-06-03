@@ -5,7 +5,7 @@
 class Camera : public Object
 {
   public:
-	Camera() = default;
+	Camera() : Object() {}
 
     void accept(std::shared_ptr<ObjectVisitor> visitor) override;
 };

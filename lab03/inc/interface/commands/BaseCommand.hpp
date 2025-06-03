@@ -4,10 +4,10 @@
 #include <interface/managers/SceneManager.hpp>
 #include <memory>
 
-class Command
+class BaseCommand
 {
   public:
-    virtual ~Command() = 0;
+    virtual ~BaseCommand() = 0;
     virtual void execute() const = 0;
 
     void setManagers(std::shared_ptr<SceneManager> sceneManager, std::shared_ptr<DrawManager> drawManager);

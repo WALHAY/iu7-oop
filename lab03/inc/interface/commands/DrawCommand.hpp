@@ -1,9 +1,9 @@
 #pragma once
 
-#include <interface/commands/Command.hpp>
+#include <interface/commands/BaseCommand.hpp>
 #include <interface/managers/DrawManager.hpp>
 
-class DrawCommand : public Command
+class DrawCommand : public BaseCommand
 {
   private:
     using Action = void (DrawManager::*)();

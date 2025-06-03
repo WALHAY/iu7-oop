@@ -11,7 +11,8 @@ class Object
     using id_type = int;
     using iterator = std::list<std::shared_ptr<Object>>::iterator;
 
-    virtual ~Object() = 0;
+	Object();
+    virtual ~Object() = default;
 
     virtual id_type id();
 
@@ -26,6 +27,5 @@ class Object
 
   private:
     id_type objectId;
+	static inline id_type lastId = 0;
 };
-
-inline Object::~Object() = default;
