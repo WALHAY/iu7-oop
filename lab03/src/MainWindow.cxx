@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     scene = std::make_shared<QGraphicsScene>(this);
 
     ui->graphicsView->setScene(scene.get());
+	ui->graphicsView->setMinimumSize(1280, 720);
 
     facade = std::make_shared<Facade>(scene);
 

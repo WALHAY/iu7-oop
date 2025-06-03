@@ -18,7 +18,15 @@ std::vector<Point> &Wireframe::getVertices()
 {
 	return vertices;
 }
+
 std::vector<Edge> &Wireframe::getEdges() 
 {
 	return edges;
+}
+
+void Wireframe::transform(const Matrix<double> &matrix)
+{
+	for(auto& point : vertices) {
+		point.transform(matrix);
+	}
 }

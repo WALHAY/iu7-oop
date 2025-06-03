@@ -10,6 +10,7 @@ class DrawManager
 {
   public:
     using GraphicsType = QtGraphicsFactory;
+
     DrawManager(std::shared_ptr<QGraphicsScene> scene);
 
     void draw();

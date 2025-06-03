@@ -6,6 +6,7 @@
 class Model : public Object
 {
     friend class DrawVisitor;
+	friend class TransformVisitor;
 
   public:
     Model() = default;

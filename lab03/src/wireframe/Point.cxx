@@ -31,3 +31,14 @@ void Point::setZ(double z)
 {
     this->z = z;
 }
+
+void Point::transform(const Matrix<double> &matrix)
+{
+	Matrix<double> pointMatrix{{x, y, z}};
+
+	auto res = pointMatrix * matrix;
+
+	x = res.at(0, 0);
+	y = res.at(0, 1);
+	z = res.at(0, 2);
+}

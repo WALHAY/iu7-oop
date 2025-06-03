@@ -1,4 +1,5 @@
 #include "objects/Model.hpp"
+#include "visitor/TransformVisitor.hpp"
 #include <QGraphicsScene>
 #include <interface/Facade.hpp>
 
@@ -16,6 +17,23 @@ Facade::Facade(std::shared_ptr<QGraphicsScene> graphicsScene)
 
     std::shared_ptr<Scene> scene = std::make_shared<Scene>();
     std::shared_ptr<Model> model = std::make_shared<Model>(wireframe);
+
+	Matrix<double> mx = {
+		{1, 0, 0},
+		{0, 1, 0},
+		{0, 0, 1}
+	};
+
+	mx *= 5;
+	Matrix<double> rotMx = {
+		{1, 0, 0},
+		{0, 0.7, -0.7},
+		{0, 0.7, 0.7}
+	};
+	mx *= rotMx;
+
+	std::shared_ptr<TransformVisitor> vis = std::make_shared<TransformVisitor>(mx);
+	model->accept(vis);
 
     scene->add(model);
     sceneManager->setScene(scene);

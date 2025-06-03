@@ -13,7 +13,7 @@ void DrawManager::draw()
         return;
     }
 
-    auto canvas = graphicsFactory->createCanvas(300, 300);
+    auto canvas = graphicsFactory->createCanvas(1280, 720);
 
     std::shared_ptr<DrawVisitor> drawVisitor =
         std::make_shared<DrawVisitor>(graphicsFactory, canvas, std::make_shared<Camera>());

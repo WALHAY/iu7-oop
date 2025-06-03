@@ -1,5 +1,6 @@
 #pragma once
 
+#include "matrix/matrix/Matrix.hpp"
 class Point {
 public:
 	Point(const Point &point) = default;
@@ -12,6 +13,8 @@ public:
 	void setX(double x);
 	void setY(double y);
 	void setZ(double z);
+
+	void transform(const Matrix<double> &transform);
 private:
 	double x;
 	double y;
