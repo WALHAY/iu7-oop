@@ -1,8 +1,8 @@
 #pragma once
 
-#include <memory>
-#include <interface/managers/SceneManager.hpp>
 #include <interface/managers/DrawManager.hpp>
+#include <interface/managers/SceneManager.hpp>
+#include <memory>
 
 class Command
 {
@@ -13,6 +13,6 @@ class Command
     void setManagers(std::shared_ptr<SceneManager> sceneManager, std::shared_ptr<DrawManager> drawManager);
 
   protected:
-	std::shared_ptr<SceneManager> sceneManager;
-	std::shared_ptr<DrawManager> drawManager;
+    std::shared_ptr<SceneManager> sceneManager;
+    std::shared_ptr<DrawManager> drawManager;
 };

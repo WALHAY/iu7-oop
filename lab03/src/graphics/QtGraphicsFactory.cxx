@@ -5,8 +5,9 @@
 #include <graphics/qt/QtPainter.hpp>
 #include <graphics/qt/QtPoint2D.hpp>
 
-QtGraphicsFactory::QtGraphicsFactory(std::shared_ptr<QGraphicsScene> scene) {
-	graphics = std::make_shared<QtGraphics>(scene);
+QtGraphicsFactory::QtGraphicsFactory(std::shared_ptr<QGraphicsScene> scene)
+{
+    graphics = std::make_shared<QtGraphics>(scene);
 }
 
 std::shared_ptr<Canvas> QtGraphicsFactory::createCanvas(int width, int height)

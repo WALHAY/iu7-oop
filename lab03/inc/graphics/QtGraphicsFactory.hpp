@@ -5,8 +5,8 @@
 #include "abstract/Painter.hpp"
 #include "abstract/Point2D.hpp"
 
-#include <graphics/GraphicsFactory.hpp>
 #include <QGraphicsScene>
+#include <graphics/GraphicsFactory.hpp>
 
 #include <memory>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <graphics/abstract/Point2D.hpp>
 #include <QPoint>
+#include <graphics/abstract/Point2D.hpp>
 
 class QtPoint2D : public Point2D
 {
@@ -12,5 +12,5 @@ class QtPoint2D : public Point2D
     int y() override;
 
   private:
-	QPoint point;
+    QPoint point;
 };

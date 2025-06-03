@@ -1,8 +1,9 @@
-#include <objects/ObjectException.hpp>
 #include <objects/Object.hpp>
+#include <objects/ObjectException.hpp>
 
-auto Object::id() -> id_type {
-	return objectId;
+auto Object::id() -> id_type
+{
+    return objectId;
 }
 
 void Object::add(std::shared_ptr<Object> object)
@@ -15,14 +16,17 @@ void Object::remove(iterator &iter)
     throw NotImplemented(__FILE_NAME__, __FUNCTION__, __LINE__);
 }
 
-auto Object::begin() -> iterator {
+auto Object::begin() -> iterator
+{
     throw NotImplemented(__FILE_NAME__, __FUNCTION__, __LINE__);
 }
 
-auto Object::end() -> iterator {
+auto Object::end() -> iterator
+{
     throw NotImplemented(__FILE_NAME__, __FUNCTION__, __LINE__);
 }
 
-bool Object::isComposite() {
-	return false;
+bool Object::isComposite()
+{
+    return false;
 }

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <interface/Facade.hpp>
-#include <QMainWindow>
 #include <QGraphicsScene>
+#include <QMainWindow>
+#include <interface/Facade.hpp>
 
 QT_BEGIN_NAMESPACE
 
@@ -26,7 +26,7 @@ class MainWindow : public QMainWindow
   private slots:
 
   private:
-	std::shared_ptr<Facade> facade;
-	std::shared_ptr<QGraphicsScene> scene;
+    std::shared_ptr<Facade> facade;
+    std::shared_ptr<QGraphicsScene> scene;
     Ui::MainWindow *ui;
 };

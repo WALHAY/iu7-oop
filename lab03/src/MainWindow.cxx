@@ -19,11 +19,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->graphicsView->setScene(scene.get());
 
-	facade = std::make_shared<Facade>(scene);
+    facade = std::make_shared<Facade>(scene);
 
-	std::shared_ptr<DrawCommand> cmd = std::make_shared<DrawCommand>(); 
-	facade->execute(cmd);
-
+    std::shared_ptr<DrawCommand> cmd = std::make_shared<DrawCommand>();
+    facade->execute(cmd);
 }
 
 MainWindow::~MainWindow()

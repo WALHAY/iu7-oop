@@ -1,19 +1,28 @@
-#include <interface/Facade.hpp>
+#include "objects/Model.hpp"
 #include <QGraphicsScene>
+#include <interface/Facade.hpp>
 
 Facade::Facade(std::shared_ptr<QGraphicsScene> graphicsScene)
 {
-	sceneManager = std::make_shared<SceneManager>();
-	drawManager = std::make_shared<DrawManager>(graphicsScene);
+    sceneManager = std::make_shared<SceneManager>();
+    drawManager = std::make_shared<DrawManager>(graphicsScene);
 
-	drawManager->setSceneManager(sceneManager);
+    drawManager->setSceneManager(sceneManager);
 
-	std::shared_ptr<Scene> scene = std::make_shared<Scene>();
-	sceneManager->setScene(scene);
+    std::vector<Point> verts = {{0, 0, 0}, {100, 100, 100}, {100, 0, 0}, {50, 0, 50}};
+    std::vector<Edge> edges = {{0, 3}, {0, 2}, {2, 3}, {0, 1}, {2, 1}, {3, 1}};
+
+    std::shared_ptr<Wireframe> wireframe = std::make_shared<Wireframe>(verts, edges);
+
+    std::shared_ptr<Scene> scene = std::make_shared<Scene>();
+    std::shared_ptr<Model> model = std::make_shared<Model>(wireframe);
+
+    scene->add(model);
+    sceneManager->setScene(scene);
 }
 
 void Facade::execute(std::shared_ptr<Command> command)
 {
-	command->setManagers(sceneManager, drawManager);
-	command->execute();
+    command->setManagers(sceneManager, drawManager);
+    command->execute();
 }

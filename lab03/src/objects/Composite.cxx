@@ -28,5 +28,6 @@ void Composite::remove(iterator &iter)
 
 void Composite::accept(std::shared_ptr<ObjectVisitor> visitor)
 {
-	visitor->visit(*this);
+	for(auto &object : *this)
+		object->accept(visitor);
 }

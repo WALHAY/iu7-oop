@@ -1,7 +1,7 @@
 #pragma once
 
-#include <graphics/abstract/Canvas.hpp>
 #include <QImage>
+#include <graphics/abstract/Canvas.hpp>
 
 class QtCanvas : public Canvas
 {
@@ -9,10 +9,10 @@ class QtCanvas : public Canvas
     QtCanvas(int width, int height);
 
     int width() override;
-	int height() override;
+    int height() override;
 
-	std::any canvas() override;
+    std::any canvas() override;
 
   private:
-	std::shared_ptr<QImage> image;
+    std::shared_ptr<QImage> image;
 };

@@ -1,13 +1,17 @@
+#pragma once
+
 #include <graphics/GraphicsFactory.hpp>
-#include <objects/Camera.hpp>
 #include <visitor/ObjectVisitor.hpp>
 
 class DrawVisitor : public ObjectVisitor
 {
-  public:
-    DrawVisitor(std::shared_ptr<GraphicsFactory> factory, std::shared_ptr<Canvas> canvas, std::shared_ptr<Camera> camera);
+    friend class Model;
 
-    void visit(Composite &composite) override;
+  public:
+    DrawVisitor(std::shared_ptr<GraphicsFactory> factory, std::shared_ptr<Canvas> canvas,
+                std::shared_ptr<Camera> camera);
+
+    void visit(Model &model) override;
     void visit(Camera &camera) override;
 
   private:

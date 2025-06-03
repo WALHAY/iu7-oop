@@ -3,29 +3,32 @@
 
 DrawManager::DrawManager(std::shared_ptr<QGraphicsScene> scene)
 {
-	graphicsFactory = std::make_shared<GraphicsType>(scene);
+    graphicsFactory = std::make_shared<GraphicsType>(scene);
 }
 
 void DrawManager::draw()
 {
-	if(sceneManager == nullptr)
-	{
-		return;
-	}
+    if (sceneManager == nullptr)
+    {
+        return;
+    }
 
     auto canvas = graphicsFactory->createCanvas(300, 300);
 
-    std::shared_ptr<DrawVisitor> drawVisitor = std::make_shared<DrawVisitor>(graphicsFactory, canvas, std::make_shared<Camera>());
+    std::shared_ptr<DrawVisitor> drawVisitor =
+        std::make_shared<DrawVisitor>(graphicsFactory, canvas, std::make_shared<Camera>());
 
-	auto scene = sceneManager->getScene();
-	for(const auto& obj : *scene) {
-		obj->accept(drawVisitor);
-	}
+    auto scene = sceneManager->getScene();
+    for (const auto &obj : *scene)
+    {
+        obj->accept(drawVisitor);
+    }
 
-	auto graphics = graphicsFactory->getGraphics();
-	graphics->displayCanvas(canvas);
+    auto graphics = graphicsFactory->getGraphics();
+    graphics->displayCanvas(canvas);
 }
 
-void DrawManager::setSceneManager(std::shared_ptr<SceneManager> sceneManager) {
-	this->sceneManager = sceneManager;
+void DrawManager::setSceneManager(std::shared_ptr<SceneManager> sceneManager)
+{
+    this->sceneManager = sceneManager;
 }
