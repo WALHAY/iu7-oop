@@ -1,5 +1,5 @@
 #include <objects/Camera.hpp>
-#include <visitor/ObjectVisitor.hpp>
+#include <visitors/ObjectVisitor.hpp>
 
 
 

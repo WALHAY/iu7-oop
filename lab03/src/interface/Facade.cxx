@@ -1,5 +1,3 @@
-#include "objects/Model.hpp"
-#include "visitor/TransformVisitor.hpp"
 #include <QGraphicsScene>
 #include <interface/Facade.hpp>
 

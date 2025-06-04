@@ -1,7 +1,7 @@
 #pragma once
 
 #include <graphics/GraphicsFactory.hpp>
-#include <visitor/ObjectVisitor.hpp>
+#include <visitors/ObjectVisitor.hpp>
 
 class DrawVisitor : public ObjectVisitor
 {

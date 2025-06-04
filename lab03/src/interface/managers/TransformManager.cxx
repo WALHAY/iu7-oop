@@ -1,4 +1,4 @@
-#include "visitor/TransformVisitor.hpp"
+#include "visitors/TransformVisitor.hpp"
 #include <interface/managers/TransformManager.hpp>
 
 void TransformManager::setSelectionManager(std::shared_ptr<SelectionManager> selectionManager)

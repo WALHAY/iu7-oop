@@ -1,7 +1,7 @@
 #pragma once
 
 #include "matrix/matrix/Matrix.hpp"
-#include "visitor/ObjectVisitor.hpp"
+#include "visitors/ObjectVisitor.hpp"
 
 class TransformVisitor : public ObjectVisitor {
 	friend class Model;

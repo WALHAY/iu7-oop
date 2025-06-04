@@ -1,5 +1,5 @@
 #include <objects/Composite.hpp>
-#include <visitor/ObjectVisitor.hpp>
+#include <visitors/ObjectVisitor.hpp>
 
 bool Composite::isComposite()
 {

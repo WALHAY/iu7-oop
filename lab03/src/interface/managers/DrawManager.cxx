@@ -1,5 +1,5 @@
 #include <interface/managers/DrawManager.hpp>
-#include <visitor/DrawVisitor.hpp>
+#include <visitors/DrawVisitor.hpp>
 
 DrawManager::DrawManager(std::shared_ptr<QGraphicsScene> scene)
 {

@@ -1,5 +1,5 @@
 #include <objects/Model.hpp>
-#include <visitor/ObjectVisitor.hpp>
+#include <visitors/ObjectVisitor.hpp>
 
 Model::Model(std::shared_ptr<Wireframe> wireframeModel) : wireframeModel(wireframeModel)
 {

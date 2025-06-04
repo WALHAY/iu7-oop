@@ -1,5 +1,5 @@
 #include <QDebug>
-#include <visitor/DrawVisitor.hpp>
+#include <visitors/DrawVisitor.hpp>
 #include <wireframe/Edge.hpp>
 
 DrawVisitor::DrawVisitor(std::shared_ptr<GraphicsFactory> factory, std::shared_ptr<Canvas> canvas,
