@@ -1,6 +1,6 @@
 #include "interface/commands/DrawCommand.hpp"
 #include "ui_mainwindow.h"
-#include <MainWindow.hpp>
+#include <ui/MainWindow.hpp>
 #include <QGraphicsView>
 #include <QHBoxLayout>
 #include <QLabel>
