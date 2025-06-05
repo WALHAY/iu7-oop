@@ -1,5 +1,6 @@
 #pragma once
 
+#include "interface/managers/LoadManager.hpp"
 #include "interface/managers/TransformManager.hpp"
 #include <interface/commands/BaseCommand.hpp>
 #include <interface/managers/SceneManager.hpp>
@@ -16,4 +17,5 @@ class Facade
     std::shared_ptr<DrawManager> drawManager;
     std::shared_ptr<SelectionManager> selectionManager;
     std::shared_ptr<TransformManager> transformManager;
+	std::shared_ptr<LoadManager> loadManager;
 };

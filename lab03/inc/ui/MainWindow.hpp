@@ -27,6 +27,6 @@ class MainWindow : public QMainWindow
 
   private:
     std::shared_ptr<Facade> facade;
-    std::shared_ptr<QGraphicsScene> scene;
+    std::shared_ptr<QGraphicsScene> graphicsScene;
     Ui::MainWindow *ui;
 };

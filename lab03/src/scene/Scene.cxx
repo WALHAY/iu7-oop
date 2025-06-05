@@ -1,4 +1,5 @@
 #include <scene/Scene.hpp>
+#include <QDebug>
 
 void Scene::add(std::shared_ptr<Object> object)
 {

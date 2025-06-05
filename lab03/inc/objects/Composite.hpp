@@ -6,7 +6,7 @@
 class Composite : public Object
 {
   public:
-	Composite() = default;
+	Composite() : Object() {}
 
     void add(std::shared_ptr<Object> object) override;
     void remove(iterator &iter) override;
