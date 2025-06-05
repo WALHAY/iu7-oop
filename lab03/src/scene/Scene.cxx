@@ -3,6 +3,9 @@
 
 void Scene::add(std::shared_ptr<Object> object)
 {
+	if(object == nullptr)
+		return;
+
     objects.push_back(object);
 }
 

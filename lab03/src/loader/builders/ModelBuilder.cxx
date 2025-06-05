@@ -2,25 +2,43 @@
 #include <loader/builders/ModelBuilder.hpp>
 #include <memory>
 
-void ModelBuilder::build() {
-	this->wireframe = std::make_shared<Wireframe>();
+void ModelBuilder::build()
+{
+    this->wireframe = std::make_shared<Wireframe>();
 }
 
 void ModelBuilder::buildEdge(const Edge &edge)
 {
-	if(wireframe == nullptr)
-		return;
-	this->wireframe->getEdges().push_back(edge);
+    if (wireframe == nullptr)
+        return;
+
+    this->wireframe->getEdges().push_back(edge);
 }
 
 void ModelBuilder::buildPoint(const Point &point)
 {
-	if(wireframe == nullptr)
-		return;
-	this->wireframe->getVertices().push_back(point);
+    if (wireframe == nullptr)
+        return;
+
+    this->wireframe->getVertices().push_back(point);
+}
+
+bool ModelBuilder::validateBuild()
+{
+    if (wireframe == nullptr)
+        return false;
+
+    auto size = wireframe->getVertices().size();
+
+    return std::ranges::none_of(wireframe->getEdges(), [size](const Edge &edge) {
+        return std::max(edge.getFirst(), edge.getSecond()) >= size;
+    });
 }
 
 std::shared_ptr<Object> ModelBuilder::get()
 {
+    if (!validateBuild())
+        throw std::exception();
+
     return std::make_shared<Model>(wireframe);
 }

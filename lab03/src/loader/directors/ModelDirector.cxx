@@ -1,9 +1,7 @@
-#include "loader/builders/ModelBuilder.hpp"
-#include "objects/Model.hpp"
 #include "wireframe/Edge.hpp"
 #include <loader/directors/ModelDirector.hpp>
 
-ModelDirector::ModelDirector(std::shared_ptr<BaseBuilder> builder) : BaseDirector(builder)
+ModelDirector::ModelDirector(std::shared_ptr<BaseBuilder> builder) 
 {
 	this->builder = builder;
 }

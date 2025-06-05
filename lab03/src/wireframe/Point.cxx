@@ -34,7 +34,7 @@ void Point::setZ(double z)
 
 void Point::transform(const Matrix<double> &matrix)
 {
-	Matrix<double> pointMatrix{{x, y, z}};
+	Matrix<double> pointMatrix{{x, y, z, 1}};
 
 	auto res = pointMatrix * matrix;
 

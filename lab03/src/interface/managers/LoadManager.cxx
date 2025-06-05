@@ -3,7 +3,6 @@
 #include "loader/builders/ModelBuilder.hpp"
 #include "loader/directors/ModelDirector.hpp"
 #include "loader/readers/TxtStreamReader.hpp"
-#include "objects/Model.hpp"
 #include <QDebug>
 #include <filesystem>
 #include <fstream>
@@ -17,8 +16,7 @@ void LoadManager::loadScene(std::filesystem::path &path)
     std::shared_ptr<BaseDirector> director = std::make_shared<ModelDirector>(builder);
 
     auto scene = sceneManager->getScene();
-    if (scene != nullptr)
-        scene->add(director->create(reader));
+    scene->add(director->create(reader));
 }
 
 void LoadManager::remove(Object::id_type id)
