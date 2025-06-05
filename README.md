@@ -8,13 +8,11 @@
 | Collection template class |10(7?)/11|
 | HashMap | 3/3 |
 | Wireframe model viewer(OOP/CPP/QT)|WIP|
-| Elevator state machine|WIP|
+| Elevator state machine|10/11|
 | OOP Docs|TODO|
 
 ## Total score
 
-Labs: 2/5
-
+Labs: 3/5
 Additional tasks: Hash-map(Lab2)
-
-Score: 22(19?)/70 
+Score: 32(29?)/70 
