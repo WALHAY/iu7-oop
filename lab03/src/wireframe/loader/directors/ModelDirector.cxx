@@ -1,5 +1,5 @@
 #include "wireframe/Edge.hpp"
-#include <loader/directors/ModelDirector.hpp>
+#include <wireframe/loader/directors/ModelDirector.hpp>
 
 ModelDirector::ModelDirector(std::shared_ptr<BaseBuilder> builder)
 {

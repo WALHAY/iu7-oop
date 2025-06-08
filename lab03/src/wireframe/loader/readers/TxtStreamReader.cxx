@@ -1,5 +1,5 @@
-#include <loader/readers/TxtStreamReader.hpp>
 #include <sstream>
+#include <wireframe/loader/readers/TxtStreamReader.hpp>
 
 TxtStreamReader::TxtStreamReader(std::shared_ptr<std::istream> stream) : stream(stream)
 {

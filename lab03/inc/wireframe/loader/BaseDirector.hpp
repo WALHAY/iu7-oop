@@ -1,8 +1,8 @@
 #pragma once
 
-#include "loader/BaseBuilder.hpp"
-#include "loader/BaseStreamReader.hpp"
 #include "objects/Object.hpp"
+#include "wireframe/loader/BaseBuilder.hpp"
+#include "wireframe/loader/BaseStreamReader.hpp"
 
 class BaseDirector
 {
@@ -14,3 +14,5 @@ class BaseDirector
   protected:
     std::shared_ptr<BaseBuilder> builder;
 };
+
+inline BaseDirector::~BaseDirector() = default;

@@ -9,7 +9,8 @@ class WireframeModel : public Model
   public:
     WireframeModel(std::shared_ptr<Wireframe> wireframe);
 
-	void accept(std::shared_ptr<ObjectVisitor> visitor) override;
+    void accept(std::shared_ptr<ObjectVisitor> visitor) override;
+
   private:
     std::shared_ptr<Wireframe> wireframe;
 };

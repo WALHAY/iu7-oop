@@ -15,9 +15,9 @@ void DrawManager::draw()
 
     auto canvas = graphicsFactory->createCanvas(1280, 720);
 
-	auto cI = std::make_shared<CameraImpl>(Point(0, 0, 0));
-    std::shared_ptr<DrawVisitor> drawVisitor = std::make_shared<DrawVisitor>(
-        graphicsFactory, canvas, std::make_shared<PlainCamera>(cI));
+    auto cI = std::make_shared<CameraImpl>(Point(0, 0, 0));
+    std::shared_ptr<DrawVisitor> drawVisitor =
+        std::make_shared<DrawVisitor>(graphicsFactory, canvas, std::make_shared<PlainCamera>(cI));
 
     auto scene = sceneManager->getScene();
     for (const auto &obj : *scene)

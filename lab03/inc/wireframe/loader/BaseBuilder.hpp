@@ -11,9 +11,10 @@ class BaseBuilder
 
     virtual void build() = 0;
 
-    virtual void buildDirection(const Point &point);
-    virtual void buildPoint(const Point &point);
-    virtual void buildEdge(const Edge &edge);
+    virtual void buildPoint(const Point &point) = 0;
+    virtual void buildEdge(const Edge &edge) = 0;
 
     virtual std::shared_ptr<Object> get() = 0;
 };
+
+inline BaseBuilder::~BaseBuilder() = default;

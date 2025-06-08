@@ -4,6 +4,16 @@ CameraImpl::CameraImpl(Point location) : location(location)
 {
 }
 
+Point CameraImpl::getLocation()
+{
+    return location;
+}
+
+void CameraImpl::setLocation(const Point &location)
+{
+    this->location = location;
+}
+
 Point CameraImpl::getForward()
 {
     return forward;
@@ -19,7 +29,17 @@ Point CameraImpl::getRight()
     return right;
 }
 
-Point CameraImpl::getLocation()
+void CameraImpl::setForward(const Point &forward)
 {
-    return location;
+    this->forward = forward;
+}
+
+void CameraImpl::setUp(const Point &up)
+{
+    this->up = up;
+}
+
+void CameraImpl::setRight(const Point &right)
+{
+    this->right = right;
 }

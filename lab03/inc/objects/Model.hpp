@@ -8,5 +8,5 @@ class Model : public Object
   public:
     virtual ~Model();
 
-	void accept(std::shared_ptr<ObjectVisitor> visitor) override = 0;
+    void accept(std::shared_ptr<ObjectVisitor> visitor) override = 0;
 };

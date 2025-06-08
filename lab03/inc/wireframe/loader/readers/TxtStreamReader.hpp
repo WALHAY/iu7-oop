@@ -1,6 +1,6 @@
 #pragma once
 
-#include "loader/BaseStreamReader.hpp"
+#include "wireframe/loader/BaseStreamReader.hpp"
 #include <istream>
 
 class TxtStreamReader : public BaseStreamReader

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "loader/BaseBuilder.hpp"
 #include "wireframe/Wireframe.hpp"
+#include "wireframe/loader/BaseBuilder.hpp"
 
 class ModelBuilder : public BaseBuilder
 {

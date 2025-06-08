@@ -1,7 +1,6 @@
-#include "objects/Model.hpp"
 #include "objects/impl/WireframeModel.hpp"
-#include <loader/builders/ModelBuilder.hpp>
 #include <memory>
+#include <wireframe/loader/builders/ModelBuilder.hpp>
 
 void ModelBuilder::build()
 {

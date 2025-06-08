@@ -1,8 +1,8 @@
-#include "loader/BaseBuilder.hpp"
-#include "loader/BaseDirector.hpp"
-#include "loader/builders/ModelBuilder.hpp"
-#include "loader/directors/ModelDirector.hpp"
-#include "loader/readers/TxtStreamReader.hpp"
+#include "wireframe/loader/BaseBuilder.hpp"
+#include "wireframe/loader/BaseDirector.hpp"
+#include "wireframe/loader/builders/ModelBuilder.hpp"
+#include "wireframe/loader/directors/ModelDirector.hpp"
+#include "wireframe/loader/readers/TxtStreamReader.hpp"
 #include <QDebug>
 #include <filesystem>
 #include <fstream>

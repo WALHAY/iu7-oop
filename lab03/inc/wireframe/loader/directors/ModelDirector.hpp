@@ -1,6 +1,6 @@
 #pragma once
 
-#include "loader/BaseDirector.hpp"
+#include "wireframe/loader/BaseDirector.hpp"
 
 class ModelDirector : public BaseDirector
 {

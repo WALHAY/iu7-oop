@@ -5,13 +5,18 @@
 class CameraImpl
 {
   public:
-	CameraImpl(Point location);
+    CameraImpl();
+    CameraImpl(Point location);
 
     Point getLocation();
+    void setLocation(const Point &location);
 
     Point getForward();
     Point getUp();
     Point getRight();
+    void setForward(const Point &location);
+    void setUp(const Point &location);
+    void setRight(const Point &location);
 
   private:
     Point location;
