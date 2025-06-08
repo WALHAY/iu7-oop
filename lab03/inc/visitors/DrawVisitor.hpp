@@ -10,7 +10,7 @@ class DrawVisitor : public ObjectVisitor
 
   public:
     DrawVisitor(std::shared_ptr<GraphicsFactory> factory, std::shared_ptr<Canvas> canvas,
-                std::shared_ptr<PlainCamera> camera);
+                std::shared_ptr<Camera> camera);
 
     void visit(WireframeModel &model) override;
     void visit(PlainCamera &camera) override;
@@ -18,5 +18,5 @@ class DrawVisitor : public ObjectVisitor
   private:
     std::shared_ptr<GraphicsFactory> graphicsFactory;
     std::shared_ptr<Canvas> canvas;
-    std::shared_ptr<PlainCamera> camera;
+    std::shared_ptr<Camera> camera;
 };

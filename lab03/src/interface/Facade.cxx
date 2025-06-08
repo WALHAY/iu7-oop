@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QGraphicsScene>
 #include <interface/Facade.hpp>
 
@@ -8,20 +9,22 @@ Facade::Facade(std::shared_ptr<QGraphicsScene> graphicsScene)
     selectionManager = std::make_shared<SelectionManager>();
     transformManager = std::make_shared<TransformManager>();
     loadManager = std::make_shared<LoadManager>();
+    cameraManager = std::make_shared<CameraManager>();
 
     drawManager->setSceneManager(sceneManager);
     loadManager->setSceneManager(sceneManager);
+    cameraManager->setSceneManager(sceneManager);
 
     transformManager->setSelectionManager(selectionManager);
 
-    sceneManager->setScene(std::make_shared<Scene>());
+    drawManager->setCameraManager(cameraManager);
 
-	std::filesystem::path p = "scene.txt";
-	loadManager->loadScene(p);
+    std::filesystem::path p = "scene.txt";
+    loadManager->loadScene(p);
 }
 
 void Facade::execute(std::shared_ptr<BaseCommand> command)
 {
-    command->setManagers(sceneManager, drawManager, loadManager);
+    command->setManagers(sceneManager, drawManager, loadManager, selectionManager, cameraManager);
     command->execute();
 }

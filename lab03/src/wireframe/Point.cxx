@@ -32,6 +32,11 @@ void Point::setZ(double z)
     this->z = z;
 }
 
+Point Point::clone() const
+{
+    return Point(x, y, z);
+}
+
 void Point::transform(const Matrix<double> &matrix)
 {
     Matrix<double> pointMatrix{{x, y, z, 1}};

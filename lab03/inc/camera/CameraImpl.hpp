@@ -5,8 +5,7 @@
 class CameraImpl
 {
   public:
-	CameraImpl();
-    CameraImpl(Point location);
+    CameraImpl(const Point &location);
 
     Point getLocation();
     void setLocation(const Point &location);
@@ -18,10 +17,12 @@ class CameraImpl
     void setUp(const Point &location);
     void setRight(const Point &location);
 
+    void transform(const Matrix<double> &transform);
+
   private:
     Point location;
 
-    Point forward{1, 0, 0};
-    Point up{0, 1, 0};
-    Point right{0, 0, 1};
+    Point forward{0, 1, 0};
+    Point up{0, 0, 1};
+    Point right{1, 0, 0};
 };

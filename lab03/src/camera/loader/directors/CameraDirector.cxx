@@ -7,6 +7,8 @@ CameraDirector::CameraDirector(std::shared_ptr<BaseCameraBuilder> builder)
 
 std::shared_ptr<Camera> CameraDirector::create(std::shared_ptr<BaseCameraStreamReader> reader)
 {
+	builder->build();
+
     auto location = reader->getLocation();
     auto direction = reader->getDirection();
 

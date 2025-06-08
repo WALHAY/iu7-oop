@@ -15,6 +15,8 @@ class Point
     void setY(double y);
     void setZ(double z);
 
+	Point clone() const;
+
     void transform(const Matrix<double> &transform);
 
   private:

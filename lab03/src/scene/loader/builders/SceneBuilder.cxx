@@ -31,8 +31,8 @@ void SceneBuilder::buildModel(std::filesystem::path &modelPath)
     if (scene == nullptr)
         throw std::exception();
 
-    std::shared_ptr<BaseModelStreamReader> reader =
-        std::make_shared<TxtModelReader>(std::make_shared<std::ifstream>(modelPath.string()));
+    auto stream = std::make_shared<std::ifstream>(modelPath);
+    std::shared_ptr<BaseModelStreamReader> reader = std::make_shared<TxtModelReader>(stream);
 
     scene->add(modelDirector->create(reader));
 }

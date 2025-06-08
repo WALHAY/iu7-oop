@@ -6,6 +6,7 @@
 class TransformVisitor : public ObjectVisitor
 {
     friend class Model;
+    friend class Camera;
 
   public:
     TransformVisitor(const Matrix<double> &transform);

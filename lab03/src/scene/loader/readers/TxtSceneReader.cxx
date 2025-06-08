@@ -26,11 +26,12 @@ std::optional<std::filesystem::path> TxtSceneReader::getCameraPath()
         success = type == "Camera";
 
     if (!success)
+    {
         stream->seekg(position);
-    else
-        return std::make_optional<std::filesystem::path>(filename);
+        return std::nullopt;
+    }
 
-    return std::nullopt;
+    return std::make_optional<std::filesystem::path>(filename);
 }
 
 std::optional<std::filesystem::path> TxtSceneReader::getModelPath()
@@ -56,9 +57,10 @@ std::optional<std::filesystem::path> TxtSceneReader::getModelPath()
     }
 
     if (!success)
+    {
         stream->seekg(position);
-    else
-        return std::make_optional<std::filesystem::path>(filename);
+        return std::nullopt;
+    }
 
-    return std::nullopt;
+    return std::make_optional<std::filesystem::path>(filename);
 }

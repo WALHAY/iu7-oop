@@ -5,6 +5,9 @@
 
 class PlainCamera : public Camera
 {
+    friend class ProjectionVisitor;
+	friend class TransformVisitor;
+
   public:
     PlainCamera(std::shared_ptr<CameraImpl> impl);
 

@@ -1,10 +1,11 @@
 #include "objects/impl/PlainCamera.hpp"
+#include "visitors/ProjectionVisitor.hpp"
 #include <QDebug>
 #include <visitors/DrawVisitor.hpp>
 #include <wireframe/Edge.hpp>
 
 DrawVisitor::DrawVisitor(std::shared_ptr<GraphicsFactory> factory, std::shared_ptr<Canvas> canvas,
-                         std::shared_ptr<PlainCamera> camera)
+                         std::shared_ptr<Camera> camera)
     : graphicsFactory(factory), canvas(canvas), camera(camera)
 {
 }
@@ -16,17 +17,33 @@ void DrawVisitor::visit(WireframeModel &model)
         return;
     }
 
-    auto a = graphicsFactory->createPainter(canvas);
+    auto painter = graphicsFactory->createPainter(canvas);
 
-    for (const Edge &edge : model.wireframe->getEdges())
+	auto impl = model.wireframe;
+    auto edges = impl->getEdges();
+    auto points = impl->getVertices();
+
+    std::vector<Point> projected;
+
+    for (const auto &p : points)
     {
-        auto firstPoint = model.wireframe->getVertices().at(edge.getFirst());
-        auto secondPoint = model.wireframe->getVertices().at(edge.getSecond());
+        auto clone = p.clone();
+        camera->accept(std::make_shared<ProjectionVisitor>(clone));
+        projected.push_back(clone);
+    }
 
-        auto first = graphicsFactory->createPoint2D(firstPoint.getX(), firstPoint.getY());
-        auto second = graphicsFactory->createPoint2D(secondPoint.getX(), secondPoint.getY());
+    for (const auto &edge : edges)
+    {
+        auto p1 = projected[edge.getFirst()];
+        auto p2 = projected[edge.getSecond()];
 
-        a->drawLine(first, second);
+        if (p1.getZ() <= 1 || p2.getZ() <= 1)
+            continue;
+
+		auto gp1 = graphicsFactory->createPoint2D(p1.getX(), p1.getY());
+		auto gp2 = graphicsFactory->createPoint2D(p2.getX(), p2.getY());
+
+        painter->drawLine(gp1, gp2);
     }
 }
 

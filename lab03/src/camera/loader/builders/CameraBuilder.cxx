@@ -1,8 +1,9 @@
+#include <QDebug>
 #include "objects/impl/PlainCamera.hpp"
 #include <camera/loader/builders/CameraBuilder.hpp>
 
 void CameraBuilder::build() {
-	this->cameraImpl = std::make_shared<CameraImpl>();
+	this->cameraImpl = std::make_shared<CameraImpl>(Point(0, 0, 0));
 }
 
 void CameraBuilder::buildDirection(const Point& direction)

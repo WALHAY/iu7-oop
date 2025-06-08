@@ -11,4 +11,5 @@ void TransformVisitor::visit(WireframeModel &model)
 
 void TransformVisitor::visit(PlainCamera &camera)
 {
+	camera.cameraImpl->transform(transform);
 }

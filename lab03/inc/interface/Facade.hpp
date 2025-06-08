@@ -1,5 +1,6 @@
 #pragma once
 
+#include "interface/managers/CameraManager.hpp"
 #include "interface/managers/LoadManager.hpp"
 #include "interface/managers/TransformManager.hpp"
 #include <interface/commands/BaseCommand.hpp>
@@ -18,4 +19,5 @@ class Facade
     std::shared_ptr<SelectionManager> selectionManager;
     std::shared_ptr<TransformManager> transformManager;
     std::shared_ptr<LoadManager> loadManager;
+    std::shared_ptr<CameraManager> cameraManager;
 };

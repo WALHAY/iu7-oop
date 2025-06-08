@@ -1,10 +1,6 @@
 #include <camera/CameraImpl.hpp>
 
-CameraImpl::CameraImpl() : location({0, 0, 0})
-{
-}
-
-CameraImpl::CameraImpl(Point location) : location(location)
+CameraImpl::CameraImpl(const Point &location) : location(location)
 {
 }
 
@@ -46,4 +42,13 @@ void CameraImpl::setUp(const Point &up)
 void CameraImpl::setRight(const Point &right)
 {
     this->right = right;
+}
+
+void CameraImpl::transform(const Matrix<double> &matrix)
+{
+    location.transform(matrix);
+
+    right.transform(matrix);
+    up.transform(matrix);
+    forward.transform(matrix);
 }
