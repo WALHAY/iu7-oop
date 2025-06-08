@@ -1,15 +1,15 @@
 #pragma once
 
-#include "wireframe/loader/BaseDirector.hpp"
+#include "wireframe/loader/BaseModelDirector.hpp"
 
-class ModelDirector : public BaseDirector
+class ModelDirector : public BaseModelDirector
 {
   public:
 	ModelDirector() = delete;
-    ModelDirector(std::shared_ptr<BaseBuilder> builder);
+    ModelDirector(std::shared_ptr<BaseModelBuilder> builder);
 
-    std::shared_ptr<Object> create(std::shared_ptr<BaseStreamReader> reader) override;
+    std::shared_ptr<Object> create(std::shared_ptr<BaseModelStreamReader> reader) override;
 
   protected:
-    std::shared_ptr<BaseBuilder> builder;
+    std::shared_ptr<BaseModelBuilder> builder;
 };

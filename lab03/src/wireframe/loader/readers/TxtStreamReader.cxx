@@ -1,11 +1,11 @@
 #include <sstream>
-#include <wireframe/loader/readers/TxtStreamReader.hpp>
+#include <wireframe/loader/readers/TxtModelReader.hpp>
 
-TxtStreamReader::TxtStreamReader(std::shared_ptr<std::istream> stream) : stream(stream)
+TxtModelReader::TxtModelReader(std::shared_ptr<std::istream> stream) : stream(stream)
 {
 }
 
-std::optional<Edge> TxtStreamReader::getEdge()
+std::optional<Edge> TxtModelReader::getEdge()
 {
     bool hasEdge = false;
     std::streampos position = stream->tellg();
@@ -28,7 +28,7 @@ std::optional<Edge> TxtStreamReader::getEdge()
     return std::make_optional<Edge>(first, second);
 }
 
-std::optional<Point> TxtStreamReader::getPoint()
+std::optional<Point> TxtModelReader::getPoint()
 {
     bool hasPoint = false;
     std::streampos position = stream->tellg();

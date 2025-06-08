@@ -1,12 +1,12 @@
 #pragma once
 
-#include "wireframe/loader/BaseStreamReader.hpp"
+#include "wireframe/loader/BaseModelStreamReader.hpp"
 #include <istream>
 
-class TxtStreamReader : public BaseStreamReader
+class TxtModelReader : public BaseModelStreamReader
 {
   public:
-    TxtStreamReader(std::shared_ptr<std::istream> stream);
+    TxtModelReader(std::shared_ptr<std::istream> stream);
 
     std::optional<Point> getPoint() override;
     std::optional<Edge> getEdge() override;

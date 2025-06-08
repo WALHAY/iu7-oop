@@ -3,13 +3,13 @@
 #include "wireframe/Edge.hpp"
 #include "wireframe/Point.hpp"
 
-class BaseStreamReader
+class BaseModelStreamReader
 {
   public:
-    virtual ~BaseStreamReader() = 0;
+    virtual ~BaseModelStreamReader() = 0;
 
     virtual std::optional<Point> getPoint() = 0;
     virtual std::optional<Edge> getEdge() = 0;
 };
 
-inline BaseStreamReader::~BaseStreamReader() = default;
+inline BaseModelStreamReader::~BaseModelStreamReader() = default;

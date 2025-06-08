@@ -1,9 +1,9 @@
 #pragma once
 
 #include "wireframe/Wireframe.hpp"
-#include "wireframe/loader/BaseBuilder.hpp"
+#include "wireframe/loader/BaseModelBuilder.hpp"
 
-class ModelBuilder : public BaseBuilder
+class ModelBuilder : public BaseModelBuilder
 {
   public:
     void build() override;

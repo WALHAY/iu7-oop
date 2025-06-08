@@ -4,10 +4,10 @@
 #include "wireframe/Edge.hpp"
 #include "wireframe/Point.hpp"
 
-class BaseBuilder
+class BaseModelBuilder
 {
   public:
-    virtual ~BaseBuilder() = 0;
+    virtual ~BaseModelBuilder() = 0;
 
     virtual void build() = 0;
 
@@ -17,4 +17,4 @@ class BaseBuilder
     virtual std::shared_ptr<Object> get() = 0;
 };
 
-inline BaseBuilder::~BaseBuilder() = default;
+inline BaseModelBuilder::~BaseModelBuilder() = default;

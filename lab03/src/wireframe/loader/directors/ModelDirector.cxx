@@ -1,11 +1,11 @@
 #include "wireframe/Edge.hpp"
 #include <wireframe/loader/directors/ModelDirector.hpp>
 
-ModelDirector::ModelDirector(std::shared_ptr<BaseBuilder> builder) : BaseDirector(builder)
+ModelDirector::ModelDirector(std::shared_ptr<BaseModelBuilder> builder) : BaseModelDirector(builder)
 {
 }
 
-std::shared_ptr<Object> ModelDirector::create(std::shared_ptr<BaseStreamReader> reader)
+std::shared_ptr<Object> ModelDirector::create(std::shared_ptr<BaseModelStreamReader> reader)
 {
 
     builder->build();

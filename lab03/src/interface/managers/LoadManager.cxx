@@ -1,8 +1,7 @@
-#include "wireframe/loader/BaseBuilder.hpp"
-#include "wireframe/loader/BaseDirector.hpp"
+#include "wireframe/loader/BaseModelBuilder.hpp"
 #include "wireframe/loader/builders/ModelBuilder.hpp"
 #include "wireframe/loader/directors/ModelDirector.hpp"
-#include "wireframe/loader/readers/TxtStreamReader.hpp"
+#include "wireframe/loader/readers/TxtModelReader.hpp"
 #include <QDebug>
 #include <filesystem>
 #include <fstream>
@@ -11,9 +10,9 @@
 void LoadManager::loadScene(std::filesystem::path &path)
 {
     std::shared_ptr<std::ifstream> str = std::make_shared<std::ifstream>(path);
-    std::shared_ptr<TxtStreamReader> reader = std::make_shared<TxtStreamReader>(str);
-    std::shared_ptr<BaseBuilder> builder = std::make_shared<ModelBuilder>();
-    std::shared_ptr<BaseDirector> director = std::make_shared<ModelDirector>(builder);
+    std::shared_ptr<BaseModelStreamReader> reader = std::make_shared<TxtModelReader>(str);
+    std::shared_ptr<BaseModelBuilder> builder = std::make_shared<ModelBuilder>();
+    std::shared_ptr<BaseModelDirector> director = std::make_shared<ModelDirector>(builder);
 
     auto scene = sceneManager->getScene();
     scene->add(director->create(reader));
