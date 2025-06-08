@@ -1,5 +1,9 @@
 #include <camera/CameraImpl.hpp>
 
+CameraImpl::CameraImpl() : location({0, 0, 0})
+{
+}
+
 CameraImpl::CameraImpl(Point location) : location(location)
 {
 }

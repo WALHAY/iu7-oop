@@ -10,7 +10,7 @@ public:
 	void buildLocation(const Point &location) override;
 	void buildDirection(const Point &direction) override;
 
-	std::shared_ptr<Object> get() override;
+	std::shared_ptr<Camera> get() override;
 private:
 	std::shared_ptr<CameraImpl> cameraImpl;
 };

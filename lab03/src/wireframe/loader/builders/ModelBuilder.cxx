@@ -28,6 +28,12 @@ bool ModelBuilder::validateBuild()
     if (wireframe == nullptr)
         return false;
 
+	if(wireframe->getEdges().empty())
+		return false;
+
+	if(wireframe->getVertices().empty())
+		return false;
+
     auto size = wireframe->getVertices().size();
 
     return std::ranges::none_of(wireframe->getEdges(), [size](const Edge &edge) {

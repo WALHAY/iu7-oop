@@ -3,7 +3,6 @@
 #include "camera/loader/BaseCameraBuilder.hpp"
 #include "camera/loader/BaseCameraStreamReader.hpp"
 #include "objects/Camera.hpp"
-#include "objects/Object.hpp"
 #include <memory>
 
 class BaseCameraDirector
@@ -14,7 +13,7 @@ class BaseCameraDirector
 
     virtual ~BaseCameraDirector() = 0;
 
-    virtual std::shared_ptr<Camera> create(std::shared_ptr<BaseCameraStreamReader> reader);
+    virtual std::shared_ptr<Camera> create(std::shared_ptr<BaseCameraStreamReader> reader) = 0;
 
   protected:
     std::shared_ptr<BaseCameraBuilder> builder;

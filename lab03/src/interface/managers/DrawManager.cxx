@@ -21,9 +21,7 @@ void DrawManager::draw()
 
     auto scene = sceneManager->getScene();
     for (const auto &obj : *scene)
-    {
         obj->accept(drawVisitor);
-    }
 
     auto graphics = graphicsFactory->getGraphics();
     graphics->displayCanvas(canvas);

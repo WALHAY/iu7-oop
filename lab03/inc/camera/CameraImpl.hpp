@@ -5,7 +5,7 @@
 class CameraImpl
 {
   public:
-    CameraImpl();
+	CameraImpl();
     CameraImpl(Point location);
 
     Point getLocation();

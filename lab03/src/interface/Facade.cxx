@@ -15,6 +15,9 @@ Facade::Facade(std::shared_ptr<QGraphicsScene> graphicsScene)
     transformManager->setSelectionManager(selectionManager);
 
     sceneManager->setScene(std::make_shared<Scene>());
+
+	std::filesystem::path p = "scene.txt";
+	loadManager->loadScene(p);
 }
 
 void Facade::execute(std::shared_ptr<BaseCommand> command)

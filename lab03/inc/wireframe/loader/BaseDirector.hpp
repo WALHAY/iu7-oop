@@ -7,6 +7,7 @@
 class BaseDirector
 {
   public:
+    BaseDirector(std::shared_ptr<BaseBuilder> builder);
     virtual ~BaseDirector() = 0;
 
     virtual std::shared_ptr<Object> create(std::shared_ptr<BaseStreamReader> reader) = 0;
@@ -14,5 +15,3 @@ class BaseDirector
   protected:
     std::shared_ptr<BaseBuilder> builder;
 };
-
-inline BaseDirector::~BaseDirector() = default;

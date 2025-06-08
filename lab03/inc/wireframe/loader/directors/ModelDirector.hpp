@@ -5,6 +5,7 @@
 class ModelDirector : public BaseDirector
 {
   public:
+	ModelDirector() = delete;
     ModelDirector(std::shared_ptr<BaseBuilder> builder);
 
     std::shared_ptr<Object> create(std::shared_ptr<BaseStreamReader> reader) override;
