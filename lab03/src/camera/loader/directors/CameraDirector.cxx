@@ -1,7 +1,8 @@
 #include <camera/loader/directors/CameraDirector.hpp>
 
-CameraDirector::CameraDirector(std::shared_ptr<BaseCameraBuilder> builder) : BaseCameraDirector(builder)
+CameraDirector::CameraDirector(std::shared_ptr<BaseCameraBuilder> builder) 
 {
+	this->builder = builder;
 }
 
 std::shared_ptr<Camera> CameraDirector::create(std::shared_ptr<BaseCameraStreamReader> reader)

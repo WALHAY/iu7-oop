@@ -6,12 +6,12 @@
 class BaseSceneDirector
 {
   public:
-    BaseSceneDirector() = delete;
-    BaseSceneDirector(std::shared_ptr<BaseSceneBuilder> builder);
+    virtual ~BaseSceneDirector() = 0;
 
-	virtual ~BaseSceneDirector() = 0;
+    virtual std::shared_ptr<Scene> create(std::shared_ptr<BaseSceneStreamReader> reader) = 0;
 
-	virtual std::shared_ptr<Scene> create(std::shared_ptr<BaseSceneStreamReader> reader) = 0;
-  private:
+  protected:
     std::shared_ptr<BaseSceneBuilder> builder;
 };
+
+inline BaseSceneDirector::~BaseSceneDirector() = default;

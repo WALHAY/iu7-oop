@@ -7,7 +7,6 @@
 class BaseModelDirector
 {
   public:
-    BaseModelDirector(std::shared_ptr<BaseModelBuilder> builder);
     virtual ~BaseModelDirector() = 0;
 
     virtual std::shared_ptr<Object> create(std::shared_ptr<BaseModelStreamReader> reader) = 0;
@@ -15,3 +14,5 @@ class BaseModelDirector
   protected:
     std::shared_ptr<BaseModelBuilder> builder;
 };
+
+inline BaseModelDirector::~BaseModelDirector() = default;

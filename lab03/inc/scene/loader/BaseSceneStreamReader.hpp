@@ -11,3 +11,5 @@ class BaseSceneStreamReader
     virtual std::optional<std::filesystem::path> getModelPath() = 0;
     virtual std::optional<std::filesystem::path> getCameraPath() = 0;
 };
+
+inline BaseSceneStreamReader::~BaseSceneStreamReader() = default;

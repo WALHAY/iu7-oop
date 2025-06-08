@@ -2,6 +2,7 @@
 
 #include "wireframe/Point.hpp"
 #include <optional>
+
 class BaseCameraStreamReader
 {
   public:

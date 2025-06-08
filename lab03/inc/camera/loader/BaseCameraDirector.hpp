@@ -8,9 +8,6 @@
 class BaseCameraDirector
 {
   public:
-	BaseCameraDirector() = delete;
-    BaseCameraDirector(std::shared_ptr<BaseCameraBuilder> builder);
-
     virtual ~BaseCameraDirector() = 0;
 
     virtual std::shared_ptr<Camera> create(std::shared_ptr<BaseCameraStreamReader> reader) = 0;
@@ -18,3 +15,5 @@ class BaseCameraDirector
   protected:
     std::shared_ptr<BaseCameraBuilder> builder;
 };
+
+inline BaseCameraDirector::~BaseCameraDirector() = default;
