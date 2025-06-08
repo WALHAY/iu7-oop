@@ -1,10 +1,10 @@
-#include <scene/Scene.hpp>
 #include <QDebug>
+#include <scene/Scene.hpp>
 
 void Scene::add(std::shared_ptr<Object> object)
 {
-	if(object == nullptr)
-		return;
+    if (object == nullptr)
+        return;
 
     objects.push_back(object);
 }

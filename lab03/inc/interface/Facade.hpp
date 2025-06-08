@@ -17,5 +17,5 @@ class Facade
     std::shared_ptr<DrawManager> drawManager;
     std::shared_ptr<SelectionManager> selectionManager;
     std::shared_ptr<TransformManager> transformManager;
-	std::shared_ptr<LoadManager> loadManager;
+    std::shared_ptr<LoadManager> loadManager;
 };

@@ -5,7 +5,8 @@
 class Camera : public Object
 {
   public:
-	Camera() : Object() {}
+    virtual ~Camera();
 
-    void accept(std::shared_ptr<ObjectVisitor> visitor) override;
+    bool isCamera() override;
+    void accept(std::shared_ptr<ObjectVisitor> visitor) override = 0;
 };

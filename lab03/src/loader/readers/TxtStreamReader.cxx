@@ -38,7 +38,7 @@ std::optional<Point> TxtStreamReader::getPoint()
 
     double x;
     double y;
-	double z;
+    double z;
     std::stringstream ss(line);
     if (ss >> x >> y >> z)
         hasPoint = true;

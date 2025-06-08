@@ -1,7 +1,8 @@
 #include <objects/Object.hpp>
 #include <objects/ObjectException.hpp>
 
-Object::Object() : objectId(Object::lastId++){
+Object::Object() : objectId(Object::lastId++)
+{
 }
 
 auto Object::id() -> id_type
@@ -30,6 +31,11 @@ auto Object::end() -> iterator
 }
 
 bool Object::isComposite()
+{
+    return false;
+}
+
+bool Object::isCamera()
 {
     return false;
 }

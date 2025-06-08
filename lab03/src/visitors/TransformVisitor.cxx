@@ -4,11 +4,11 @@ TransformVisitor::TransformVisitor(const Matrix<double> &transform) : transform(
 {
 }
 
-void TransformVisitor::visit(Model &model)
+void TransformVisitor::visit(WireframeModel &model)
 {
-    model.wireframeModel->transform(transform);
+    model.wireframe->transform(transform);
 }
 
-void TransformVisitor::visit(Camera &camera)
+void TransformVisitor::visit(PlainCamera &camera)
 {
 }

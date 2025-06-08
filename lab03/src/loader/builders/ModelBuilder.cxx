@@ -1,4 +1,5 @@
 #include "objects/Model.hpp"
+#include "objects/impl/WireframeModel.hpp"
 #include <loader/builders/ModelBuilder.hpp>
 #include <memory>
 
@@ -40,5 +41,5 @@ std::shared_ptr<Object> ModelBuilder::get()
     if (!validateBuild())
         throw std::exception();
 
-    return std::make_shared<Model>(wireframe);
+    return std::make_shared<WireframeModel>(wireframe);
 }

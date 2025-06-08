@@ -3,14 +3,16 @@
 #include "matrix/matrix/Matrix.hpp"
 #include "visitors/ObjectVisitor.hpp"
 
-class TransformVisitor : public ObjectVisitor {
-	friend class Model;
-public:
-	TransformVisitor(const Matrix<double>& transform);
+class TransformVisitor : public ObjectVisitor
+{
+    friend class Model;
 
-	void visit(Model &model) override;
-	void visit(Camera &camera) override;
-private:
-	const Matrix<double>& transform;
+  public:
+    TransformVisitor(const Matrix<double> &transform);
+
+    void visit(WireframeModel &model) override;
+    void visit(PlainCamera &camera) override;
+
+  private:
+    const Matrix<double> &transform;
 };
-

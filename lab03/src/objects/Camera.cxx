@@ -1,9 +1,8 @@
 #include <objects/Camera.hpp>
-#include <visitors/ObjectVisitor.hpp>
 
+Camera::~Camera() = default;
 
-
-void Camera::accept(std::shared_ptr<ObjectVisitor> visitor)
+bool Camera::isCamera()
 {
-    visitor->visit(*this);
+    return true;
 }

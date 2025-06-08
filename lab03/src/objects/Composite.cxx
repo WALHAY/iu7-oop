@@ -18,8 +18,8 @@ auto Composite::end() -> iterator
 
 void Composite::add(std::shared_ptr<Object> object)
 {
-	if(object.get() != this)
-    	stored.push_back(object);
+    if (object.get() != this)
+        stored.push_back(object);
 }
 
 void Composite::remove(iterator &iter)
@@ -29,6 +29,6 @@ void Composite::remove(iterator &iter)
 
 void Composite::accept(std::shared_ptr<ObjectVisitor> visitor)
 {
-	for(auto &object : *this)
-		object->accept(visitor);
+    for (auto &object : *this)
+        object->accept(visitor);
 }
