@@ -2,6 +2,7 @@
 #include "interface/commands/LoadCommand.hpp"
 #include "interface/commands/SelectCommand.hpp"
 #include "interface/commands/TransformCommand.hpp"
+#include "interface/commands/UnSelectCommand.hpp"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QGraphicsView>
@@ -33,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     sceneViewModel->setHorizontalHeaderItem(0, new QStandardItem(QString("Object type")));
     sceneViewModel->setHorizontalHeaderItem(1, new QStandardItem(QString("Id")));
     ui->sceneObjectTable->setModel(sceneViewModel);
+    ui->sceneObjectTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->sceneObjectTable->verticalHeader()->setVisible(false);
 
     clearCameras();
@@ -40,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->cameraChoiceBox, &QComboBox::currentTextChanged, this, &MainWindow::changeCamera);
     connect(ui->rotateLeftButton, &QPushButton::clicked, this, &MainWindow::rotateLeft);
     connect(ui->loadSceneButton, &QPushButton::clicked, this, &MainWindow::loadSceneDialog);
+    connect(ui->sceneObjectTable->selectionModel(), &QItemSelectionModel::selectionChanged, this,
+            &MainWindow::refreshSelection);
 
     facade = std::make_shared<Facade>(graphicsScene);
 }
@@ -91,8 +95,36 @@ void MainWindow::loadSceneDialog()
         return;
 
     auto cmd = std::make_shared<LoadCommand>(
-        filename.toStdString(), [this](const ObjectType &type, const Object::id_type &id) { this->objectAdded(type, id); });
+        filename.toStdString(),
+        [this](const ObjectType &type, const Object::id_type &id) { this->objectAdded(type, id); });
     facade->execute(cmd);
+}
+
+void MainWindow::refreshSelection(const QItemSelection &added, const QItemSelection &removed)
+{
+    auto composite = std::make_shared<CompositeCommand>();
+
+    for (const QModelIndex &add : added.indexes())
+    {
+        if (add.column() != 1)
+            continue;
+
+        auto value = add.data().toUInt();
+
+        composite->add(std::make_shared<SelectCommand>(value));
+    }
+
+    for (const QModelIndex &removed : removed.indexes())
+    {
+        if (removed.column() != 1)
+            continue;
+
+        auto value = removed.data().toUInt();
+
+        composite->add(std::make_shared<UnSelectCommand>(value));
+    }
+
+    facade->execute(composite);
 }
 
 void MainWindow::rotateLeft()
@@ -104,7 +136,7 @@ void MainWindow::rotateLeft()
     Matrix<double> transform = {{1, 0, 0, 0}, {0, cosv, -sinv, 0}, {0, sinv, cosv, 0}, {0, 0, 0, 1}};
 
     auto composite = std::make_shared<CompositeCommand>();
-    composite->add(std::make_shared<SelectCommand>(2));
+
     composite->add(std::make_shared<TransformCommand>(transform));
     composite->add(std::make_shared<DrawCommand>());
 

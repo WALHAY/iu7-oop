@@ -2,18 +2,11 @@
 
 SelectionManager::SelectionManager()
 {
-	this->composite = std::make_shared<Composite>();
+    this->composite = std::make_shared<Composite>();
 }
 
-void SelectionManager::setSceneManager(std::shared_ptr<SceneManager> sceneManager)
+void SelectionManager::add(std::shared_ptr<Scene> scene, id_type id)
 {
-    this->sceneManager = sceneManager;
-}
-
-void SelectionManager::add(id_type id)
-{
-    auto scene = sceneManager->getScene();
-
     if (scene == nullptr)
         return;
 

@@ -2,8 +2,9 @@
 
 #include <QGraphicsScene>
 #include <QMainWindow>
-#include <interface/Facade.hpp>
 #include <QStandardItemModel>
+#include <interface/Facade.hpp>
+#include <QItemSelection>
 
 QT_BEGIN_NAMESPACE
 
@@ -22,22 +23,24 @@ class MainWindow : public QMainWindow
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-	void objectAdded(ObjectType, Object::id_type);
+    void objectAdded(ObjectType, Object::id_type);
 
-	void addCamera(Object::id_type id);
-	void changeCamera(const QString &text);
-	void clearCameras();
+    void addCamera(Object::id_type id);
+    void changeCamera(const QString &text);
+    void clearCameras();
 
-	void loadSceneDialog();
+    void loadSceneDialog();
 
-	void rotateLeft();
+    void refreshSelection(const QItemSelection &added, const QItemSelection &removed);
+
+    void rotateLeft();
 
   signals:
 
   private slots:
 
   private:
-	QStandardItemModel* sceneViewModel;
+    QStandardItemModel *sceneViewModel;
     std::shared_ptr<Facade> facade;
     std::shared_ptr<QGraphicsScene> graphicsScene;
     Ui::MainWindow *ui;

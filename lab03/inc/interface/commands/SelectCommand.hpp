@@ -4,14 +4,14 @@
 
 class SelectCommand : public BaseCommand
 {
-    using Action = void (SelectionManager::*)(Object::id_type);
+    using Action = void (SelectionManager::*)(std::shared_ptr<Scene>, Object::id_type);
 
   public:
     SelectCommand(Object::id_type id) : id(id) {};
 
     void execute() const override
     {
-        ((*selectionManager).*action)(id);
+        ((*selectionManager).*action)(sceneManager->getScene(), id);
     }
 
   private:
