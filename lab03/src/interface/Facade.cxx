@@ -14,6 +14,7 @@ Facade::Facade(std::shared_ptr<QGraphicsScene> graphicsScene)
     drawManager->setSceneManager(sceneManager);
     loadManager->setSceneManager(sceneManager);
     cameraManager->setSceneManager(sceneManager);
+	selectionManager->setSceneManager(sceneManager);
 
     transformManager->setSelectionManager(selectionManager);
 
@@ -22,6 +23,6 @@ Facade::Facade(std::shared_ptr<QGraphicsScene> graphicsScene)
 
 void Facade::execute(std::shared_ptr<BaseCommand> command)
 {
-    command->setManagers(sceneManager, drawManager, loadManager, selectionManager, cameraManager);
+    command->setManagers(sceneManager, drawManager, loadManager, selectionManager, cameraManager, transformManager);
     command->execute();
 }

@@ -32,7 +32,7 @@ void CompositeCommand::execute() const
 {
     for (auto &obj : *this)
 	{
-		obj->setManagers(sceneManager, drawManager, loadManager, selectionManager, cameraManager);
+		obj->setManagers(sceneManager, drawManager, loadManager, selectionManager, cameraManager, transformManager);
         obj->execute();
 	}
 }

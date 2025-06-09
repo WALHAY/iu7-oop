@@ -23,9 +23,14 @@ class MainWindow : public QMainWindow
     ~MainWindow();
 
 	void objectAdded(ObjectType, Object::id_type);
+
 	void addCamera(Object::id_type id);
 	void changeCamera(const QString &text);
 	void clearCameras();
+
+	void loadSceneDialog();
+
+	void rotateLeft();
 
   signals:
 

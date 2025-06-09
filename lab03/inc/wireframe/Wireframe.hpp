@@ -17,6 +17,8 @@ class Wireframe
     std::vector<Point> &getVertices();
     std::vector<Edge> &getEdges();
 
+	Point getCenter() const;
+
     void transform(const Matrix<double> &transform);
 
   private:

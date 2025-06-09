@@ -7,7 +7,7 @@ class SelectionManager
 {
   public:
     using id_type = Object::id_type;
-    SelectionManager() = default;
+    SelectionManager();
 
     void setSceneManager(std::shared_ptr<SceneManager> sceneManager);
 

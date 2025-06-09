@@ -1,6 +1,9 @@
 #include "interface/commands/DrawCommand.hpp"
 #include "interface/commands/LoadCommand.hpp"
+#include "interface/commands/SelectCommand.hpp"
+#include "interface/commands/TransformCommand.hpp"
 #include "ui_mainwindow.h"
+#include <QFileDialog>
 #include <QGraphicsView>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -9,6 +12,7 @@
 #include <QVBoxLayout>
 #include <interface/commands/ChangeCameraCommand.hpp>
 #include <interface/commands/CompositeCommand.hpp>
+#include <numbers>
 #include <ui/MainWindow.hpp>
 
 #include <graphics/GraphicsFactory.hpp>
@@ -34,13 +38,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     clearCameras();
 
     connect(ui->cameraChoiceBox, &QComboBox::currentTextChanged, this, &MainWindow::changeCamera);
-
+    connect(ui->rotateLeftButton, &QPushButton::clicked, this, &MainWindow::rotateLeft);
+    connect(ui->loadSceneButton, &QPushButton::clicked, this, &MainWindow::loadSceneDialog);
 
     facade = std::make_shared<Facade>(graphicsScene);
-
-    auto cmd = std::make_shared<LoadCommand>(
-        "./scene.txt", [this](const ObjectType &type, const Object::id_type &id) { this->objectAdded(type, id); });
-    facade->execute(cmd);
 }
 
 void MainWindow::objectAdded(ObjectType type, Object::id_type id)
@@ -60,13 +61,13 @@ void MainWindow::addCamera(Object::id_type id)
 
 void MainWindow::changeCamera(const QString &text)
 {
-    auto id = text.toInt();
+    if (text.contains("None"))
+    {
+        ui->graphicsView->scene()->clear();
+        return;
+    }
 
-	if(id == -1)
-	{
-		ui->graphicsView->scene()->clear();
-		return;
-	}
+    auto id = text.toInt();
 
     auto compositeCmd = std::make_shared<CompositeCommand>();
 
@@ -79,7 +80,35 @@ void MainWindow::changeCamera(const QString &text)
 void MainWindow::clearCameras()
 {
     ui->cameraChoiceBox->clear();
-    ui->cameraChoiceBox->addItem(QString::number(-1));
+    ui->cameraChoiceBox->addItem(QString("None"));
+}
+
+void MainWindow::loadSceneDialog()
+{
+    auto filename = QFileDialog::getOpenFileName(this, "Path to scene", "Scene *.txt");
+
+    if (filename.isEmpty())
+        return;
+
+    auto cmd = std::make_shared<LoadCommand>(
+        filename.toStdString(), [this](const ObjectType &type, const Object::id_type &id) { this->objectAdded(type, id); });
+    facade->execute(cmd);
+}
+
+void MainWindow::rotateLeft()
+{
+    double angle = 2;
+    auto cosv = std::cos(angle / 180 * std::numbers::pi);
+    auto sinv = std::sin(angle / 180 * std::numbers::pi);
+
+    Matrix<double> transform = {{1, 0, 0, 0}, {0, cosv, -sinv, 0}, {0, sinv, cosv, 0}, {0, 0, 0, 1}};
+
+    auto composite = std::make_shared<CompositeCommand>();
+    composite->add(std::make_shared<SelectCommand>(2));
+    composite->add(std::make_shared<TransformCommand>(transform));
+    composite->add(std::make_shared<DrawCommand>());
+
+    facade->execute(composite);
 }
 
 MainWindow::~MainWindow()

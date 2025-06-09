@@ -1,5 +1,22 @@
 #include <camera/CameraImpl.hpp>
 
+static void decomposeTransform(const Matrix<double> &M, Matrix<double> &T, Matrix<double> &R)
+{
+    T = {{
+        {1, 0, 0, M[0][3]},
+        {0, 1, 0, M[1][3]},
+        {0, 0, 1, M[2][3]},
+        {M[3][0], M[3][1], M[3][2], 1}
+    }};
+
+    R = {{
+        {M[0][0], M[0][1], M[0][2], 0},
+        {M[1][0], M[1][1], M[1][2], 0},
+        {M[2][0], M[2][1], M[2][2], 0},
+        {0, 0, 0, 1}
+    }};
+}
+
 CameraImpl::CameraImpl(const Point &location) : location(location)
 {
 }
@@ -46,9 +63,14 @@ void CameraImpl::setRight(const Point &right)
 
 void CameraImpl::transform(const Matrix<double> &matrix)
 {
-    location.transform(matrix);
+	Matrix<double> translation(4, 4);
+	Matrix<double> rotation(4, 4);
 
-    right.transform(matrix);
-    up.transform(matrix);
-    forward.transform(matrix);
+	decomposeTransform(matrix, translation, rotation);
+
+    location.transform(translation);
+
+    right.transform(rotation);
+    up.transform(rotation);
+    forward.transform(rotation);
 }
