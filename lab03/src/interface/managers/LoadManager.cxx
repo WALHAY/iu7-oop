@@ -27,7 +27,16 @@ void LoadManager::loadScene(std::filesystem::path &path)
     auto sceneBuilder = std::make_shared<SceneBuilder>(modelDirector, cameraDirector);
     auto director = std::make_shared<SceneDirector>(sceneBuilder);
 
-	sceneManager->setScene(director->create(reader));
+    auto scene = director->create(reader);
+    sceneManager->setScene(scene);
+
+    if (callback == nullptr)
+        return;
+
+    for (const auto &obj : *scene)
+    {
+        callback(obj->isCamera() ? ObjectType::CAMERA : ObjectType::MODEl, obj->id());
+    }
 }
 
 void LoadManager::remove(Object::id_type id)
@@ -48,4 +57,9 @@ void LoadManager::remove(Object::id_type id)
 void LoadManager::setSceneManager(std::shared_ptr<SceneManager> sceneManager)
 {
     this->sceneManager = sceneManager;
+}
+
+void LoadManager::setLoadingCallback(std::function<void(ObjectType, Object::id_type)> callback)
+{
+    this->callback = callback;
 }

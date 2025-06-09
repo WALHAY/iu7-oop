@@ -1,6 +1,5 @@
 #pragma once
 
-#include "wireframe/Point.hpp"
 #include <cstddef>
 
 class Edge

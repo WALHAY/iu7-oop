@@ -9,7 +9,7 @@
 class Facade
 {
   public:
-    Facade(std::shared_ptr<QGraphicsScene> graphicsScene);
+    Facade(std::shared_ptr<QGraphicsScene> graphicsScene, std::function<void(ObjectType, Object::id_type)> callback);
 
     void execute(std::shared_ptr<BaseCommand> command);
 

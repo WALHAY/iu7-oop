@@ -15,10 +15,16 @@ std::shared_ptr<Scene> SceneDirector::create(std::shared_ptr<BaseSceneStreamRead
     while ((cameraPath = reader->getCameraPath()) || (modelPath = reader->getModelPath()))
     {
         if (cameraPath)
+        {
             builder->buildCamera(*cameraPath);
+            continue;
+        }
 
         if (modelPath)
+		{
             builder->buildModel(*modelPath);
+			continue;
+		}
     }
 
     return builder->get();
