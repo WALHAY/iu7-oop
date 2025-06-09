@@ -1,4 +1,5 @@
 #include "interface/commands/DrawCommand.hpp"
+#include "interface/commands/LoadCommand.hpp"
 #include "ui_mainwindow.h"
 #include <QGraphicsView>
 #include <QHBoxLayout>
@@ -30,12 +31,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->sceneObjectTable->setModel(sceneViewModel);
     ui->sceneObjectTable->verticalHeader()->setVisible(false);
 
+    clearCameras();
+
     connect(ui->cameraChoiceBox, &QComboBox::currentTextChanged, this, &MainWindow::changeCamera);
 
-    facade = std::make_shared<Facade>(
-        graphicsScene, std::bind(&MainWindow::objectAdded, this, std::placeholders::_1, std::placeholders::_2));
 
-    std::shared_ptr<DrawCommand> cmd = std::make_shared<DrawCommand>();
+    facade = std::make_shared<Facade>(graphicsScene);
+
+    auto cmd = std::make_shared<LoadCommand>(
+        "./scene.txt", [this](const ObjectType &type, const Object::id_type &id) { this->objectAdded(type, id); });
     facade->execute(cmd);
 }
 
@@ -56,7 +60,13 @@ void MainWindow::addCamera(Object::id_type id)
 
 void MainWindow::changeCamera(const QString &text)
 {
-    Object::id_type id = text.toUInt();
+    auto id = text.toInt();
+
+	if(id == -1)
+	{
+		ui->graphicsView->scene()->clear();
+		return;
+	}
 
     auto compositeCmd = std::make_shared<CompositeCommand>();
 
@@ -64,6 +74,12 @@ void MainWindow::changeCamera(const QString &text)
     compositeCmd->add(std::make_shared<DrawCommand>());
 
     facade->execute(compositeCmd);
+}
+
+void MainWindow::clearCameras()
+{
+    ui->cameraChoiceBox->clear();
+    ui->cameraChoiceBox->addItem(QString::number(-1));
 }
 
 MainWindow::~MainWindow()

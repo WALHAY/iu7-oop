@@ -14,7 +14,7 @@
 #include <fstream>
 #include <interface/managers/LoadManager.hpp>
 
-void LoadManager::loadScene(std::filesystem::path &path)
+void LoadManager::loadScene(std::filesystem::path path, std::function<void(ObjectType, Object::id_type)> callback)
 {
     std::shared_ptr<std::ifstream> str = std::make_shared<std::ifstream>(path);
     std::shared_ptr<BaseSceneStreamReader> reader = std::make_shared<TxtSceneReader>(str);
@@ -59,7 +59,3 @@ void LoadManager::setSceneManager(std::shared_ptr<SceneManager> sceneManager)
     this->sceneManager = sceneManager;
 }
 
-void LoadManager::setLoadingCallback(std::function<void(ObjectType, Object::id_type)> callback)
-{
-    this->callback = callback;
-}

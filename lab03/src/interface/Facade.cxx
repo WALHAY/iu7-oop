@@ -2,7 +2,7 @@
 #include <QGraphicsScene>
 #include <interface/Facade.hpp>
 
-Facade::Facade(std::shared_ptr<QGraphicsScene> graphicsScene, std::function<void(ObjectType, Object::id_type)> callback)
+Facade::Facade(std::shared_ptr<QGraphicsScene> graphicsScene)
 {
     sceneManager = std::make_shared<SceneManager>();
     drawManager = std::make_shared<DrawManager>(graphicsScene);
@@ -18,13 +18,6 @@ Facade::Facade(std::shared_ptr<QGraphicsScene> graphicsScene, std::function<void
     transformManager->setSelectionManager(selectionManager);
 
     drawManager->setCameraManager(cameraManager);
-
-	loadManager->setLoadingCallback(callback);
-
-    std::filesystem::path p = "scene.txt";
-    loadManager->loadScene(p);
-
-	cameraManager->setActiveCamera(2);
 }
 
 void Facade::execute(std::shared_ptr<BaseCommand> command)
