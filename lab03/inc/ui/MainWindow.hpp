@@ -35,7 +35,16 @@ class MainWindow : public QMainWindow
 
     void refreshSelection(const QItemSelection &added, const QItemSelection &removed);
 
-    void rotateLeft();
+    void rotateAroundX(double angle);
+    void rotateAroundY(double angle);
+    void rotateAroundZ(double angle);
+
+	void rotateXNeg();
+	void rotateXPos();
+	void rotateYNeg();
+	void rotateYPos();
+	void rotateZNeg();
+	void rotateZPos();
 
   signals:
 

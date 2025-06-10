@@ -40,10 +40,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     clearCameras();
     clearSceneTable();
 
+    connect(ui->rotateXNegButton, &QPushButton::clicked, this, &MainWindow::rotateXNeg);
+    connect(ui->rotateXPosButton, &QPushButton::clicked, this, &MainWindow::rotateXPos);
+    connect(ui->rotateYNegButton, &QPushButton::clicked, this, &MainWindow::rotateYNeg);
+    connect(ui->rotateYPosButton, &QPushButton::clicked, this, &MainWindow::rotateYPos);
+    connect(ui->rotateZNegButton, &QPushButton::clicked, this, &MainWindow::rotateZNeg);
+    connect(ui->rotateZPosButton, &QPushButton::clicked, this, &MainWindow::rotateZPos);
+
     connect(ui->cameraChoiceBox, &QComboBox::currentTextChanged, this, &MainWindow::changeCamera);
-    connect(ui->rotateLeftButton, &QPushButton::clicked, this, &MainWindow::rotateLeft);
     connect(ui->loadSceneButton, &QPushButton::clicked, this, &MainWindow::loadSceneDialog);
-    connect(ui->sceneObjectTable->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::refreshSelection);
+    connect(ui->sceneObjectTable->selectionModel(), &QItemSelectionModel::selectionChanged, this,
+            &MainWindow::refreshSelection);
 
     facade = std::make_shared<Facade>(graphicsScene);
 }
@@ -134,19 +141,78 @@ void MainWindow::refreshSelection(const QItemSelection &added, const QItemSelect
 {
     auto composite = std::make_shared<CompositeCommand>();
 
-	refreshSelectionCmd<SelectCommand>(added, composite);
-	refreshSelectionCmd<UnSelectCommand>(removed, composite);
+    refreshSelectionCmd<SelectCommand>(added, composite);
+    refreshSelectionCmd<UnSelectCommand>(removed, composite);
 
     facade->execute(composite);
 }
 
-void MainWindow::rotateLeft()
+void MainWindow::rotateXNeg()
 {
-    double angle = 2;
+    rotateAroundX(-15);
+}
+
+void MainWindow::rotateXPos()
+{
+    rotateAroundX(15);
+}
+
+void MainWindow::rotateYNeg()
+{
+	rotateAroundY(-15);
+}
+
+void MainWindow::rotateYPos()
+{
+	rotateAroundY(15);
+}
+
+void MainWindow::rotateZNeg()
+{
+	rotateAroundZ(-15);
+}
+
+void MainWindow::rotateZPos()
+{
+	rotateAroundZ(15);
+}
+
+void MainWindow::rotateAroundX(double angle)
+{
     auto cosv = std::cos(angle / 180 * std::numbers::pi);
     auto sinv = std::sin(angle / 180 * std::numbers::pi);
 
     Matrix<double> transform = {{1, 0, 0, 0}, {0, cosv, -sinv, 0}, {0, sinv, cosv, 0}, {0, 0, 0, 1}};
+
+    auto composite = std::make_shared<CompositeCommand>();
+
+    composite->add(std::make_shared<TransformCommand>(transform));
+    composite->add(std::make_shared<DrawCommand>());
+
+    facade->execute(composite);
+}
+
+void MainWindow::rotateAroundY(double angle)
+{
+    auto cosv = std::cos(angle / 180 * std::numbers::pi);
+    auto sinv = std::sin(angle / 180 * std::numbers::pi);
+
+    Matrix<double> transform = {{cosv, 0, sinv, 0}, {0, 1, 0, 0}, {-sinv, 0, cosv, 0}, {0, 0, 0, 1}};
+
+    auto composite = std::make_shared<CompositeCommand>();
+
+    composite->add(std::make_shared<TransformCommand>(transform));
+    composite->add(std::make_shared<DrawCommand>());
+
+    facade->execute(composite);
+}
+
+void MainWindow::rotateAroundZ(double angle)
+{
+    auto cosv = std::cos(angle / 180 * std::numbers::pi);
+    auto sinv = std::sin(angle / 180 * std::numbers::pi);
+
+    Matrix<double> transform = {{cosv, -sinv, 0, 0}, {sinv, cosv, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}};
 
     auto composite = std::make_shared<CompositeCommand>();
 

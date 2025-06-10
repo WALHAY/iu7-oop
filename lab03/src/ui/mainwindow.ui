@@ -1,196 +1,270 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+<class>MainWindow</class>
+<widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>800</width>
-    <height>600</height>
-   </rect>
+    <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1000</width>
+      <height>700</height>
+    </rect>
   </property>
   <property name="windowTitle">
-   <string>3D Scene Viewer</string>
+    <string>3D Scene Editor</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QGraphicsView" name="graphicsView">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>3</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QFrame" name="menuFrame">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-        <horstretch>1</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>250</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QPushButton" name="loadSceneButton">
-         <property name="text">
-          <string>Load Scene</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="sceneObjectsLabel">
-         <property name="text">
-          <string>Scene Objects:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTableView" name="sceneObjectTable">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>1</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <property name="showGrid">
-          <bool>true</bool>
-         </property>
-         <property name="cornerButtonEnabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="cameraLabel">
-         <property name="text">
-          <string>Camera:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="cameraChoiceBox">
-         <item>
-          <property name="text">
-           <string>Perspective</string>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+      <!-- Main Graphics View -->
+      <item>
+        <widget class="QGraphicsView" name="graphicsView">
+          <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>7</horstretch>
+              <verstretch>0</verstretch>
+            </sizepolicy>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Orthographic</string>
+        </widget>
+      </item>
+      
+      <!-- Right Side Panel -->
+      <item>
+        <widget class="QFrame" name="menuFrame">
+          <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+              <horstretch>3</horstretch>
+              <verstretch>0</verstretch>
+            </sizepolicy>
           </property>
-         </item>
+          <property name="minimumSize">
+            <size>
+              <width>300</width>
+              <height>0</height>
+            </size>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+            <!-- Load Scene Button -->
+            <item>
+              <widget class="QPushButton" name="loadSceneButton">
+                <property name="text">
+                  <string>Load Scene</string>
+                </property>
+              </widget>
+            </item>
+            
+            <!-- Scene Objects Table -->
+            <item>
+              <widget class="QLabel" name="sceneObjectsLabel">
+                <property name="text">
+                  <string>Scene Objects:</string>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QTableView" name="sceneObjectTable">
+                <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>1</verstretch>
+                  </sizepolicy>
+                </property>
+                <property name="selectionMode">
+                  <enum>QAbstractItemView::SingleSelection</enum>
+                </property>
+                <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
+                </property>
+              </widget>
+            </item>
+            
+            <!-- Camera Selection -->
+            <item>
+              <widget class="QLabel" name="cameraLabel">
+                <property name="text">
+                  <string>Camera:</string>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QComboBox" name="cameraChoiceBox">
+                <item>
+                  <property name="text">
+                    <string>Perspective</string>
+                  </property>
+                </item>
+                <item>
+                  <property name="text">
+                    <string>Orthographic</string>
+                  </property>
+                </item>
+              </widget>
+            </item>
+            
+            <!-- Rotation Controls -->
+            <item>
+              <widget class="QLabel" name="rotationLabel">
+                <property name="text">
+                  <string>Rotation:</string>
+                </property>
+                <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <layout class="QGridLayout" name="rotationGridLayout">
+                <!-- Row 0 -->
+                <item row="0" column="0">
+                  <widget class="QPushButton" name="rotateZPosButton">
+                    <property name="text">
+                      <string>Z+</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Rotate clockwise around Z axis</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="1">
+                  <widget class="QPushButton" name="rotateXPosButton">
+                    <property name="text">
+                      <string>X+</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Rotate right around X axis</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="2">
+                  <spacer name="spacerTopRight">
+                    <property name="sizeHint" stdset="0">
+                      <size>
+                        <width>40</width>
+                        <height>20</height>
+                      </size>
+                    </property>
+                  </spacer>
+                </item>
+                
+                <!-- Row 1 -->
+                <item row="1" column="0">
+                  <widget class="QPushButton" name="rotateYNegButton">
+                    <property name="text">
+                      <string>Y-</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Rotate down around Y axis</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="1" column="1">
+                  <spacer name="spacerCenter">
+                    <property name="sizeHint" stdset="0">
+                      <size>
+                        <width>40</width>
+                        <height>20</height>
+                      </size>
+                    </property>
+                  </spacer>
+                </item>
+                <item row="1" column="2">
+                  <widget class="QPushButton" name="rotateYPosButton">
+                    <property name="text">
+                      <string>Y+</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Rotate up around Y axis</string>
+                    </property>
+                  </widget>
+                </item>
+                
+                <!-- Row 2 -->
+                <item row="2" column="0">
+                  <spacer name="spacerBottomLeft">
+                    <property name="sizeHint" stdset="0">
+                      <size>
+                        <width>40</width>
+                        <height>20</height>
+                      </size>
+                    </property>
+                  </spacer>
+                </item>
+                <item row="2" column="1">
+                  <widget class="QPushButton" name="rotateXNegButton">
+                    <property name="text">
+                      <string>X-</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Rotate left around X axis</string>
+                    </property>
+                  </widget>
+                </item>
+                <item row="2" column="2">
+                  <widget class="QPushButton" name="rotateZNegButton">
+                    <property name="text">
+                      <string>Z-</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Rotate counter-clockwise around Z axis</string>
+                    </property>
+                  </widget>
+                </item>
+              </layout>
+            </item>
+            
+            <!-- Movement Controls -->
+            <item>
+              <widget class="QLabel" name="movementLabel">
+                <property name="text">
+                  <string>Movement:</string>
+                </property>
+                <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <layout class="QGridLayout" name="movementGridLayout">
+                <!-- Movement buttons would go here in similar pattern -->
+              </layout>
+            </item>
+            
+            <item>
+              <spacer name="verticalSpacer">
+                <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                  <size>
+                    <width>20</width>
+                    <height>40</height>
+                  </size>
+                </property>
+              </spacer>
+            </item>
+          </layout>
         </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="rotationLabel">
-         <property name="text">
-          <string>Rotation:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QPushButton" name="rotateLeftButton">
-           <property name="text">
-            <string>Left</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="rotateRightButton">
-           <property name="text">
-            <string>Right</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QPushButton" name="rotateUpButton">
-           <property name="text">
-            <string>Up</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="rotateDownButton">
-           <property name="text">
-            <string>Down</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-    </item>
-   </layout>
+      </item>
+    </layout>
   </widget>
+  <!-- Standard menu bar and status bar -->
   <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1000</width>
+        <height>22</height>
+      </rect>
     </property>
-   </widget>
-   <addaction name="menuFile"/>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
+    <widget class="QMenu" name="menuFile">
+      <property name="title">
+        <string>File</string>
+      </property>
+    </widget>
+    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
- </widget>
- <layoutdefault spacing="6" margin="11"/>
- <resources/>
- <connections/>
+</widget>
+<resources/>
+<connections/>
 </ui>
