@@ -39,12 +39,21 @@ class MainWindow : public QMainWindow
     void rotateAroundY(double angle);
     void rotateAroundZ(double angle);
 
-	void rotateXNeg();
-	void rotateXPos();
-	void rotateYNeg();
-	void rotateYPos();
-	void rotateZNeg();
-	void rotateZPos();
+    void rotateXNeg();
+    void rotateXPos();
+    void rotateYNeg();
+    void rotateYPos();
+    void rotateZNeg();
+    void rotateZPos();
+
+    void move(double x, double y, double z);
+
+    void moveXNeg();
+    void moveXPos();
+    void moveYNeg();
+    void moveYPos();
+    void moveZNeg();
+    void moveZPos();
 
   signals:
 

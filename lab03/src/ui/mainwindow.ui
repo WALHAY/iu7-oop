@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
     <layout class="QHBoxLayout" name="horizontalLayout">
-      <!-- Main Graphics View -->
+      <!-- Main Graphics View (Left 70%) -->
       <item>
         <widget class="QGraphicsView" name="graphicsView">
           <property name="sizePolicy">
@@ -27,7 +27,7 @@
         </widget>
       </item>
       
-      <!-- Right Side Panel -->
+      <!-- Right Side Panel (30%) -->
       <item>
         <widget class="QFrame" name="menuFrame">
           <property name="sizePolicy">
@@ -48,6 +48,12 @@
               <widget class="QPushButton" name="loadSceneButton">
                 <property name="text">
                   <string>Load Scene</string>
+                </property>
+                <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
                 </property>
               </widget>
             </item>
@@ -112,7 +118,7 @@
               </widget>
             </item>
             <item>
-              <layout class="QGridLayout" name="rotationGridLayout">
+              <layout class="QGridLayout" name="rotationGridLayout" columnstretch="0,0,0" rowstretch="0,0,0">
                 <!-- Row 0 -->
                 <item row="0" column="0">
                   <widget class="QPushButton" name="rotateZPosButton">
@@ -121,6 +127,12 @@
                     </property>
                     <property name="toolTip">
                       <string>Rotate clockwise around Z axis</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
                     </property>
                   </widget>
                 </item>
@@ -132,13 +144,19 @@
                     <property name="toolTip">
                       <string>Rotate right around X axis</string>
                     </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
+                    </property>
                   </widget>
                 </item>
                 <item row="0" column="2">
-                  <spacer name="spacerTopRight">
+                  <spacer name="spacer1">
                     <property name="sizeHint" stdset="0">
                       <size>
-                        <width>40</width>
+                        <width>60</width>
                         <height>20</height>
                       </size>
                     </property>
@@ -154,13 +172,19 @@
                     <property name="toolTip">
                       <string>Rotate down around Y axis</string>
                     </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
+                    </property>
                   </widget>
                 </item>
                 <item row="1" column="1">
-                  <spacer name="spacerCenter">
+                  <spacer name="spacer2">
                     <property name="sizeHint" stdset="0">
                       <size>
-                        <width>40</width>
+                        <width>60</width>
                         <height>20</height>
                       </size>
                     </property>
@@ -174,15 +198,21 @@
                     <property name="toolTip">
                       <string>Rotate up around Y axis</string>
                     </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
+                    </property>
                   </widget>
                 </item>
                 
                 <!-- Row 2 -->
                 <item row="2" column="0">
-                  <spacer name="spacerBottomLeft">
+                  <spacer name="spacer3">
                     <property name="sizeHint" stdset="0">
                       <size>
-                        <width>40</width>
+                        <width>60</width>
                         <height>20</height>
                       </size>
                     </property>
@@ -196,6 +226,12 @@
                     <property name="toolTip">
                       <string>Rotate left around X axis</string>
                     </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
+                    </property>
                   </widget>
                 </item>
                 <item row="2" column="2">
@@ -205,6 +241,12 @@
                     </property>
                     <property name="toolTip">
                       <string>Rotate counter-clockwise around Z axis</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
                     </property>
                   </widget>
                 </item>
@@ -223,8 +265,138 @@
               </widget>
             </item>
             <item>
-              <layout class="QGridLayout" name="movementGridLayout">
-                <!-- Movement buttons would go here in similar pattern -->
+              <layout class="QGridLayout" name="movementGridLayout" columnstretch="0,0,0" rowstretch="0,0,0">
+                <!-- Row 0 -->
+                <item row="0" column="0">
+                  <widget class="QPushButton" name="moveZPosButton">
+                    <property name="text">
+                      <string>Z+</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Move forward along Z axis</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="1">
+                  <widget class="QPushButton" name="moveXPosButton">
+                    <property name="text">
+                      <string>X+</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Move right along X axis</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
+                <item row="0" column="2">
+                  <spacer name="spacer4">
+                    <property name="sizeHint" stdset="0">
+                      <size>
+                        <width>60</width>
+                        <height>20</height>
+                      </size>
+                    </property>
+                  </spacer>
+                </item>
+                
+                <!-- Row 1 -->
+                <item row="1" column="0">
+                  <widget class="QPushButton" name="moveYNegButton">
+                    <property name="text">
+                      <string>Y-</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Move down along Y axis</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
+                <item row="1" column="1">
+                  <spacer name="spacer5">
+                    <property name="sizeHint" stdset="0">
+                      <size>
+                        <width>60</width>
+                        <height>20</height>
+                      </size>
+                    </property>
+                  </spacer>
+                </item>
+                <item row="1" column="2">
+                  <widget class="QPushButton" name="moveYPosButton">
+                    <property name="text">
+                      <string>Y+</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Move up along Y axis</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
+                
+                <!-- Row 2 -->
+                <item row="2" column="0">
+                  <spacer name="spacer6">
+                    <property name="sizeHint" stdset="0">
+                      <size>
+                        <width>60</width>
+                        <height>20</height>
+                      </size>
+                    </property>
+                  </spacer>
+                </item>
+                <item row="2" column="1">
+                  <widget class="QPushButton" name="moveXNegButton">
+                    <property name="text">
+                      <string>X-</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Move left along X axis</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
+                <item row="2" column="2">
+                  <widget class="QPushButton" name="moveZNegButton">
+                    <property name="text">
+                      <string>Z-</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Move backward along Z axis</string>
+                    </property>
+                    <property name="minimumSize">
+                      <size>
+                        <width>60</width>
+                        <height>30</height>
+                      </size>
+                    </property>
+                  </widget>
+                </item>
               </layout>
             </item>
             
@@ -246,6 +418,7 @@
       </item>
     </layout>
   </widget>
+  
   <!-- Standard menu bar and status bar -->
   <widget class="QMenuBar" name="menuBar">
     <property name="geometry">

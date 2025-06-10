@@ -47,6 +47,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->rotateZNegButton, &QPushButton::clicked, this, &MainWindow::rotateZNeg);
     connect(ui->rotateZPosButton, &QPushButton::clicked, this, &MainWindow::rotateZPos);
 
+    connect(ui->moveXNegButton, &QPushButton::clicked, this, &MainWindow::moveXNeg);
+    connect(ui->moveXPosButton, &QPushButton::clicked, this, &MainWindow::moveXPos);
+    connect(ui->moveYNegButton, &QPushButton::clicked, this, &MainWindow::moveYNeg);
+    connect(ui->moveYPosButton, &QPushButton::clicked, this, &MainWindow::moveYPos);
+    connect(ui->moveZNegButton, &QPushButton::clicked, this, &MainWindow::moveZNeg);
+    connect(ui->moveZPosButton, &QPushButton::clicked, this, &MainWindow::moveZPos);
+
     connect(ui->cameraChoiceBox, &QComboBox::currentTextChanged, this, &MainWindow::changeCamera);
     connect(ui->loadSceneButton, &QPushButton::clicked, this, &MainWindow::loadSceneDialog);
     connect(ui->sceneObjectTable->selectionModel(), &QItemSelectionModel::selectionChanged, this,
@@ -159,22 +166,22 @@ void MainWindow::rotateXPos()
 
 void MainWindow::rotateYNeg()
 {
-	rotateAroundY(-15);
+    rotateAroundY(-15);
 }
 
 void MainWindow::rotateYPos()
 {
-	rotateAroundY(15);
+    rotateAroundY(15);
 }
 
 void MainWindow::rotateZNeg()
 {
-	rotateAroundZ(-15);
+    rotateAroundZ(-15);
 }
 
 void MainWindow::rotateZPos()
 {
-	rotateAroundZ(15);
+    rotateAroundZ(15);
 }
 
 void MainWindow::rotateAroundX(double angle)
@@ -217,6 +224,51 @@ void MainWindow::rotateAroundZ(double angle)
     auto composite = std::make_shared<CompositeCommand>();
 
     composite->add(std::make_shared<TransformCommand>(transform));
+    composite->add(std::make_shared<DrawCommand>());
+
+    facade->execute(composite);
+}
+
+void MainWindow::moveXNeg()
+{
+    move(-15, 0, 0);
+}
+
+void MainWindow::moveXPos()
+{
+    move(15, 0, 0);
+}
+
+void MainWindow::moveYNeg()
+{
+    move(0, -15, 0);
+}
+
+void MainWindow::moveYPos()
+{
+    move(0, 15, 0);
+}
+
+void MainWindow::moveZNeg()
+{
+    move(0, 0, -15);
+}
+
+void MainWindow::moveZPos()
+{
+    move(0, 0, 15);
+}
+
+void MainWindow::move(double x, double y, double z)
+{
+    Matrix<double> move = Matrix<double>::identity(4);
+    move[3][0] = x;
+    move[3][1] = y;
+    move[3][2] = z;
+
+    auto composite = std::make_shared<CompositeCommand>();
+
+    composite->add(std::make_shared<TransformCommand>(move));
     composite->add(std::make_shared<DrawCommand>());
 
     facade->execute(composite);
