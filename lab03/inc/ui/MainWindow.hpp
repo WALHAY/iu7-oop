@@ -1,10 +1,11 @@
 #pragma once
 
 #include <QGraphicsScene>
+#include <QItemSelection>
 #include <QMainWindow>
 #include <QStandardItemModel>
 #include <interface/Facade.hpp>
-#include <QItemSelection>
+#include <interface/commands/CompositeCommand.hpp>
 
 QT_BEGIN_NAMESPACE
 
@@ -30,6 +31,7 @@ class MainWindow : public QMainWindow
     void clearCameras();
 
     void loadSceneDialog();
+    void clearSceneTable();
 
     void refreshSelection(const QItemSelection &added, const QItemSelection &removed);
 
@@ -44,4 +46,8 @@ class MainWindow : public QMainWindow
     std::shared_ptr<Facade> facade;
     std::shared_ptr<QGraphicsScene> graphicsScene;
     Ui::MainWindow *ui;
+
+    template <typename Cmd>
+        requires std::derived_from<Cmd, BaseCommand>
+    void refreshSelectionCmd(const QItemSelection &selection, std::shared_ptr<CompositeCommand> command);
 };

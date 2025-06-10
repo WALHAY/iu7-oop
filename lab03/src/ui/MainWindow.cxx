@@ -38,12 +38,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->sceneObjectTable->verticalHeader()->setVisible(false);
 
     clearCameras();
+    clearSceneTable();
 
     connect(ui->cameraChoiceBox, &QComboBox::currentTextChanged, this, &MainWindow::changeCamera);
     connect(ui->rotateLeftButton, &QPushButton::clicked, this, &MainWindow::rotateLeft);
     connect(ui->loadSceneButton, &QPushButton::clicked, this, &MainWindow::loadSceneDialog);
-    connect(ui->sceneObjectTable->selectionModel(), &QItemSelectionModel::selectionChanged, this,
-            &MainWindow::refreshSelection);
+    connect(ui->sceneObjectTable->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::refreshSelection);
 
     facade = std::make_shared<Facade>(graphicsScene);
 }
@@ -71,7 +71,11 @@ void MainWindow::changeCamera(const QString &text)
         return;
     }
 
-    auto id = text.toInt();
+    bool parsed = true;
+    auto id = text.toInt(&parsed);
+
+    if (!parsed)
+        return;
 
     auto compositeCmd = std::make_shared<CompositeCommand>();
 
@@ -83,6 +87,7 @@ void MainWindow::changeCamera(const QString &text)
 
 void MainWindow::clearCameras()
 {
+
     ui->cameraChoiceBox->clear();
     ui->cameraChoiceBox->addItem(QString("None"));
 }
@@ -94,35 +99,43 @@ void MainWindow::loadSceneDialog()
     if (filename.isEmpty())
         return;
 
+    clearCameras();
+    clearSceneTable();
+
     auto cmd = std::make_shared<LoadCommand>(
         filename.toStdString(),
         [this](const ObjectType &type, const Object::id_type &id) { this->objectAdded(type, id); });
     facade->execute(cmd);
 }
 
-void MainWindow::refreshSelection(const QItemSelection &added, const QItemSelection &removed)
+void MainWindow::clearSceneTable()
 {
-    auto composite = std::make_shared<CompositeCommand>();
+    auto model = ui->sceneObjectTable->model();
+    if (model)
+        model->removeRows(0, model->rowCount());
+}
 
-    for (const QModelIndex &add : added.indexes())
+template <typename Cmd>
+    requires std::derived_from<Cmd, BaseCommand>
+void MainWindow::refreshSelectionCmd(const QItemSelection &selection, std::shared_ptr<CompositeCommand> command)
+{
+    for (const QModelIndex &add : selection.indexes())
     {
         if (add.column() != 1)
             continue;
 
         auto value = add.data().toUInt();
 
-        composite->add(std::make_shared<SelectCommand>(value));
+        command->add(std::make_shared<Cmd>(value));
     }
+}
 
-    for (const QModelIndex &removed : removed.indexes())
-    {
-        if (removed.column() != 1)
-            continue;
+void MainWindow::refreshSelection(const QItemSelection &added, const QItemSelection &removed)
+{
+    auto composite = std::make_shared<CompositeCommand>();
 
-        auto value = removed.data().toUInt();
-
-        composite->add(std::make_shared<UnSelectCommand>(value));
-    }
+	refreshSelectionCmd<SelectCommand>(added, composite);
+	refreshSelectionCmd<UnSelectCommand>(removed, composite);
 
     facade->execute(composite);
 }

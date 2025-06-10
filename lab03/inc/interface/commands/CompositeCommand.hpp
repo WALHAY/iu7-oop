@@ -1,3 +1,5 @@
+#pragma once
+
 #include <interface/commands/BaseCommand.hpp>
 
 class CompositeCommand : public BaseCommand
