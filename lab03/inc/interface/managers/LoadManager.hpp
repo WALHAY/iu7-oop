@@ -2,6 +2,7 @@
 
 #include "interface/managers/SceneManager.hpp"
 #include "ui/ObjectType.hpp"
+#include <functional>
 #include <filesystem>
 #include <objects/Object.hpp>
 

@@ -1,4 +1,5 @@
 #include <visitors/ProjectionVisitor.hpp>
+#include <cmath>
 
 ProjectionVisitor::ProjectionVisitor(Point &point) : point(point)
 {
@@ -33,8 +34,8 @@ void ProjectionVisitor::visit(PlainCamera &camera)
     double px = x_cam / z_cam;
     double py = y_cam / z_cam;
 
-    auto width = 746;
-    auto height = 776;
+    auto width = 1280;
+    auto height = 720;
 
     double screen_x = (px + 1) * width / 2;
     double screen_y = (1 - py) * height / 2;

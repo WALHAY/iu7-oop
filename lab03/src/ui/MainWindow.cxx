@@ -18,6 +18,7 @@
 
 #include <graphics/GraphicsFactory.hpp>
 #include <graphics/QtGraphicsFactory.hpp>
+#include <QAbstractItemView>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -36,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->sceneObjectTable->setModel(sceneViewModel);
     ui->sceneObjectTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->sceneObjectTable->verticalHeader()->setVisible(false);
+	ui->sceneObjectTable->setSelectionMode(QAbstractItemView::SelectionMode::MultiSelection);
 
     clearCameras();
     clearSceneTable();
