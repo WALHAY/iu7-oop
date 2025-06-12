@@ -14,7 +14,7 @@ class ModelBuilder : public BaseModelBuilder
     std::shared_ptr<Object> get() override;
 
   private:
-    std::shared_ptr<Wireframe> wireframe = nullptr;
+    std::shared_ptr<BaseWireframe> wireframe;
 
     bool validateBuild();
 };

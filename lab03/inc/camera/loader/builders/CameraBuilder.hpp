@@ -1,6 +1,6 @@
 #pragma once
 
-#include "camera/CameraImpl.hpp"
+#include "camera/BaseCameraImpl.hpp"
 #include <camera/loader/BaseCameraBuilder.hpp>
 
 class CameraBuilder : public BaseCameraBuilder {
@@ -12,6 +12,6 @@ public:
 
 	std::shared_ptr<Camera> get() override;
 private:
-	std::shared_ptr<CameraImpl> cameraImpl;
+	std::shared_ptr<BaseCameraImpl> cameraImpl;
 };
 

@@ -1,7 +1,7 @@
 #include <objects/impl/PlainCamera.hpp>
 #include <visitors/ObjectVisitor.hpp>
 
-PlainCamera::PlainCamera(std::shared_ptr<CameraImpl> impl) : cameraImpl(impl)
+PlainCamera::PlainCamera(std::shared_ptr<BaseCameraImpl> impl) : cameraImpl(impl)
 {
 }
 

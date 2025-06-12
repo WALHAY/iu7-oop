@@ -1,6 +1,7 @@
 #include <QDebug>
 #include "objects/impl/PlainCamera.hpp"
 #include <camera/loader/builders/CameraBuilder.hpp>
+#include <camera/CameraImpl.hpp>
 
 void CameraBuilder::build() {
 	this->cameraImpl = std::make_shared<CameraImpl>(Point(0, 0, 0));

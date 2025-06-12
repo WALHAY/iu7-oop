@@ -1,25 +1,25 @@
 #pragma once
 
+#include "wireframe/BaseWireframe.hpp"
 #include "wireframe/Edge.hpp"
 #include "wireframe/Point.hpp"
 #include <vector>
 
-class Wireframe
+class Wireframe : public BaseWireframe
 {
   public:
-    Wireframe() = default;
-    Wireframe(const Wireframe &wireframe) = default;
+	Wireframe() = default;
     Wireframe(std::vector<Point> &points, std::vector<Edge> &edges);
 
-    void setVertices(std::vector<Point> &points);
-    void setEdges(std::vector<Edge> &edges);
+    void setVertices(std::vector<Point> &points) override;
+    void setEdges(std::vector<Edge> &edges) override;
 
-    std::vector<Point> &getVertices();
-    std::vector<Edge> &getEdges();
+    std::vector<Point> &getVertices() override;
+    std::vector<Edge> &getEdges() override;
 
-	Point getCenter() const;
+	Point getCenter() const override;
 
-    void transform(const Matrix<double> &transform);
+    void transform(const Matrix<double> &transform) override;
 
   private:
     std::vector<Point> vertices;

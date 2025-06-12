@@ -1,4 +1,5 @@
 #include "objects/impl/WireframeModel.hpp"
+#include <wireframe/Wireframe.hpp>
 #include <memory>
 #include <wireframe/loader/builders/ModelBuilder.hpp>
 

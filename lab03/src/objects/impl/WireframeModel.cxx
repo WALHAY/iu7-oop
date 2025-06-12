@@ -1,7 +1,7 @@
 #include <objects/impl/WireframeModel.hpp>
 #include <visitors/ObjectVisitor.hpp>
 
-WireframeModel::WireframeModel(std::shared_ptr<Wireframe> wireframe) : wireframe(wireframe)
+WireframeModel::WireframeModel(std::shared_ptr<BaseWireframe> wireframe) : wireframe(wireframe)
 {
 }
 
