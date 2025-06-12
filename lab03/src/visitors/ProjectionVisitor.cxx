@@ -1,3 +1,4 @@
+#include "ui/RenderConfig.hpp"
 #include <visitors/ProjectionVisitor.hpp>
 #include <cmath>
 
@@ -22,23 +23,20 @@ void ProjectionVisitor::visit(PlainCamera &camera)
     Point relative = Point(copy.getX() - impl->getLocation().getX(), copy.getY() - impl->getLocation().getY(),
                            copy.getZ() - impl->getLocation().getZ());
 
-    double x_cam = dotProduct(relative, impl->getRight());
-    double y_cam = dotProduct(relative, impl->getUp());
-    double z_cam = dotProduct(relative, impl->getForward());
+    double xCam = dotProduct(relative, impl->getRight());
+    double yCam = dotProduct(relative, impl->getUp());
+    double zCam = dotProduct(relative, impl->getForward());
 
-    copy.setZ(z_cam);
+    copy.setZ(zCam);
 
-    if (fabs(z_cam) < __DBL_EPSILON__)
-        z_cam = 1e-6;
+    if (fabs(zCam) < __DBL_EPSILON__)
+        zCam = 1e-6;
 
-    double px = x_cam / z_cam;
-    double py = y_cam / z_cam;
+    double px = xCam / zCam;
+    double py = yCam / zCam;
 
-    auto width = 1280;
-    auto height = 720;
-
-    double screen_x = (px + 1) * width / 2;
-    double screen_y = (1 - py) * height / 2;
+    double screen_x = (px + 1) * RenderWidth / 2;
+    double screen_y = (1 - py) * RenderHeight / 2;
 
     copy.setX(screen_x);
     copy.setY(screen_y);

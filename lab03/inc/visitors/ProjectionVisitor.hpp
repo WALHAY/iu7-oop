@@ -4,7 +4,7 @@
 
 class ProjectionVisitor : public ObjectVisitor
 {
-    friend class PlainCamera;
+    friend class Camera;
 
   public:
     ProjectionVisitor(Point &p);

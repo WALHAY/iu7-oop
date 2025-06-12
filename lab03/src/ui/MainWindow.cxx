@@ -3,6 +3,7 @@
 #include "interface/commands/SelectCommand.hpp"
 #include "interface/commands/TransformCommand.hpp"
 #include "interface/commands/UnSelectCommand.hpp"
+#include "ui/RenderConfig.hpp"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QGraphicsView>
@@ -28,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     graphicsScene = std::make_shared<QGraphicsScene>(this);
 
     ui->graphicsView->setScene(graphicsScene.get());
-    ui->graphicsView->setMinimumSize(1280, 720);
+    ui->graphicsView->setFixedSize(RenderWidth, RenderHeight);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
 
