@@ -6,8 +6,6 @@
 class TransformManager
 {
   public:
-    TransformManager() = default;
-
     void transform(const Matrix<double> &transform);
 
     void setSelectionManager(std::shared_ptr<SelectionManager> selectionManager);
