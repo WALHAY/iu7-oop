@@ -1,8 +1,9 @@
 #pragma once
 
-#include "interface/managers/SceneManager.hpp"
 #include "objects/Composite.hpp"
 #include <memory>
+#include <scene/Scene.hpp>
+
 class SelectionManager
 {
   public:

@@ -39,7 +39,7 @@ void LoadManager::loadScene(std::filesystem::path path, std::function<void(Objec
     }
 }
 
-void LoadManager::remove(Object::id_type id)
+void LoadManager::remove(id_type id)
 {
     if (sceneManager == nullptr)
         return;
