@@ -4,6 +4,7 @@
 #include "camera/loader/builders/CameraBuilder.hpp"
 #include "camera/loader/directors/CameraDirector.hpp"
 #include "camera/loader/readers/TxtCameraReader.hpp"
+#include "interface/managers/ManagersExceptions.hpp"
 #include "scene/loader/SceneDirector.hpp"
 #include "scene/loader/SceneReader.hpp"
 #include "stream/BaseStreamLoader.hpp"
@@ -20,6 +21,9 @@
 
 void LoadManager::loadScene(std::filesystem::path path, callback_type callback = nullptr)
 {
+    if (!sceneManager)
+        throw SceneManagerNotSetException(__FILE_NAME__, __FUNCTION__, __LINE__);
+
     std::shared_ptr<std::ifstream> str = std::make_shared<std::ifstream>(path);
 
     std::shared_ptr<BaseFileLoader> fileLoader = std::make_shared<TxtFileLoader>(path);
@@ -40,18 +44,13 @@ void LoadManager::loadScene(std::filesystem::path path, callback_type callback =
     std::shared_ptr<SceneDirector> sceneLoader =
         std::make_shared<SceneDirector>(modelDirector, cameraDirector, sceneStreamReader);
 
-	sceneLoader->setCallback(callback);
+    sceneLoader->setCallback(callback);
 
     sceneManager->setScene(sceneLoader->create());
 }
 
-void LoadManager::remove(Object::id_type id)
+void LoadManager::remove(std::shared_ptr<Scene> scene, Object::id_type id)
 {
-    if (sceneManager == nullptr)
-        return;
-
-    auto scene = sceneManager->getScene();
-
     if (scene == nullptr)
         return;
 

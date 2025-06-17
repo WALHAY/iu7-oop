@@ -13,7 +13,6 @@ Facade::Facade(std::shared_ptr<QGraphicsScene> graphicsScene)
 
     drawManager->setSceneManager(sceneManager);
     loadManager->setSceneManager(sceneManager);
-    cameraManager->setSceneManager(sceneManager);
 
     transformManager->setSelectionManager(selectionManager);
 

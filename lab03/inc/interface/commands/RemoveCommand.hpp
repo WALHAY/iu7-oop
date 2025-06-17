@@ -6,7 +6,7 @@
 class RemoveCommand : public BaseCommand
 {
   private:
-    using Action = void (LoadManager::*)(Object::id_type);
+    using Action = void (LoadManager::*)(std::shared_ptr<Scene>, Object::id_type);
 
   public:
     RemoveCommand(Object::id_type id) : id(id)
@@ -15,7 +15,7 @@ class RemoveCommand : public BaseCommand
 
     void execute() const override
     {
-        ((*loadManager).*action)(id);
+        ((*loadManager).*action)(sceneManager->getScene(), id);
     }
 
   private:

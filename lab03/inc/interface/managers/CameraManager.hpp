@@ -1,17 +1,15 @@
 #pragma once
 
-#include "interface/managers/SceneManager.hpp"
 #include "objects/Camera.hpp"
+#include "scene/Scene.hpp"
 #include <memory>
+
 class CameraManager
 {
   public:
-    void setActiveCamera(Object::id_type id);
+    void setActiveCamera(std::shared_ptr<Scene> scene, Object::id_type id);
 	std::shared_ptr<Camera> getActiveCamera();
 
-	void setSceneManager(std::shared_ptr<SceneManager> sceneManager);
-
   private:
-    std::shared_ptr<SceneManager> sceneManager;
     std::shared_ptr<Camera> activeCamera;
 };

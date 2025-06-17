@@ -21,7 +21,8 @@ void SelectionManager::remove(id_type id)
     auto find =
         std::ranges::find_if(composite->begin(), composite->end(), [id](const auto &obj) { return obj->id() == id; });
 
-    composite->remove(find);
+    if (find != composite->end())
+        composite->remove(find);
 }
 
 std::shared_ptr<Composite> SelectionManager::getSelection()

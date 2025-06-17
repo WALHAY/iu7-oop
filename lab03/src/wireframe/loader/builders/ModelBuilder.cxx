@@ -1,7 +1,8 @@
 #include "objects/impl/WireframeModel.hpp"
-#include <wireframe/Wireframe.hpp>
 #include <memory>
+#include <wireframe/Wireframe.hpp>
 #include <wireframe/loader/builders/ModelBuilder.hpp>
+#include <wireframe/loader/ModelLoaderExceptions.hpp>
 
 void ModelBuilder::build()
 {
@@ -29,11 +30,11 @@ bool ModelBuilder::validateBuild()
     if (wireframe == nullptr)
         return false;
 
-	if(wireframe->getEdges().empty())
-		return false;
+    if (wireframe->getEdges().empty())
+        return false;
 
-	if(wireframe->getVertices().empty())
-		return false;
+    if (wireframe->getVertices().empty())
+        return false;
 
     auto size = wireframe->getVertices().size();
 
@@ -45,7 +46,7 @@ bool ModelBuilder::validateBuild()
 std::shared_ptr<Object> ModelBuilder::get()
 {
     if (!validateBuild())
-        throw std::exception();
+        throw ModelValidationFailedException(__FILE_NAME__, __FUNCTION__, __LINE__);
 
-    return std::make_shared<WireframeModel>(wireframe);
+            return std::make_shared<WireframeModel>(wireframe);
 }
