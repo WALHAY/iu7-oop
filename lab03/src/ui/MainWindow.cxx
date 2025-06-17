@@ -164,32 +164,32 @@ void MainWindow::refreshSelection(const QItemSelection &added, const QItemSelect
 
 void MainWindow::rotateXNeg()
 {
-    rotateAroundX(-15);
+    rotateAroundX(-RotationStep);
 }
 
 void MainWindow::rotateXPos()
 {
-    rotateAroundX(15);
+    rotateAroundX(RotationStep);
 }
 
 void MainWindow::rotateYNeg()
 {
-    rotateAroundY(-15);
+    rotateAroundY(-RotationStep);
 }
 
 void MainWindow::rotateYPos()
 {
-    rotateAroundY(15);
+    rotateAroundY(RotationStep);
 }
 
 void MainWindow::rotateZNeg()
 {
-    rotateAroundZ(-15);
+    rotateAroundZ(-RotationStep);
 }
 
 void MainWindow::rotateZPos()
 {
-    rotateAroundZ(15);
+    rotateAroundZ(RotationStep);
 }
 
 void MainWindow::rotateAroundX(double angle)
@@ -239,32 +239,32 @@ void MainWindow::rotateAroundZ(double angle)
 
 void MainWindow::moveXNeg()
 {
-    move(-15, 0, 0);
+    move(-MoveStep, 0, 0);
 }
 
 void MainWindow::moveXPos()
 {
-    move(15, 0, 0);
+    move(MoveStep, 0, 0);
 }
 
 void MainWindow::moveYNeg()
 {
-    move(0, -15, 0);
+    move(0, -MoveStep, 0);
 }
 
 void MainWindow::moveYPos()
 {
-    move(0, 15, 0);
+    move(0, MoveStep, 0);
 }
 
 void MainWindow::moveZNeg()
 {
-    move(0, 0, -15);
+    move(0, 0, -MoveStep);
 }
 
 void MainWindow::moveZPos()
 {
-    move(0, 0, 15);
+    move(0, 0, MoveStep);
 }
 
 void MainWindow::move(double x, double y, double z)
@@ -295,7 +295,7 @@ void MainWindow::removeFromScene()
         if (index.column() != 1)
             continue;
 
-		auto value = index.data();
+        auto value = index.data();
 
         auto cameraId = ui->cameraChoiceBox->findText(value.toString());
         ui->cameraChoiceBox->removeItem(cameraId);
