@@ -34,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
 
+    graphicsScene->setBackgroundBrush(QBrush(QColor(0xFFFFFF)));
+
     sceneViewModel->setHorizontalHeaderItem(0, new QStandardItem(QString("Object type")));
     sceneViewModel->setHorizontalHeaderItem(1, new QStandardItem(QString("Id")));
     ui->sceneObjectTable->setModel(sceneViewModel);
@@ -293,12 +295,14 @@ void MainWindow::removeFromScene()
         if (index.column() != 1)
             continue;
 
-        auto id = index.data().toUInt();
+		auto value = index.data();
 
-		auto cameraId = ui->cameraChoiceBox->findText(index.data().toString());
-		if()
+        auto cameraId = ui->cameraChoiceBox->findText(value.toString());
+        ui->cameraChoiceBox->removeItem(cameraId);
 
-        composite->add(std::make_shared<RemoveCommand>(id));
+        ui->sceneObjectTable->model()->removeRow(index.row());
+
+        composite->add(std::make_shared<RemoveCommand>(value.toUInt()));
     }
 
     composite->add(std::make_shared<DrawCommand>());

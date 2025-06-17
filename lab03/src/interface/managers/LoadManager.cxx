@@ -51,11 +51,11 @@ void LoadManager::remove(Object::id_type id)
 
     auto find = std::ranges::find_if(scene->begin(), scene->end(), [id](const auto &a) { return a->id() == id; });
 
-    scene->remove(find);
+    if (find != scene->end())
+        scene->remove(find);
 }
 
 void LoadManager::setSceneManager(std::shared_ptr<SceneManager> sceneManager)
 {
     this->sceneManager = sceneManager;
 }
-

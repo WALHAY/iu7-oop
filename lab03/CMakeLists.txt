@@ -11,10 +11,6 @@ set(CMAKE_AUTOUIC ON)
 
 set(APP_NAME WireframeViewer)
 
-if (UNIX)
-	add_compile_options(-mno-direct-extern-access)
-endif (UNIX)
-
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 file(GLOB_RECURSE SOURCES src/*.cxx)

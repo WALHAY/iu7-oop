@@ -1,4 +1,4 @@
-#include "interface/commands/CommandException.hpp"
+#include "exceptions/NotImplementedException.hpp"
 #include <interface/commands/BaseCommand.hpp>
 
 BaseCommand::~BaseCommand() = default;
@@ -10,22 +10,22 @@ bool BaseCommand::isComposite()
 
 void BaseCommand::add(std::shared_ptr<BaseCommand> command)
 {
-	throw NotImplemented(__FILE__, __FUNCTION__, __LINE__);
+	throw NotImplementedException(__FILE__, __FUNCTION__, __LINE__);
 }
 
 void BaseCommand::remove(iterator &iter)
 {
-	throw NotImplemented(__FILE__, __FUNCTION__, __LINE__);
+	throw NotImplementedException(__FILE__, __FUNCTION__, __LINE__);
 }
 
 auto BaseCommand::begin() const -> iterator
 {
-	throw NotImplemented(__FILE__, __FUNCTION__, __LINE__);
+	throw NotImplementedException(__FILE__, __FUNCTION__, __LINE__);
 }
 
 auto BaseCommand::end() const -> iterator
 {
-	throw NotImplemented(__FILE__, __FUNCTION__, __LINE__);
+	throw NotImplementedException(__FILE__, __FUNCTION__, __LINE__);
 }
 
 void BaseCommand::setManagers(std::shared_ptr<SceneManager> sceneManager, std::shared_ptr<DrawManager> drawManager,
