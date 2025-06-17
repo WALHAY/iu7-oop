@@ -83,6 +83,21 @@
               </widget>
             </item>
             
+            <!-- Remove Button (newly added) -->
+            <item>
+              <widget class="QPushButton" name="removeObjectButton">
+                <property name="text">
+                  <string>Remove Selected</string>
+                </property>
+                <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                  </sizepolicy>
+                </property>
+              </widget>
+            </item>
+            
             <!-- Camera Selection -->
             <item>
               <widget class="QLabel" name="cameraLabel">

@@ -55,9 +55,7 @@ class MainWindow : public QMainWindow
     void moveZNeg();
     void moveZPos();
 
-  signals:
-
-  private slots:
+	void removeFromScene();
 
   private:
     QStandardItemModel *sceneViewModel;

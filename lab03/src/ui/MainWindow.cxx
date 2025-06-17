@@ -1,5 +1,6 @@
 #include "interface/commands/DrawCommand.hpp"
 #include "interface/commands/LoadCommand.hpp"
+#include "interface/commands/RemoveCommand.hpp"
 #include "interface/commands/SelectCommand.hpp"
 #include "interface/commands/TransformCommand.hpp"
 #include "interface/commands/UnSelectCommand.hpp"
@@ -17,9 +18,9 @@
 #include <numbers>
 #include <ui/MainWindow.hpp>
 
+#include <QAbstractItemView>
 #include <graphics/GraphicsFactory.hpp>
 #include <graphics/QtGraphicsFactory.hpp>
-#include <QAbstractItemView>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -38,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->sceneObjectTable->setModel(sceneViewModel);
     ui->sceneObjectTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->sceneObjectTable->verticalHeader()->setVisible(false);
-	ui->sceneObjectTable->setSelectionMode(QAbstractItemView::SelectionMode::MultiSelection);
+    ui->sceneObjectTable->setSelectionMode(QAbstractItemView::SelectionMode::MultiSelection);
 
     clearCameras();
     clearSceneTable();
@@ -56,6 +57,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->moveYPosButton, &QPushButton::clicked, this, &MainWindow::moveYPos);
     connect(ui->moveZNegButton, &QPushButton::clicked, this, &MainWindow::moveZNeg);
     connect(ui->moveZPosButton, &QPushButton::clicked, this, &MainWindow::moveZPos);
+
+    connect(ui->removeObjectButton, &QPushButton::clicked, this, &MainWindow::removeFromScene);
 
     connect(ui->cameraChoiceBox, &QComboBox::currentTextChanged, this, &MainWindow::changeCamera);
     connect(ui->loadSceneButton, &QPushButton::clicked, this, &MainWindow::loadSceneDialog);
@@ -272,6 +275,32 @@ void MainWindow::move(double x, double y, double z)
     auto composite = std::make_shared<CompositeCommand>();
 
     composite->add(std::make_shared<TransformCommand>(move));
+    composite->add(std::make_shared<DrawCommand>());
+
+    facade->execute(composite);
+}
+
+void MainWindow::removeFromScene()
+{
+    auto composite = std::make_shared<CompositeCommand>();
+
+    auto selectionModel = ui->sceneObjectTable->selectionModel();
+
+    auto selectedIndices = selectionModel->selectedIndexes();
+
+    for (const QModelIndex &index : selectedIndices)
+    {
+        if (index.column() != 1)
+            continue;
+
+        auto id = index.data().toUInt();
+
+		auto cameraId = ui->cameraChoiceBox->findText(index.data().toString());
+		if()
+
+        composite->add(std::make_shared<RemoveCommand>(id));
+    }
+
     composite->add(std::make_shared<DrawCommand>());
 
     facade->execute(composite);

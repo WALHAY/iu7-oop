@@ -13,7 +13,7 @@ class LoadManager
 
     void loadScene(std::filesystem::path path, std::function<void(ObjectType, Object::id_type)> callback);
 
-    void remove(id_type id);
+    void remove(Object::id_type id);
 
     void setSceneManager(std::shared_ptr<SceneManager> sceneManager);
 
