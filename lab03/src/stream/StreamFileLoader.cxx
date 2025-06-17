@@ -1,7 +1,5 @@
 #include "stream/StreamFileLoader.hpp"
 
-#include <fstream>
-
 StreamFileLoader::StreamFileLoader(std::shared_ptr<BaseFileLoader> fileLoader)
 {
     this->fileLoader = fileLoader;

@@ -1,42 +1,48 @@
 #include "camera/loader/BaseCameraBuilder.hpp"
 #include "camera/loader/BaseCameraDirector.hpp"
+#include "camera/loader/BaseCameraStreamReader.hpp"
 #include "camera/loader/builders/CameraBuilder.hpp"
 #include "camera/loader/directors/CameraDirector.hpp"
-#include "scene/loader/BaseSceneStreamReader.hpp"
-#include "scene/loader/builders/SceneBuilder.hpp"
-#include "scene/loader/directors/SceneDirector.hpp"
-#include "scene/loader/readers/TxtSceneReader.hpp"
+#include "camera/loader/readers/TxtCameraReader.hpp"
+#include "scene/loader/SceneDirector.hpp"
+#include "scene/loader/SceneReader.hpp"
+#include "stream/BaseStreamLoader.hpp"
+#include "stream/StreamFileLoader.hpp"
+#include "stream/TxtFileLoader.hpp"
 #include "wireframe/loader/BaseModelBuilder.hpp"
 #include "wireframe/loader/builders/ModelBuilder.hpp"
 #include "wireframe/loader/directors/ModelDirector.hpp"
+#include "wireframe/loader/readers/TxtModelReader.hpp"
 #include <QDebug>
 #include <filesystem>
 #include <fstream>
 #include <interface/managers/LoadManager.hpp>
 
-void LoadManager::loadScene(std::filesystem::path path, std::function<void(ObjectType, Object::id_type)> callback)
+void LoadManager::loadScene(std::filesystem::path path, callback_type callback = nullptr)
 {
     std::shared_ptr<std::ifstream> str = std::make_shared<std::ifstream>(path);
-    std::shared_ptr<BaseSceneStreamReader> reader = std::make_shared<TxtSceneReader>(str);
+
+    std::shared_ptr<BaseFileLoader> fileLoader = std::make_shared<TxtFileLoader>(path);
+    std::shared_ptr<BaseStreamLoader> streamLoader = std::make_shared<StreamFileLoader>(fileLoader);
+
+    std::shared_ptr<BaseModelStreamReader> modelStreamReader =
+        std::make_shared<TxtModelReader>(streamLoader->getStream());
+    std::shared_ptr<BaseCameraStreamReader> cameraStreamReader =
+        std::make_shared<TxtCameraReader>(streamLoader->getStream());
+    std::shared_ptr<BaseSceneStreamReader> sceneStreamReader = std::make_shared<SceneReader>(streamLoader->getStream());
 
     std::shared_ptr<BaseModelBuilder> modelBuilder = std::make_shared<ModelBuilder>();
     std::shared_ptr<BaseCameraBuilder> cameraBuilder = std::make_shared<CameraBuilder>();
-    std::shared_ptr<BaseModelDirector> modelDirector = std::make_shared<ModelDirector>(modelBuilder);
-    std::shared_ptr<BaseCameraDirector> cameraDirector = std::make_shared<CameraDirector>(cameraBuilder);
+    std::shared_ptr<BaseModelDirector> modelDirector = std::make_shared<ModelDirector>(modelBuilder, modelStreamReader);
+    std::shared_ptr<BaseCameraDirector> cameraDirector =
+        std::make_shared<CameraDirector>(cameraBuilder, cameraStreamReader);
 
-    auto sceneBuilder = std::make_shared<SceneBuilder>(modelDirector, cameraDirector);
-    auto director = std::make_shared<SceneDirector>(sceneBuilder);
+    std::shared_ptr<SceneDirector> sceneLoader =
+        std::make_shared<SceneDirector>(modelDirector, cameraDirector, sceneStreamReader);
 
-    auto scene = director->create(reader);
-    sceneManager->setScene(scene);
+	sceneLoader->setCallback(callback);
 
-    if (callback == nullptr)
-        return;
-
-    for (const auto &obj : *scene)
-    {
-        callback(obj->isCamera() ? ObjectType::CAMERA : ObjectType::MODEl, obj->id());
-    }
+    sceneManager->setScene(sceneLoader->create());
 }
 
 void LoadManager::remove(Object::id_type id)

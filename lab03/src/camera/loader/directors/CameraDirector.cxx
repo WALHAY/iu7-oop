@@ -1,13 +1,15 @@
 #include <camera/loader/directors/CameraDirector.hpp>
 
-CameraDirector::CameraDirector(std::shared_ptr<BaseCameraBuilder> builder) 
+CameraDirector::CameraDirector(std::shared_ptr<BaseCameraBuilder> builder,
+                               std::shared_ptr<BaseCameraStreamReader> reader)
 {
-	this->builder = builder;
+	this->reader = reader;
+    this->builder = builder;
 }
 
-std::shared_ptr<Camera> CameraDirector::create(std::shared_ptr<BaseCameraStreamReader> reader)
+std::shared_ptr<Camera> CameraDirector::create()
 {
-	builder->build();
+    builder->build();
 
     auto location = reader->getLocation();
     auto direction = reader->getDirection();

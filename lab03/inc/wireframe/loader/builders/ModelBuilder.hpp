@@ -1,6 +1,6 @@
 #pragma once
 
-#include "wireframe/Wireframe.hpp"
+#include "wireframe/BaseWireframe.hpp"
 #include "wireframe/loader/BaseModelBuilder.hpp"
 
 class ModelBuilder : public BaseModelBuilder
