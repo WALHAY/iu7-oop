@@ -57,6 +57,8 @@ class MainWindow : public QMainWindow
 
 	void removeFromScene();
 
+	void drawScene();
+
   private:
     QStandardItemModel *sceneViewModel;
     std::shared_ptr<Facade> facade;

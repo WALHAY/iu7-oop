@@ -4,6 +4,7 @@
 #include "interface/commands/SelectCommand.hpp"
 #include "interface/commands/TransformCommand.hpp"
 #include "interface/commands/UnSelectCommand.hpp"
+#include "interface/managers/ManagersExceptions.hpp"
 #include "ui/RenderConfig.hpp"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
@@ -99,12 +100,11 @@ void MainWindow::changeCamera(const QString &text)
     if (!parsed)
         return;
 
-    auto compositeCmd = std::make_shared<CompositeCommand>();
+    auto cmd = std::make_shared<ChangeCameraCommand>(id);
 
-    compositeCmd->add(std::make_shared<ChangeCameraCommand>(id));
-    compositeCmd->add(std::make_shared<DrawCommand>());
+    facade->execute(cmd);
 
-    facade->execute(compositeCmd);
+    drawScene();
 }
 
 void MainWindow::clearCameras()
@@ -194,47 +194,47 @@ void MainWindow::rotateZPos()
 
 void MainWindow::rotateAroundX(double angle)
 {
-    auto cosv = std::cos(angle / 180 * std::numbers::pi);
-    auto sinv = std::sin(angle / 180 * std::numbers::pi);
+    auto rad = qDegreesToRadians(angle);
+    auto cosv = std::cos(rad);
+    auto sinv = std::sin(rad);
 
     Matrix<double> transform = {{1, 0, 0, 0}, {0, cosv, -sinv, 0}, {0, sinv, cosv, 0}, {0, 0, 0, 1}};
 
-    auto composite = std::make_shared<CompositeCommand>();
+    auto cmd = std::make_shared<TransformCommand>(transform);
 
-    composite->add(std::make_shared<TransformCommand>(transform));
-    composite->add(std::make_shared<DrawCommand>());
+    facade->execute(cmd);
 
-    facade->execute(composite);
+    drawScene();
 }
 
 void MainWindow::rotateAroundY(double angle)
 {
-    auto cosv = std::cos(angle / 180 * std::numbers::pi);
-    auto sinv = std::sin(angle / 180 * std::numbers::pi);
+    auto rad = qDegreesToRadians(angle);
+    auto cosv = std::cos(rad);
+    auto sinv = std::sin(rad);
 
     Matrix<double> transform = {{cosv, 0, sinv, 0}, {0, 1, 0, 0}, {-sinv, 0, cosv, 0}, {0, 0, 0, 1}};
 
-    auto composite = std::make_shared<CompositeCommand>();
+    auto cmd = std::make_shared<TransformCommand>(transform);
 
-    composite->add(std::make_shared<TransformCommand>(transform));
-    composite->add(std::make_shared<DrawCommand>());
+    facade->execute(cmd);
 
-    facade->execute(composite);
+    drawScene();
 }
 
 void MainWindow::rotateAroundZ(double angle)
 {
-    auto cosv = std::cos(angle / 180 * std::numbers::pi);
-    auto sinv = std::sin(angle / 180 * std::numbers::pi);
+    auto rad = qDegreesToRadians(angle);
+    auto cosv = std::cos(rad);
+    auto sinv = std::sin(rad);
 
     Matrix<double> transform = {{cosv, -sinv, 0, 0}, {sinv, cosv, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}};
 
-    auto composite = std::make_shared<CompositeCommand>();
+    auto cmd = std::make_shared<TransformCommand>(transform);
 
-    composite->add(std::make_shared<TransformCommand>(transform));
-    composite->add(std::make_shared<DrawCommand>());
+    facade->execute(cmd);
 
-    facade->execute(composite);
+    drawScene();
 }
 
 void MainWindow::moveXNeg()
@@ -274,12 +274,9 @@ void MainWindow::move(double x, double y, double z)
     move[3][1] = y;
     move[3][2] = z;
 
-    auto composite = std::make_shared<CompositeCommand>();
+    auto cmd = std::make_shared<TransformCommand>(move);
 
-    composite->add(std::make_shared<TransformCommand>(move));
-    composite->add(std::make_shared<DrawCommand>());
-
-    facade->execute(composite);
+    facade->execute(cmd);
 }
 
 void MainWindow::removeFromScene()
@@ -290,6 +287,7 @@ void MainWindow::removeFromScene()
 
     auto selectedIndices = selectionModel->selectedIndexes();
 
+    std::vector<unsigned int> rows;
     for (const QModelIndex &index : selectedIndices)
     {
         if (index.column() != 1)
@@ -300,14 +298,35 @@ void MainWindow::removeFromScene()
         auto cameraId = ui->cameraChoiceBox->findText(value.toString());
         ui->cameraChoiceBox->removeItem(cameraId);
 
-        ui->sceneObjectTable->model()->removeRow(index.row());
+        rows.push_back(index.row());
 
         composite->add(std::make_shared<RemoveCommand>(value.toUInt()));
     }
 
-    composite->add(std::make_shared<DrawCommand>());
+    std::sort(rows.rbegin(), rows.rend());
+
+    for (const auto &i : rows)
+    {
+        ui->sceneObjectTable->model()->removeRow(i);
+    }
 
     facade->execute(composite);
+
+    drawScene();
+}
+
+void MainWindow::drawScene()
+{
+    auto cmd = std::make_shared<DrawCommand>();
+
+    try
+    {
+        facade->execute(cmd);
+    }
+    catch (BaseException e)
+    {
+        qDebug() << "[" << typeid(e).name() << "]" << e.what();
+    }
 }
 
 MainWindow::~MainWindow()
