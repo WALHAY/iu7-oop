@@ -18,3 +18,7 @@ void CameraManager::setActiveCamera(std::shared_ptr<Scene> scene, Object::id_typ
     else
         this->activeCamera = std::static_pointer_cast<Camera>(*find);
 }
+
+void CameraManager::removeActiveCamera() {
+	this->activeCamera = nullptr;
+}

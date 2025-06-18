@@ -4,6 +4,7 @@
 #include "interface/commands/SelectCommand.hpp"
 #include "interface/commands/TransformCommand.hpp"
 #include "interface/commands/UnSelectCommand.hpp"
+#include "interface/commands/RemoveCameraCommand.hpp"
 #include "ui/RenderConfig.hpp"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
@@ -89,6 +90,10 @@ void MainWindow::changeCamera(const QString &text)
 {
     if (text.contains("None"))
     {
+		auto removeCamera = std::make_shared<RemoveCameraCommand>();
+
+		facade->execute(removeCamera);
+
         ui->graphicsView->scene()->clear();
         return;
     }
@@ -286,6 +291,8 @@ void MainWindow::move(double x, double y, double z)
     auto cmd = std::make_shared<TransformCommand>(move);
 
     facade->execute(cmd);
+
+	drawScene();
 }
 
 void MainWindow::removeFromScene()
@@ -334,7 +341,6 @@ void MainWindow::drawScene()
     }
     catch (BaseException e)
     {
-        qDebug() << "[" << typeid(e).name() << "]" << e.what();
     }
 }
 
