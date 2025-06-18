@@ -4,19 +4,18 @@
 #include "interface/commands/SelectCommand.hpp"
 #include "interface/commands/TransformCommand.hpp"
 #include "interface/commands/UnSelectCommand.hpp"
-#include "interface/managers/ManagersExceptions.hpp"
 #include "ui/RenderConfig.hpp"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QGraphicsView>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include <interface/commands/ChangeCameraCommand.hpp>
 #include <interface/commands/CompositeCommand.hpp>
-#include <numbers>
 #include <ui/MainWindow.hpp>
 
 #include <QAbstractItemView>
@@ -127,7 +126,17 @@ void MainWindow::loadSceneDialog()
     auto cmd = std::make_shared<LoadCommand>(
         filename.toStdString(),
         [this](const ObjectType &type, const Object::id_type &id) { this->objectAdded(type, id); });
-    facade->execute(cmd);
+    try
+    {
+        facade->execute(cmd);
+    }
+    catch (BaseException e)
+    {
+		clearSceneTable();
+		clearCameras();
+
+        QMessageBox::warning(this, "Failed to load scene", "Failed to load scene. File is corrupted");
+    }
 }
 
 void MainWindow::clearSceneTable()

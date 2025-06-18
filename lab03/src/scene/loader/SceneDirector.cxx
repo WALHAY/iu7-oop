@@ -9,12 +9,14 @@ SceneDirector::SceneDirector(std::shared_ptr<BaseModelDirector> modelDirector,
 
 void SceneDirector::setCallback(callback_type callback)
 {
-	this->callback = callback;
+    this->callback = callback;
 }
 
 std::shared_ptr<Scene> SceneDirector::create()
 {
     auto scene = std::make_shared<Scene>();
+
+	bool failure = false;
 
     std::optional<ObjectType> type;
     while ((type = sceneReader->getType()))
@@ -31,13 +33,16 @@ std::shared_ptr<Scene> SceneDirector::create()
         }
 
         if (obj != nullptr)
-		{
+        {
             scene->add(obj);
 
-			if(callback != nullptr)
-				callback(*type, obj->id());
+            if (callback != nullptr)
+                callback(*type, obj->id());
+        } else{
+			failure = true;
+			break;
 		}
     }
 
-	return scene;
+    return failure ? nullptr : scene;
 }
