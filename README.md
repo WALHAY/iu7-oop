@@ -1,18 +1,29 @@
-# OOP: Labs 
+# ООП
 
-## Status
+## Статистика
 
-| Lab | Score |
+| Лабораторная | Баллы |
 | ---|---|
-| Wireframe model viewer(Struct/CPP/SDL)|9/10|
-| Collection template class |10(7?)/11|
-| HashMap | 3/3 |
-| Wireframe model viewer(OOP/CPP/QT)|WIP|
-| Elevator state machine|10/11|
-| OOP Docs|TODO|
+| Просмотр каркасной модели(Struct/CPP/SDL)|9/10|
+| Шаблонный класс коллекции(матрица) |11/11|
+| Хэш-таблица | 3/3 |
+| Просмотр каркасной модели(OOP/CPP/QT)| 22/26 |
+| Модель состояний лифта |10/11|
+| Документы ООП | 10/10 |
 
-## Total score
+## Суммарный бал
 
-Labs: 3/5
-Additional tasks: Hash-map(Lab2)
-Score: 32(29?)/70 
+65 - автомат жди меня...
+
+## Важные моменты
+
+- Загрузчик в 3 лабораторной не совпадает со схемой на UML диаграмме
+- Первые 4 лабораторных были сданы Д.Ю. Пудову. 5 сдана Тассову.
+
+## Спасибо
+
+[@kanterroman](https://github.com/kanterroman)
+
+[@ofdun](https://github.com/ofdun)
+
+за возможность подглядывать в их репы :D
